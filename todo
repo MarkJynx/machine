@@ -1,18 +1,20 @@
 Roadmap
-1. Database: empty task table.
-2. Database: empty day table.
-3. Database: empty chore table.
-4. Database: create categories.
-5. Database: create tasks.
-6. Back-end: create day.
-7. Back-end: read day.
-8. Back-end: update day.
-9. Back-end: delete day.
-10. Front-end: read day.
-11. Front-end: navigate days.
-12. Front-end: create day.
-13. Front-end: update day.
-14. Front-end: delete day.
+1. Authorization: setup symmetric VPN on a router with public IP address.
+2. Authorization: access the website running on PC (192.168.1.100) through VPN on your smartphone.
+3. Database: create categories (minimal set).
+4. Database: empty task table.
+5. Database: create tasks (minimal set)
+6. Database: empty day table.
+7. Database: empty chore table.
+8. Back-end: create day.
+9. Back-end: read day.
+10. Back-end: update day.
+11. Back-end: delete day.
+12. Front-end: read day.
+13. Front-end: navigate days.
+14. Front-end: create day.
+15. Front-end: update day.
+16. Front-end: delete day.
 
 Roadmap (nice-to-have)
 1. Database integrity check.
