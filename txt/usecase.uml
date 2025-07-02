@@ -1,0 +1,54 @@
+@startuml
+skinparam actorStyle awesome
+
+actor User as U
+
+rectangle "Authorization" {
+	usecase "Log-in" as UC1
+	usecase "Log-out" as UC2
+}
+
+rectangle "Category" {
+	usecase "Create Category" as UC3
+	usecase "Read Category" as UC4
+	usecase "Update Category" as UC5
+	usecase "Delete Category" as UC6
+}
+
+rectangle "Task" {
+	usecase "Create Task" as UC7
+	usecase "Read Task" as UC8
+	usecase "Update Task" as UC9
+	usecase "Delete Task" as UC10
+}
+
+rectangle "Day" {
+	usecase "Create Day" as UC11
+	usecase "Read Day" as UC12
+	usecase "Update Day" as UC13
+	usecase "Delete Day" as UC14
+}
+
+rectangle "Statistics" {
+	usecase "Show daily statistics" as UC15
+	usecase "Show aggregate statistics" as UC16
+}
+
+U .left. UC1
+U .left. UC2
+U .up. UC3
+U .up. UC4
+U .up. UC5
+U .up. UC6
+U .up. UC7
+U .up. UC8
+U .up. UC9
+U .up. UC10
+U .down. UC11
+U .down. UC12
+U .down. UC13
+U .down. UC14
+U .right. UC15
+U .right. UC16
+
+@enduml
