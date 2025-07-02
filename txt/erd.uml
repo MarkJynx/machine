@@ -1,0 +1,46 @@
+@startuml
+
+skinparam linetype ortho
+hide circle
+hide empty members
+
+entity Category {
+    * ID
+    * Name
+    * Description
+    * Color
+}
+
+entity Task {
+    * ID
+    * Name
+    * Description
+    * Motivation
+    * ScheduleJSON
+    * Order
+    * Points
+    * Color
+    * Category <<FK>>
+}
+
+entity Chore {
+    * ID
+    * Done
+    * Order
+    * Notes
+    * Day <<FK>>
+    * Task <<FK>>
+}
+
+entity Day {
+    * ID
+    * Vacation
+    * Notes
+    * Points <<Generated>>
+}
+
+Chore }o-- Day
+Chore }o-- Task
+Task }o-- Category
+
+@enduml
