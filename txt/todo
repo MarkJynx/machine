@@ -6,5 +6,15 @@ Roadmap
 5. Database: empty chore table.
 6. Database: create categories.
 7. Database: create tasks.
+8. Back-end: create day.
+9. Back-end: read day.
+10. Back-end: update day.
+11. Back-end: delete day.
+12. Front-end: read day.
+13. Front-end: navigate days.
+14. Front-end: create day.
+15. Front-end: update day.
+16. Front-end: delete day.
+
 Roadmap (nice-to-have)
 1. Database integrity check.
