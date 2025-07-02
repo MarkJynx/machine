@@ -1,0 +1,10 @@
+Roadmap
+1. Database: empty file.
+2. Database: empty category table.
+3. Database: empty task table.
+4. Database: empty day table.
+5. Database: empty chore table.
+6. Database: create categories.
+7. Database: create tasks.
+Roadmap (nice-to-have)
+1. Database integrity check.
