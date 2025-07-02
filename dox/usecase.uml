@@ -30,8 +30,9 @@ rectangle "Day" {
 }
 
 rectangle "Statistics" {
-	usecase "Show daily statistics" as UC15
-	usecase "Show aggregate statistics" as UC16
+	usecase "Show day statistics" as UC15
+	usecase "Show daily statistics" as UC16
+	usecase "Show aggregate statistics" as UC17
 }
 
 U .left. UC1
@@ -50,5 +51,6 @@ U .down. UC13
 U .down. UC14
 U .right. UC15
 U .right. UC16
+U .right. UC17
 
 @enduml
