@@ -36,3 +36,31 @@ CREATE TABLE IF NOT EXISTS task (
 	points INTEGER NOT NULL CHECK(points > 0),
 	color INTEGER NOT NULL CHECK(color >= 0 and color <= 0xFFFFFF)
 );
+
+-- TODO 1: wake early
+-- TODO 2: shower
+-- TODO 3: wash hair
+-- TODO 4: dental care
+-- TODO 5: shave face
+-- TODO 6: clip nails
+-- TODO 7: clean home
+-- TODO 8: push
+-- TODO 9: pull
+-- TODO 10: legs
+
+-- TODO 11: face care
+-- TODO 12: dental care
+-- TODO 13: shave body
+-- TODO 14: fresh clothes
+-- TODO 15: homemade food
+-- TODO 16: laundry
+-- TODO 17: car care
+-- TODO 18: cooking
+-- TODO 19: productivity
+-- TODO 20: cardio
+-- TODO 21: diet
+
+-- TODO 22: hair care
+-- TODO 23: budgeting
+-- TODO 24: fighting
+-- TODO 25: ...
