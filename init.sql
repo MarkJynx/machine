@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE IF NOT EXISTS category (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL UNIQUE,
@@ -33,17 +35,20 @@ INSERT INTO category (name, description, motivation, color) VALUES (
 
 CREATE TABLE IF NOT EXISTS task (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	category_id INTEGER NOT NULL,
 	name TEXT NOT NULL UNIQUE,
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE,
 	tier INTEGER NOT NULL CHECK(tier > 0),
 	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
 	points INTEGER NOT NULL CHECK(points > 0),
-	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 and color <= 0xFFFFFF)
+	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 and color <= 0xFFFFFF),
+	FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
-INSERT INTO task (name, description, motivation, tier, order_priority, points, color) VALUES (
+INSERT INTO task (name, category_id, description, motivation, tier, order_priority, points, color) VALUES (
 	"Wake early",
+	1,
 	"Rise from bed at 08:00 or earlier",
 	"No more embarrassment of being late at work."                                  || char(10) ||
 	"No more skipping morning chores and feeling bad afterwards."                   || char(10) ||
