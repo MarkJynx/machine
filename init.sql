@@ -36,18 +36,31 @@ CREATE TABLE IF NOT EXISTS task (
 	name TEXT NOT NULL UNIQUE,
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE,
-	schedule_period INTEGER NOT NULL CHECK(schedule_period >= 1 AND schedule_period < 7), -- anything less frequent is not worthy to be a rule
-	schedule_weekdays INTEGER NOT NULL CHECK(schedule_weekdays >= 0 AND schedule_weekdays <= 127), -- 7-bit integer, LSB is Monday, MSB is Sunday
 	tier INTEGER NOT NULL CHECK(tier > 0),
-	order_priority INTEGER NOT NULL CHECK(order_priority > 0),
+	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
 	points INTEGER NOT NULL CHECK(points > 0),
-	color INTEGER NOT NULL CHECK(color >= 0 and color <= 0xFFFFFF)
+	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 and color <= 0xFFFFFF)
 );
 
--- TODO 1: wake early
+INSERT INTO task (name, description, motivation, tier, order_priority, points, color) VALUES (
+	"Wake early",
+	"Rise from bed at 08:00 or earlier",
+	"No more embarrassment of being late at work."                                  || char(10) ||
+	"No more skipping morning chores and feeling bad afterwards."                   || char(10) ||
+	"No more being stressed and in a hurry in the morning."                         || char(10) ||
+	"Ability to relax, focus and have time for oneself before diving into the day." || char(10) ||
+	"Margin for error in case of unexpected events."                                || char(10) ||
+	"More useful (daylight, stores still open) time available during the day."      || char(10) ||
+	"Good external image and work ethic.",
+	1,
+	1,
+	10,
+	0x0000FF
+);
+
 -- TODO 2: shower
 -- TODO 3: wash hair
--- TODO 4: dental care
+-- TODO 4: dental care (after sleep)
 -- TODO 5: shave face
 -- TODO 6: clip nails
 -- TODO 7: clean home
@@ -56,7 +69,7 @@ CREATE TABLE IF NOT EXISTS task (
 -- TODO 10: legs
 
 -- TODO 11: face care
--- TODO 12: dental care
+-- TODO 12: dental care (before sleep)
 -- TODO 13: shave body
 -- TODO 14: fresh clothes
 -- TODO 15: homemade food
