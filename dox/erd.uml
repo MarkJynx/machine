@@ -14,6 +14,7 @@ entity Category {
 
 entity Task {
     * ID
+    * Category <<FK>>
     * Name
     * Description
     * Motivation
@@ -23,16 +24,15 @@ entity Task {
     * Order
     * Points
     * Color
-    * Category <<FK>>
 }
 
 entity Chore {
     * ID
+    * Task <<FK>>
+    * Day <<FK>>
     * Done
     * Order
     * Notes
-    * Day <<FK>>
-    * Task <<FK>>
 }
 
 entity Day {
@@ -40,10 +40,16 @@ entity Day {
     * Vacation
     * Notes
     * Points <<Generated>>
+    * Percetage <<Generated>>
 }
 
 Chore }o-- Day
 Chore }o-- Task
 Task }o-- Category
+
+note top of Task
+	Schedule could be superseded by a JS function in the future
+	Points could be superseded by sub-tasks and a JS function in the future.
+end note
 
 @enduml
