@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS category (
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF)
 ) WITHOUT ROWID;
 
+-- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
 INSERT INTO category (name, description, motivation, color) VALUES (
 	"Image (internal)",
 	"One's immediate appearance and behavior",
@@ -33,6 +34,7 @@ INSERT INTO category (name, description, motivation, color) VALUES (
 );
 
 -- TODO: ensure no gaps between order_priority entries
+-- TODO: consider sub-tasks
 CREATE TABLE IF NOT EXISTS task (
 	name TEXT PRIMARY KEY,
 	category_name TEXT NOT NULL,
@@ -82,7 +84,21 @@ INSERT INTO task_schedule (task_name, start_date, period, weekdays) VALUES (
 	127
 );
 
+-- TODO: ensure no gaps between id entries?
+-- TODO: generated columns
+-- TODO: consider vacations
 CREATE TABLE IF NOT EXISTS day (
 	id TEXT PRIMARY KEY,
 	notes TEXT
+) WITHOUT ROWID;
+
+-- TODO: ensure no gaps between order_priority entries for a day
+CREATE TABLE IF NOT EXISTS chore (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	task_name TEXT NOT NULL,
+	day_id TEXT NOT NULL,
+	done INTEGER NOT NULL CHECK (done == 0 OR done == 1),
+	order_priority INTEGER NOT NULL,
+	FOREIGN KEY (task_name) REFERENCES task (name),
+	FOREIGN KEY (day_id) REFERENCES day (id)
 );

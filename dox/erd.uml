@@ -37,7 +37,7 @@ entity Chore {
     * TaskName <<FK>>
     * DayID <<FK>>
     * Done
-    * Order
+    * OrderPriority
     * Notes
 }
 
@@ -45,7 +45,7 @@ entity Day {
     * ID <<PK>>
     * Notes
     * Points <<Generated>>
-    * Percetage <<Generated>>
+    * Percentage <<Generated>>
 }
 
 Chore }o-- Day
