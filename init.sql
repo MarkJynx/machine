@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS category (
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE,
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF)
-);
+) WITHOUT ROWID;
 
 INSERT INTO category (name, description, motivation, color) VALUES (
 	"Image (internal)",
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS task (
 	points INTEGER NOT NULL CHECK(points > 0),
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 and color <= 0xFFFFFF),
 	FOREIGN KEY (category_name) REFERENCES category (name)
-);
+) WITHOUT ROWID;
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points, color) VALUES (
 	"Wake early",
