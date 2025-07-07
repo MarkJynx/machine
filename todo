@@ -1,27 +1,12 @@
 Roadmap
-1. Database: create tasks (minimal set)
-2. Database: empty day table.
-3. Database: empty chore table.
-4. Back-end: create day.
-5. Back-end: read day.
-6. Back-end: update day.
-7. Back-end: delete day.
-8. Front-end: read day.
-9. Front-end: navigate days.
-10. Front-end: create day.
-11. Front-end: update day.
-12. Front-end: delete day.
-
-Roadmap (nice-to-have)
-1. Database integrity check.
-2. Manifesto.
-3. Symbol.
-4. Music theme.
-5. Avatar character.
-6. Guidelines for categories.
-7. Guidelines for tasks.
-8. Guidelines for days.
-9. Guidelines for lifestyle.
-
-Roadmap (vague notions)
-1. Subtasks.
+1. Database: empty day table.
+2. Database: empty chore table.
+3. Back-end: create day.
+4. Back-end: read day.
+5. Back-end: update day.
+6. Back-end: delete day.
+7. Front-end: read day.
+8. Front-end: navigate days.
+9. Front-end: create day.
+10. Front-end: update day.
+11. Front-end: delete day.
