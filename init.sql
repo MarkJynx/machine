@@ -1,9 +1,7 @@
 PRAGMA foreign_keys = ON;
 
--- TODO: ensure no gaps between id entries
 CREATE TABLE IF NOT EXISTS category (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name TEXT NOT NULL UNIQUE,
+	name TEXT PRIMARY KEY,
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE,
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF)
@@ -34,23 +32,22 @@ INSERT INTO category (name, description, motivation, color) VALUES (
 	0xFF0000
 );
 
--- TODO: ensure no gaps between id, order_priority entries
+-- TODO: ensure no gaps between order_priority entries
 CREATE TABLE IF NOT EXISTS task (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	category_id INTEGER NOT NULL,
-	name TEXT NOT NULL UNIQUE,
+	name TEXT PRIMARY KEY,
+	category_name TEXT NOT NULL,
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE,
 	tier INTEGER NOT NULL CHECK(tier > 0),
 	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
 	points INTEGER NOT NULL CHECK(points > 0),
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 and color <= 0xFFFFFF),
-	FOREIGN KEY (category_id) REFERENCES category (id)
+	FOREIGN KEY (category_name) REFERENCES category (name)
 );
 
-INSERT INTO task (name, category_id, description, motivation, tier, order_priority, points, color) VALUES (
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points, color) VALUES (
 	"Wake early",
-	1,
+	"Image (internal)",
 	"Rise from bed at 08:00 or earlier",
 	"No more embarrassment of being late at work."                                  || char(10) ||
 	"No more skipping morning chores and feeling bad afterwards."                   || char(10) ||

@@ -5,17 +5,15 @@ hide circle
 hide empty members
 
 entity Category {
-    * ID
-    * Name
+    * Name <<PK>>
     * Description
     * Motivation
     * Color
 }
 
 entity Task {
-    * ID
-    * CategoryID <<FK>>
-    * Name
+    * Name <<PK>>
+    * CategoryName <<FK>>
     * Description
     * Motivation
     * Tier
@@ -25,8 +23,8 @@ entity Task {
 }
 
 entity TaskSchedule {
-    * ID
-    * TaskID <<FK>
+    * ID <<PK>>
+    * TaskName <<FK>
     * StartDate
     * StopDate
     * Period
@@ -35,8 +33,8 @@ entity TaskSchedule {
 }
 
 entity Chore {
-    * ID
-    * TaskID <<FK>>
+    * ID <<PK>>
+    * TaskName <<FK>>
     * DayID <<FK>>
     * Done
     * Order
@@ -44,7 +42,7 @@ entity Chore {
 }
 
 entity Day {
-    * ID
+    * ID <<PK>>
     * Vacation
     * Notes
     * Points <<Generated>>
