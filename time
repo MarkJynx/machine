@@ -11,3 +11,4 @@
 61: database work.
 30: finish database work.
 84: struggle with POST loaded responses to loaded POST requests.
+52: temporarily switch to Python HTTP server; succeed in POST.

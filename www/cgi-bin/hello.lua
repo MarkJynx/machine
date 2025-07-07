@@ -1,11 +1,21 @@
 #!/usr/bin/env lua5.1
 
---local payload = io.read("*all")
---payload = tostring(#payload)
-payload = "[1,2,3]"
-payload_length=7
+require("os")
 
---io.write("HTTP/1.0 200 OK\r\n")
+local content_length = os.getenv("CONTENT_LENGTH")
+if content_length ~= nil then
+	content_length = tonumber(content_length) -- TODO: enforce integer
+end
+if content_length == nil then
+	content_length = 0
+end
+
+local payload = "{}"
+if content_length > 0 then
+	payload = io.read(content_length) -- TODO: expect read errors
+end
+
+io.write("Status: 200 OK\r\n")
 io.write("Content-Type: application/json;charset=utf-8\r\n")
---io.write("Content-Length: " .. payload_length .. "\r\n\r\n")
-print(payload)
+io.write("Content-Length: " .. #payload .. "\r\n\r\n")
+io.write(payload)
