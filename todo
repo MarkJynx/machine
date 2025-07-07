@@ -1,12 +1,15 @@
 Roadmap
-1. Database: empty day table.
-2. Database: empty chore table.
-3. Back-end: create day.
-4. Back-end: read day.
-5. Back-end: update day.
-6. Back-end: delete day.
-7. Front-end: read day.
-8. Front-end: navigate days.
-9. Front-end: create day.
-10. Front-end: update day.
-11. Front-end: delete day.
+1. Back-end: create day.
+2. Back-end: read day.
+3. Back-end: update day.
+4. Back-end: delete day.
+5. Front-end: read day.
+6. Front-end: navigate days.
+7. Front-end: create day.
+8. Front-end: update day (chore.done).
+9. Front-end: delete day.
+10. Front-end: update day (chore.order_priority).
+11. Front-end: update day (delete chore).
+12. Front-end: update day (add chore).
+13. Front-end: update day (day.notes).
+14. Front-end: update day (chore.notes).
