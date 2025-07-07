@@ -8,6 +8,7 @@ entity Category {
     * ID
     * Name
     * Description
+    * Motivation
     * Color
 }
 
@@ -16,7 +17,9 @@ entity Task {
     * Name
     * Description
     * Motivation
-    * ScheduleJSON
+    * Schedule_Period
+    * Schedule_Weekdays
+    * Tier
     * Order
     * Points
     * Color
