@@ -1,5 +1,6 @@
 PRAGMA foreign_keys = ON;
 
+-- TODO: ensure no gaps between id entries
 CREATE TABLE IF NOT EXISTS category (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL UNIQUE,
@@ -33,6 +34,7 @@ INSERT INTO category (name, description, motivation, color) VALUES (
 	0xFF0000
 );
 
+-- TODO: ensure no gaps between id, order_priority entries
 CREATE TABLE IF NOT EXISTS task (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	category_id INTEGER NOT NULL,
@@ -61,6 +63,19 @@ INSERT INTO task (name, category_id, description, motivation, tier, order_priori
 	1,
 	10,
 	0x0000FF
+);
+
+-- TODO: check against time overlaps for the same task_id
+-- TODO: enforce YYYY-MM-DD format where applicable
+CREATE TABLE IF NOT EXISTS task_schedule (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	task_id INTEGER NOT NULL,
+	start_date TEXT NOT NULL, -- ISO-8601, YYYY-MM-DD
+	end_date TEXT, -- ISO-8601, YYYY-MM-DD
+	period INTEGER NOT NULL CHECK(period >= 1 AND period < 7), -- anything less frequent is not worthy to be a rule
+	weekdays INTEGER NOT NULL CHECK(weekdays >= 0 AND weekdays <= 127), -- 7-bit integer, LSB is Monday, MSB is Sunday,
+	notes TEXT,
+	FOREIGN KEY (task_id) REFERENCES task (id)
 );
 
 -- TODO 2: shower

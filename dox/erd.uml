@@ -14,21 +14,21 @@ entity Category {
 
 entity Task {
     * ID
-    * Category <<FK>>
+    * CategoryID <<FK>>
     * Name
     * Description
     * Motivation
     * Tier
-    * Order_Priority
+    * OrderPriority
     * Points
     * Color
 }
 
 entity TaskSchedule {
     * ID
-    * Task <<FK>
-    * Start
-    * Stop
+    * TaskID <<FK>
+    * StartDate
+    * StopDate
     * Period
     * Weekdays
     * Notes
@@ -36,8 +36,8 @@ entity TaskSchedule {
 
 entity Chore {
     * ID
-    * Task <<FK>>
-    * Day <<FK>>
+    * TaskID <<FK>>
+    * DayID <<FK>>
     * Done
     * Order
     * Notes
