@@ -1,8 +1,8 @@
-Roadmap
-1. Back-end: create day.
-2. Back-end: read day.
-3. Back-end: update day.
-4. Back-end: delete day.
+Roadmap (small tasks)
+1. Back-end: read day.
+2. Back-end: create day.
+3. Back-end: delete day.
+4. Back-end: update day.
 5. Front-end: read day.
 6. Front-end: navigate days.
 7. Front-end: create day.
@@ -13,3 +13,14 @@ Roadmap
 12. Front-end: update day (add chore).
 13. Front-end: update day (day.notes).
 14. Front-end: update day (chore.notes).
+
+Roadmap (big picture)
+1. Day CRUD.
+2. Reliable hosting solution.
+3. Mobile friendliness.
+4. Statistics: day.
+5. Statistics: daily.
+6. Statistics: aggregate.
+7. Task CRUD.
+8. Category CRUD.
+9. Polishing.
