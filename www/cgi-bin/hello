@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env lua5.1
 
 print("Status: 200 OK")
+print("Content-length: 5")
 print("Content-Type: application/json;charset=utf-8\n")
 print("Hello")
