@@ -21,7 +21,7 @@ entity Task {
     * Schedule_Period
     * Schedule_Weekdays
     * Tier
-    * Order
+    * Order_Priority
     * Points
     * Color
 }
