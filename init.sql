@@ -81,3 +81,8 @@ INSERT INTO task_schedule (task_name, start_date, period, weekdays) VALUES (
 	1,
 	127
 );
+
+CREATE TABLE IF NOT EXISTS day (
+	id TEXT PRIMARY KEY,
+	notes TEXT
+);

@@ -43,7 +43,6 @@ entity Chore {
 
 entity Day {
     * ID <<PK>>
-    * Vacation
     * Notes
     * Points <<Generated>>
     * Percetage <<Generated>>
