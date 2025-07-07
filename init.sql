@@ -1,13 +1,14 @@
 PRAGMA foreign_keys = ON;
 
+-- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
+
 CREATE TABLE IF NOT EXISTS category (
 	name TEXT PRIMARY KEY,
 	description TEXT NOT NULL UNIQUE,
-	motivation TEXT NOT NULL UNIQUE,
+	motivation TEXT NOT NULL UNIQUE, -- always focus on the positives only
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF)
 ) WITHOUT ROWID;
 
--- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
 INSERT INTO category (name, description, motivation, color) VALUES (
 	"Image (internal)",
 	"One's immediate appearance and behavior",
@@ -35,33 +36,120 @@ INSERT INTO category (name, description, motivation, color) VALUES (
 
 -- TODO: ensure no gaps between order_priority entries
 -- TODO: consider sub-tasks
+-- TODO: add color when needed
 CREATE TABLE IF NOT EXISTS task (
 	name TEXT PRIMARY KEY,
 	category_name TEXT NOT NULL,
 	description TEXT NOT NULL UNIQUE,
-	motivation TEXT NOT NULL UNIQUE,
+	motivation TEXT NOT NULL, -- always focus on the positives only
 	tier INTEGER NOT NULL CHECK(tier > 0),
 	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
 	points INTEGER NOT NULL CHECK(points > 0),
-	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 and color <= 0xFFFFFF),
 	FOREIGN KEY (category_name) REFERENCES category (name)
 ) WITHOUT ROWID;
 
-INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points, color) VALUES (
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Wake early",
 	"Image (internal)",
 	"Rise from bed at 08:00 or earlier",
-	"No more embarrassment of being late at work."                                  || char(10) ||
-	"No more skipping morning chores and feeling bad afterwards."                   || char(10) ||
-	"No more being stressed and in a hurry in the morning."                         || char(10) ||
-	"Ability to relax, focus and have time for oneself before diving into the day." || char(10) ||
-	"Margin for error in case of unexpected events."                                || char(10) ||
+	"Ability to take a thorough and laid-back approach to morning chores."          || char(10) ||
+	"Ability to relax and focus on oneself before diving into the day."             || char(10) ||
+	"Always having a margin for error in case of unexpected events."                || char(10) ||
 	"More useful (daylight, stores still open) time available during the day."      || char(10) ||
 	"Good external image and work ethic.",
 	1,
 	1,
+	10
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Shower",
+	"Image (internal)",
+	"Regularly shower",
+	"Always stay fresh and clean.",
+	1,
+	2,
+	10
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Hair care",
+	"Image (internal)",
+	"Regularly wash hair. Visit barber if deemed necessary. Apply products if deemed necessary.",
+	"Looks. Style. Discipline & order.",
+	1,
+	3,
+	6
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Dental care (after sleep)",
+	"Image (internal)",
+	"Regularly brush teeth and wash mouth after sleep",
+	"Looks. Smell. Health. Money.",
+	1,
+	4,
+	2
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Shave face",
+	"Image (internal)",
+	"Regularly cleanly shave facial hair.",
+	"Looks. Style. Discipline & order.",
+	1,
+	5,
+	4
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Clip nails",
+	"Image (internal)",
+	"Regularly check and (if deemed necessary) clip and file fingernails and toenails.",
+	"Looks. Style. Discipline & order.",
+	1,
+	6,
+	1
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Clean home",
+	"Image (external)",
+	"Clean apartment either until the looks or the amount of time and effort spent is deemed sufficient.",
+	"Clean and orderly environment, facilitating good mood and high productivity.",
+	1,
+	7,
+	4
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Workout: push",
+	"Bodybuilding",
+	"Full bodybuilding pushing workout.",
+	"Looks. Health. Performance.",
+	1,
+	8,
+	30
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Workout: pull",
+	"Bodybuilding",
+	"Full bodybuilding pulling workout.",
+	"Looks. Health. Performance.",
+	1,
+	9,
+	30
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Workout: legs",
+	"Bodybuilding",
+	"Full bodybuilding leg workout.",
+	"Looks. Health. Performance.",
+	1,
 	10,
-	0x0000FF
+	30
 );
 
 -- TODO: check against time overlaps for the same task_id

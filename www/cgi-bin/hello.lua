@@ -10,7 +10,7 @@ if content_length == nil then
 	content_length = 0
 end
 
-local payload = "{}"
+local payload = "null"
 if content_length > 0 then
 	payload = io.read(content_length) -- TODO: expect read errors
 end
