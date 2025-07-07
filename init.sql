@@ -24,6 +24,13 @@ INSERT INTO category (name, description, motivation, color) VALUES (
 	0x000080
 );
 
+INSERT INTO category (name, description, motivation, color) VALUES (
+	"Bodybuilding",
+	"Building a better body",
+	"Looks. Health. Strength. Endurance.",
+	0xFF0000
+);
+
 CREATE TABLE IF NOT EXISTS task (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL UNIQUE,
