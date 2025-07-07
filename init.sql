@@ -70,9 +70,16 @@ CREATE TABLE IF NOT EXISTS task_schedule (
 	start_date TEXT NOT NULL, -- ISO-8601, YYYY-MM-DD
 	end_date TEXT, -- ISO-8601, YYYY-MM-DD
 	period INTEGER NOT NULL CHECK(period >= 1 AND period < 7), -- anything less frequent is not worthy to be a rule
-	weekdays INTEGER NOT NULL CHECK(weekdays >= 0 AND weekdays <= 127), -- 7-bit integer, LSB is Monday, MSB is Sunday,
+	weekdays INTEGER NOT NULL CHECK(weekdays >= 0 AND weekdays <= 127), -- 7-bit integer, LSB is Monday, MSB is Sunday; NULL means all weekdays
 	notes TEXT,
 	FOREIGN KEY (task_name) REFERENCES task (name)
+);
+
+INSERT INTO task_schedule (task_name, start_date, period, weekdays) VALUES (
+	"Wake early",
+	"2025-07-07",
+	1,
+	127
 );
 
 -- TODO 2: shower
