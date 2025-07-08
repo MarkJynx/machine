@@ -22,13 +22,12 @@ CREATE TABLE IF NOT EXISTS rule (
 	FOREIGN KEY (rule_importance_label) REFERENCES rule_importance (label)
 ) WITHOUT ROWID;
 
--- TODO: check against time overlaps for the same rule_id
--- TODO: enforce YYYY-MM-DD format where applicable
+-- TODO: check against time overlaps for the same rule_name
 CREATE TABLE IF NOT EXISTS rule_schedule (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	rule_name INTEGER NOT NULL,
-	start_date TEXT NOT NULL, -- ISO-8601, YYYY-MM-DD
-	end_date TEXT, -- ISO-8601, YYYY-MM-DD
+	start_date TEXT NOT NULL CHECK(start_date IS date(start_date, "+0 days")), -- ISO-8601, YYYY-MM-DD
+	end_date TEXT CHECK(end_date IS date(end_date, "+0 days")), -- ISO-8601, YYYY-MM-DD
 	period INTEGER NOT NULL CHECK(period >= 1 AND period < 7), -- anything less frequent is not worthy to be a rule
 	weekdays INTEGER NOT NULL CHECK(weekdays >= 0 AND weekdays <= 127), -- 7-bit integer, LSB is Monday, MSB is Sunday; NULL means all weekdays
 	notes TEXT,
@@ -305,25 +304,3 @@ INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 	1,
 	127
 );
-
--- 	"Early rise",
--- 	"Nail care",
--- 	"Home cleaning",
--- 	"Shower",
--- 	"Hair care",
--- 	"Face shave",
--- 	"Face care",
--- 	"Dental care (after sleep)",
--- 	"Fresh clothes",
--- 	"Productivity",
--- 	"Car care",
--- 	"Workout: push",
--- 	"Workout: pull",
--- 	"Workout: legs",
--- 	"Workout: cardio",
--- 	"Cooking",
--- 	"Laundry",
--- 	"Body care",
--- 	"Dental care (before sleep)",
--- 	"Homemade food",
--- 	"Diet",
