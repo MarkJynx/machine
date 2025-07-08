@@ -109,53 +109,13 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Shower",
-	"Image (internal)",
-	"Very important",
-	"Shower",
-	"Feeling fresh and clean.",
-	1,
-	2
-);
-
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Hair care",
-	"Image (internal)",
-	"Important",
-	"Wash hair. Visit barber if deemed necessary. Apply products if deemed necessary.",
-	"Looks. Style. Discipline & order.",
-	1,
-	3
-);
-
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Dental care (after sleep)",
-	"Image (internal)",
-	"Slightly important",
-	"Brush teeth and wash mouth after sleep",
-	"Looks. Smell. Health. Money.",
-	1,
-	4
-);
-
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Face shave",
-	"Image (internal)",
-	"Important",
-	"Cleanly shave facial hair.",
-	"Looks. Style. Discipline & order.",
-	1,
-	5
-);
-
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Nail care",
 	"Image (internal)",
 	"Slightly important",
 	"Check and clip and file fingernails and toenails.",
 	"Looks. Style. Discipline & order.",
 	1,
-	6
+	2
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -165,7 +125,83 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Clean home until results or effort spent is satisfactory.",
 	"Mood. Productivity. Image.",
 	1,
+	3
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Shower",
+	"Image (internal)",
+	"Very important",
+	"Shower",
+	"Feeling fresh and clean.",
+	1,
+	4
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Hair care",
+	"Image (internal)",
+	"Important",
+	"Wash hair. Visit barber if deemed necessary. Apply products if deemed necessary.",
+	"Looks. Style. Discipline & order.",
+	1,
+	5
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Face shave",
+	"Image (internal)",
+	"Important",
+	"Cleanly shave facial hair.",
+	"Looks. Style. Discipline & order.",
+	1,
+	6
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Face care",
+	"Image (internal)",
+	"Wash and moisturize face.",
+	"", -- TODO: motivation,
+	2,
 	7
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Dental care (after sleep)",
+	"Image (internal)",
+	"Slightly important",
+	"Brush teeth and wash mouth after sleep",
+	"Looks. Smell. Health. Money.",
+	1,
+	8
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Fresh clothes",
+	"Image (internal)",
+	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
+	"", -- TODO: motivation,
+	2,
+	9
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Productivity",
+	"Image (external)",
+	"Be productive at work.",
+	"", -- TODO: motivation,
+	2,
+	10
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Car care",
+	"Image (external)",
+	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
+	"", -- TODO: motivation,
+	2,
+	11
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -175,7 +211,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Full bodybuilding pushing workout.",
 	"Looks. Confidence. Health. Performance.",
 	1,
-	8
+	12
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -185,7 +221,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Full bodybuilding pulling workout.",
 	"Looks. Confidence. Health. Performance.",
 	1,
-	9
+	13
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -195,7 +231,70 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Full bodybuilding leg workout.",
 	"Looks. Confidence. Health. Performance.",
 	1,
-	10
+	14
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Workout: cardio",
+	"Bodybuilding",
+	"At least an hour of zone two or more intense cardio.",
+	"", -- TODO: motivation,
+	2,
+	15
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Cooking",
+	"Image (external)",
+	"Meal-prep for the upcoming days, weeks or even months.",
+	"", -- TODO: motivation,
+	2,
+	16
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Laundry",
+	"Image (external)",
+	"Do laundry.",
+	"", -- TODO: motivation,
+	2,
+	17
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Body care",
+	"Image (internal)",
+	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary.",
+	"", -- TODO: motivation,
+	2,
+	18
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Dental care (before sleep)",
+	"Image (internal)",
+	"Brush teeth and wash mouth before sleep",
+	"", -- TODO: motivation,
+	2,
+	19
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Homemade food",
+	"Image (external)",
+	"Eat only homemade food throughout the day.",
+	"", -- TODO: motivation,
+	2,
+	20
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Diet",
+	"Bodybuilding",
+	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
+	"", -- TODO: motivation,
+	2,
+	21
 );
 
 INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
@@ -226,113 +325,3 @@ INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 -- 	"Dental care (before sleep)",
 -- 	"Homemade food",
 -- 	"Diet",
-
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Face care",
--- 	"Image (internal)",
--- 	"Wash and moisturize face.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	100, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Dental care (before sleep)",
--- 	"Image (internal)",
--- 	"Brush teeth and wash mouth before sleep",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	101, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Body care",
--- 	"Image (internal)",
--- 	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	102, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Fresh clothes",
--- 	"Image (internal)",
--- 	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	103, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Homemade food",
--- 	"Image (external)",
--- 	"Eat only homemade food throughout the day.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	104, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Laundry",
--- 	"Image (external)",
--- 	"Do laundry.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	105, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Car care",
--- 	"Image (external)",
--- 	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	106, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Cooking",
--- 	"Image (external)",
--- 	"Meal-prep for the upcoming days, weeks or even months.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	107, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Productivity",
--- 	"Image (external)",
--- 	"Be productive at work.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	108, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Diet",
--- 	"Bodybuilding",
--- 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	109, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
--- 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Workout: cardio",
--- 	"Bodybuilding",
--- 	"At least an hour of zone two or more intense cardio.",
--- 	"", -- TODO: motivation,
--- 	2,
--- 	110, -- TODO: order_priority,
--- 	1 -- TODO: points
--- );
