@@ -35,12 +35,8 @@ Roadmap (small tasks)
 3. Deploy.
 
 Roadmap (big picture)
-1. Day CRUD.
-2. Reliable hosting solution.
-3. Mobile friendliness.
-4. Statistics: day.
-5. Statistics: daily.
-6. Statistics: aggregate.
-7. Task CRUD.
-8. Category CRUD.
-9. Polishing.
+1. CRUD day & chores (back-end, front-end).
+2. Statistics (day, daily, aggregate).
+3. CRUD task_schedule (back-end, front-end).
+4. CRUD category, task (remove init.sql).
+5. Documentation, style, philosophy, style.

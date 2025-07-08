@@ -245,7 +245,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 -- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 -- 	"Diet",
 -- 	"Bodybuilding",
--- 	"Maintain a proper diet appropriate to current bodybuilding phase throughout the day.",
+-- 	"Maintain a proper diet appropriate to current bodybuilding phase throughout the day. Consistently track bodyweight.",
 -- 	-- TODO: motivation,
 -- 	2,
 -- 	-- TODO: order_priority,
