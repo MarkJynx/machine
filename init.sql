@@ -90,7 +90,7 @@ INSERT INTO rule_category (name, description, motivation, color) VALUES (
 INSERT INTO rule_category (name, description, motivation, color) VALUES (
 	"Bodybuilding",
 	"Building a better body",
-	"Looks. Health. Strength. Endurance.",
+	"Looks. Confidence. Health. Performance. Endurance.",
 	0xFF0000
 );
 
@@ -162,7 +162,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Face care",
 	"Image (internal)",
 	"Wash and moisturize face.",
-	"", -- TODO: motivation,
+	"Clear, healthy face skin.",
 	2,
 	7
 );
@@ -181,7 +181,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Fresh clothes",
 	"Image (internal)",
 	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
-	"", -- TODO: motivation,
+	"Looks. Freshness. Confidence. Image.",
 	2,
 	9
 );
@@ -190,7 +190,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Productivity",
 	"Image (external)",
 	"Be productive at work.",
-	"", -- TODO: motivation,
+	"Security. Discipline. Competence.",
 	2,
 	10
 );
@@ -199,7 +199,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Car care",
 	"Image (external)",
 	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
-	"", -- TODO: motivation,
+	"Clean, orderly vehicle. Image.",
 	2,
 	11
 );
@@ -238,7 +238,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Workout: cardio",
 	"Bodybuilding",
 	"At least an hour of zone two or more intense cardio.",
-	"", -- TODO: motivation,
+	"Confidence. Health. Endurance.",
 	2,
 	15
 );
@@ -247,16 +247,17 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Cooking",
 	"Image (external)",
 	"Meal-prep for the upcoming days, weeks or even months.",
-	"", -- TODO: motivation,
+	"Facilitating homemade food and diet. Independence. Money. Image. Experimentation. Discovery.",
 	2,
 	16
 );
 
+-- TODO: perhaps should be merged with fresh clothes; one cannot exist without the other.
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Laundry",
 	"Image (external)",
 	"Do laundry.",
-	"", -- TODO: motivation,
+	"Facilitating fresh clothes. Independence. Image.",
 	2,
 	17
 );
@@ -264,7 +265,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Body care",
 	"Image (internal)",
-	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary.",
+	"Shave body. Trim nose hair. Apply products.",
 	"", -- TODO: motivation,
 	2,
 	18
@@ -274,16 +275,17 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Dental care (before sleep)",
 	"Image (internal)",
 	"Brush teeth and wash mouth before sleep",
-	"", -- TODO: motivation,
+	"Looks. Smell. Health. Money.",
 	2,
 	19
 );
 
+-- TODO: perhaps should be merged with cooking; one cannot exist without the other.
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Homemade food",
 	"Image (external)",
 	"Eat only homemade food throughout the day.",
-	"", -- TODO: motivation,
+	"Health. Image. Diet. Control.",
 	2,
 	20
 );
@@ -292,14 +294,14 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Diet",
 	"Bodybuilding",
 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
-	"", -- TODO: motivation,
+	"Achieve bodybuilding goals.",
 	2,
 	21
 );
 
 INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 	"Early rise",
-	"2025-07-07", -- TODO: adjust
+	"2025-07-14",
 	1,
 	127
 );
