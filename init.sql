@@ -62,11 +62,12 @@ CREATE TABLE IF NOT EXISTS rule_instance (
 
 -- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
 
--- Four value Likert scale enumeration in regards to importance
-INSERT INTO rule_importance (label, value) VALUES ( "Absolutely essential", 27);
-INSERT INTO rule_importance (label, value) VALUES ( "Very important", 9);
-INSERT INTO rule_importance (label, value) VALUES ( "Important", 3);
-INSERT INTO rule_importance (label, value) VALUES ( "Slightly important", 1);
+-- Five value Likert scale enumeration in regards to importance
+INSERT INTO rule_importance (label, value) VALUES ( "Absolutely essential", 16);
+INSERT INTO rule_importance (label, value) VALUES ( "Extremely important",   8);
+INSERT INTO rule_importance (label, value) VALUES ( "Very important",        4);
+INSERT INTO rule_importance (label, value) VALUES ( "Important",             2);
+INSERT INTO rule_importance (label, value) VALUES ( "Slightly important",    1);
 
 INSERT INTO rule_category (name, description, motivation, color) VALUES (
 	"Image (internal)",
@@ -96,7 +97,7 @@ INSERT INTO rule_category (name, description, motivation, color) VALUES (
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Early rise",
 	"Image (internal)",
-	"Very important",
+	"Extremely important",
 	"Rise from bed at 08:00 or earlier",
 	"Ability to take a thorough and laid-back approach to morning chores."          || char(10) ||
 	"Ability to relax and focus on oneself before diving into the day."             || char(10) ||
@@ -110,7 +111,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Nail care",
 	"Image (internal)",
-	"Slightly important",
+	"Important",
 	"Check and clip and file fingernails and toenails.",
 	"Looks. Style. Discipline & order.",
 	1,
@@ -120,7 +121,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Home cleaning",
 	"Image (external)",
-	"Important",
+	"Very important",
 	"Clean home until results or effort spent is satisfactory.",
 	"Mood. Productivity. Image.",
 	1,
@@ -130,7 +131,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Shower",
 	"Image (internal)",
-	"Very important",
+	"Extremely important",
 	"Shower",
 	"Feeling fresh and clean.",
 	1,
@@ -140,7 +141,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Hair care",
 	"Image (internal)",
-	"Important",
+	"Very important",
 	"Wash hair. Visit barber if deemed necessary. Apply products if deemed necessary.",
 	"Looks. Style. Discipline & order.",
 	1,
@@ -150,7 +151,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Face shave",
 	"Image (internal)",
-	"Important",
+	"Very important",
 	"Cleanly shave facial hair.",
 	"Looks. Style. Discipline & order.",
 	1,
@@ -160,7 +161,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Face care",
 	"Image (internal)",
-	"Slightly important",
+	"Important",
 	"Wash and moisturize face.",
 	"Clear, healthy face skin.",
 	2,
@@ -170,7 +171,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Dental care (after sleep)",
 	"Image (internal)",
-	"Slightly important",
+	"Important",
 	"Brush teeth and wash mouth after sleep",
 	"Looks. Smell. Health. Money.",
 	1,
@@ -240,7 +241,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Workout: cardio",
 	"Bodybuilding",
-	"Very important",
+	"Extremely important",
 	"At least an hour of zone two or more intense cardio.",
 	"Confidence. Health. Endurance.",
 	2,
@@ -281,7 +282,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Dental care (before sleep)",
 	"Image (internal)",
-	"Slightly important",
+	"Important",
 	"Brush teeth and wash mouth before sleep",
 	"Looks. Smell. Health. Money.",
 	2,
@@ -302,7 +303,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Diet",
 	"Bodybuilding",
-	"Very important",
+	"Extremely important",
 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
 	"Achieve bodybuilding goals.",
 	2,
