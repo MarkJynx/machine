@@ -95,7 +95,7 @@ INSERT INTO rule_category (name, description, motivation, color) VALUES (
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Waking early",
+	"Early rise",
 	"Image (internal)",
 	"Very important",
 	"Rise from bed at 08:00 or earlier",
@@ -139,7 +139,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Face shaving",
+	"Face shave",
 	"Image (internal)",
 	"Important",
 	"Cleanly shave facial hair.",
@@ -149,20 +149,20 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Clip nails",
+	"Nail care",
 	"Image (internal)",
 	"Slightly important",
-	"Check and (if deemed necessary) clip and file fingernails and toenails.",
+	"Check and clip and file fingernails and toenails.",
 	"Looks. Style. Discipline & order.",
 	1,
 	6
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Clean home",
+	"Home cleaning",
 	"Image (external)",
 	"Important",
-	"Clean apartment either until the looks or the amount of time and effort spent is deemed sufficient.",
+	"Clean home until results or effort spent is satisfactory.",
 	"Mood. Productivity. Image.",
 	1,
 	7
@@ -199,22 +199,33 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 );
 
 INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
-	"Waking early",
+	"Early rise",
 	"2025-07-07", -- TODO: adjust
 	1,
 	127
 );
 
--- 	"Waking early",
--- 	"Clip nails",
--- 	"Clean home",
+-- 	"Early rise",
+-- 	"Nail care",
+-- 	"Home cleaning",
 -- 	"Shower",
 -- 	"Hair care",
--- 	"Face shaving",
+-- 	"Face shave",
+-- 	"Face care",
 -- 	"Dental care (after sleep)",
+-- 	"Fresh clothes",
+-- 	"Productivity",
+-- 	"Car care",
 -- 	"Workout: push",
 -- 	"Workout: pull",
 -- 	"Workout: legs",
+-- 	"Workout: cardio",
+-- 	"Cooking",
+-- 	"Laundry",
+-- 	"Body care",
+-- 	"Dental care (before sleep)",
+-- 	"Homemade food",
+-- 	"Diet",
 
 -- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 -- 	"Face care",
@@ -317,7 +328,7 @@ INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 -- );
 -- 
 -- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
--- 	"Cardio",
+-- 	"Workout: cardio",
 -- 	"Bodybuilding",
 -- 	"At least an hour of zone two or more intense cardio.",
 -- 	"", -- TODO: motivation,
