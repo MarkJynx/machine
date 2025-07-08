@@ -1,18 +1,38 @@
 Roadmap (small tasks)
-1. Back-end: read day.
-2. Back-end: create day.
-3. Back-end: delete day.
-4. Back-end: update day.
-5. Front-end: read day.
-6. Front-end: navigate days.
-7. Front-end: create day.
-8. Front-end: update day (chore.done).
-9. Front-end: delete day.
-10. Front-end: update day (chore.order_priority).
-11. Front-end: update day (delete chore).
-12. Front-end: update day (add chore).
-13. Front-end: update day (day.notes).
-14. Front-end: update day (chore.notes).
+1. Back-end.
+1. 1. Back-end: read day.
+1. 1. 1. Change front-end invocation and content-type.
+1. 1. 2. Parse, validate, error-handle, test invocation TEXT.
+1. 1. 3. Touch test.sql. Create an example day in the database.
+1. 1. 4. Return JSON (dictionary or null). Test it.
+1. 2. Back-end: delete day.
+1. 2. 1. Proper CGI end-points.
+1. 2. 2. Parse request.
+1. 2. 3. Execute queries.
+1. 2. 4. Produce response.
+1. 3. Back-end: update day.
+1. 3. 1. Parse request.
+1. 3. 2. Execute query.
+1. 3. 3. Produce response.
+1. 4. Back-end: create day.
+1. 4. 1. Parse request.
+1. 4. 2. Check day availability.
+1. 4. 3. Check chore applicability (in regards to task schedule).
+1. 4. 4. Check chore applicability (in regards to previous chores).
+1. 4. 5. Produce day chores.
+1. 4. 6. Produce response.
+2. Front-end.
+2. 1. Front-end: read day.
+2. 2. Front-end: navigate days.
+2. 3. Front-end: create day.
+2. 4. Front-end: update day (chore.done).
+2. 5. Front-end: delete day.
+2. 6. Front-end: update day (chore.order_priority).
+2. 7. Front-end: update day (delete chore).
+2. 8. Front-end: update day (add chore).
+2. 9. Front-end: update day (day.notes).
+2. 10. Front-end: update day (chore.notes).
+3. Deploy.
 
 Roadmap (big picture)
 1. Day CRUD.
