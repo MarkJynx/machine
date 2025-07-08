@@ -266,7 +266,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Body care",
 	"Image (internal)",
 	"Shave body. Trim nose hair. Apply products.",
-	"", -- TODO: motivation,
+	"Looks. Sex. Image.",
 	2,
 	18
 );
