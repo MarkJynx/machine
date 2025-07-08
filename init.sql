@@ -205,6 +205,17 @@ INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 	127
 );
 
+-- 	"Waking early",
+-- 	"Clip nails",
+-- 	"Clean home",
+-- 	"Shower",
+-- 	"Hair care",
+-- 	"Face shaving",
+-- 	"Dental care (after sleep)",
+-- 	"Workout: push",
+-- 	"Workout: pull",
+-- 	"Workout: legs",
+
 -- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 -- 	"Face care",
 -- 	"Image (internal)",
