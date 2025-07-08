@@ -4,27 +4,27 @@ skinparam linetype ortho
 hide circle
 hide empty members
 
-entity Category {
+entity RuleCategory {
     * Name <<PK>>
     * Description
     * Motivation
     * Color
 }
 
-entity Task {
+entity Rule {
     * Name <<PK>>
-    * CategoryName <<FK>>
+    * RuleCategoryName <<FK>>
+    * RuleImportanceLabel <<FK>>
     * Description
     * Motivation
     * Tier
     * OrderPriority
-    * TaskImportanceLabel <<FK>>
     * Color
 }
 
-entity TaskSchedule {
+entity RuleSchedule {
     * ID <<PK>>
-    * TaskName <<FK>
+    * RuleName <<FK>
     * StartDate
     * StopDate
     * Period
@@ -32,14 +32,14 @@ entity TaskSchedule {
     * Notes
 }
 
-entity TaskImportance {
+entity RuleImportance {
     * Label <<PK>>
-    * Points
+    * Value
 }
 
-entity Chore {
+entity RuleInstance {
     * ID <<PK>>
-    * TaskName <<FK>>
+    * RuleName <<FK>>
     * DayID <<FK>>
     * Done
     * OrderPriority
@@ -53,9 +53,10 @@ entity Day {
     * Percentage <<Generated>>
 }
 
-Day --o{ Chore
-Task --o{ Chore
-Category --o{ Task
-Task --o{ TaskSchedule
+Day --o{ RuleInstance
+Rule --o{ RuleInstance
+RuleCategory --o{ Rule
+Rule --o{ RuleSchedule
+RuleImportance --o{ Rule
 
 @enduml
