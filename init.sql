@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS rule_category (
 	name TEXT PRIMARY KEY,
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE, -- always focus on the positives only
-	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF)
+	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF) -- TODO: use enumeration table
 ) WITHOUT ROWID;
 
 -- TODO: ensure no gaps between order_priority entries
@@ -63,12 +63,11 @@ CREATE TABLE IF NOT EXISTS rule_instance (
 
 -- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
 
--- Likert scale enumeration in regards to importance
-INSERT INTO rule_importance (label, value) VALUES ( "Absolutely essential", 30);
-INSERT INTO rule_importance (label, value) VALUES ( "Very important", 10);
-INSERT INTO rule_importance (label, value) VALUES ( "Important", 5);
-INSERT INTO rule_importance (label, value) VALUES ( "Slightly important", 3);
-INSERT INTO rule_importance (label, value) VALUES ( "Not important", 1);
+-- Four value Likert scale enumeration in regards to importance
+INSERT INTO rule_importance (label, value) VALUES ( "Absolutely essential", 27);
+INSERT INTO rule_importance (label, value) VALUES ( "Very important", 9);
+INSERT INTO rule_importance (label, value) VALUES ( "Important", 3);
+INSERT INTO rule_importance (label, value) VALUES ( "Slightly important", 1);
 
 INSERT INTO rule_category (name, description, motivation, color) VALUES (
 	"Image (internal)",
