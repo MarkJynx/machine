@@ -54,8 +54,8 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"Rise from bed at 08:00 or earlier",
 	"Ability to take a thorough and laid-back approach to morning chores."          || char(10) ||
 	"Ability to relax and focus on oneself before diving into the day."             || char(10) ||
-	"Always having a margin for error in case of unexpected events."                || char(10) ||
-	"More useful (daylight, stores still open) time available during the day."      || char(10) ||
+	"Margin for error in case of unexpected events."                                || char(10) ||
+	"More useful time available during the day."                                    || char(10) ||
 	"Good external image and work ethic.",
 	1,
 	1,
@@ -66,7 +66,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"Shower",
 	"Image (internal)",
 	"Shower",
-	"Always stay fresh and clean.",
+	"Feeling fresh and clean.",
 	1,
 	2,
 	10
@@ -116,7 +116,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"Clean home",
 	"Image (external)",
 	"Clean apartment either until the looks or the amount of time and effort spent is deemed sufficient.",
-	"Clean and orderly environment, facilitating good mood and high productivity.",
+	"Mood. Productivity. Image.",
 	1,
 	7,
 	4
@@ -126,7 +126,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"Workout: push",
 	"Bodybuilding",
 	"Full bodybuilding pushing workout.",
-	"Looks. Health. Performance.",
+	"Looks. Confidence. Health. Performance.",
 	1,
 	8,
 	30
@@ -136,7 +136,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"Workout: pull",
 	"Bodybuilding",
 	"Full bodybuilding pulling workout.",
-	"Looks. Health. Performance.",
+	"Looks. Confidence. Health. Performance.",
 	1,
 	9,
 	30
@@ -146,121 +146,121 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"Workout: legs",
 	"Bodybuilding",
 	"Full bodybuilding leg workout.",
-	"Looks. Health. Performance.",
+	"Looks. Confidence. Health. Performance.",
 	1,
 	10,
 	30
 );
 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Face care",
--- 	"Image (internal)",
--- 	"Wash and moisturize face."
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Dental care (before sleep)",
--- 	"Image (internal)",
--- 	"Brush teeth and wash mouth after sleep",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Body care",
--- 	"Image (internal)",
--- 	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary."
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Fresh clothes",
--- 	"Image (internal)",
--- 	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume."
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Homemade food",
--- 	"Image (external)",
--- 	"Eat only homemade food throughout the day."
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Laundry",
--- 	"Image (external)",
--- 	"Do laundry.",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Car care",
--- 	"Image (external)",
--- 	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Cooking",
--- 	"Image (external)",
--- 	"Meal-prep for the upcoming days, weeks or even months.",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Productivity",
--- 	"Image (external)",
--- 	"Be productive at work.",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Diet",
--- 	"Bodybuilding",
--- 	"Maintain a proper diet appropriate to current bodybuilding phase throughout the day. Consistently track bodyweight.",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
--- 
--- INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
--- 	"Cardio",
--- 	"Bodybuilding",
--- 	"At least an hour of at least zone two cardio.",
--- 	-- TODO: motivation,
--- 	2,
--- 	-- TODO: order_priority,
--- 	-- TODO: points
--- );
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Face care",
+	"Image (internal)",
+	"Wash and moisturize face."
+	"", -- TODO: motivation,
+	2,
+	100, -- TODO: order_priority,
+	1 -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Dental care (before sleep)",
+	"Image (internal)",
+	"Brush teeth and wash mouth after sleep",
+	"", -- TODO: motivation,
+	2,
+	101, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Body care",
+	"Image (internal)",
+	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary."
+	"", -- TODO: motivation,
+	2,
+	102, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Fresh clothes",
+	"Image (internal)",
+	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume."
+	"", -- TODO: motivation,
+	2,
+	103, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Homemade food",
+	"Image (external)",
+	"Eat only homemade food throughout the day."
+	"", -- TODO: motivation,
+	2,
+	104, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Laundry",
+	"Image (external)",
+	"Do laundry.",
+	"", -- TODO: motivation,
+	2,
+	105, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Car care",
+	"Image (external)",
+	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
+	"", -- TODO: motivation,
+	2,
+	106, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Cooking",
+	"Image (external)",
+	"Meal-prep for the upcoming days, weeks or even months.",
+	"", -- TODO: motivation,
+	2,
+	107, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Productivity",
+	"Image (external)",
+	"Be productive at work.",
+	"", -- TODO: motivation,
+	2,
+	108, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Diet",
+	"Bodybuilding",
+	"Maintain a proper diet appropriate to current bodybuilding phase throughout the day. Consistently track bodyweight.",
+	"", -- TODO: motivation,
+	2,
+	109, -- TODO: order_priority,
+	1, -- TODO: points
+);
+
+INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
+	"Cardio",
+	"Bodybuilding",
+	"At least an hour of at least zone two cardio.",
+	"", -- TODO: motivation,
+	2,
+	110, -- TODO: order_priority,
+	1, -- TODO: points
+);
 
 -- TODO: check against time overlaps for the same task_id
 -- TODO: enforce YYYY-MM-DD format where applicable
