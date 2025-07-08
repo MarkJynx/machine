@@ -155,7 +155,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Face care",
 	"Image (internal)",
-	"Wash and moisturize face."
+	"Wash and moisturize face.",
 	"", -- TODO: motivation,
 	2,
 	100, -- TODO: order_priority,
@@ -165,41 +165,41 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Dental care (before sleep)",
 	"Image (internal)",
-	"Brush teeth and wash mouth after sleep",
+	"Brush teeth and wash mouth before sleep",
 	"", -- TODO: motivation,
 	2,
 	101, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Body care",
 	"Image (internal)",
-	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary."
+	"Shave body. Trim nose hair if deemed necessary. Apply products if deemed necessary.",
 	"", -- TODO: motivation,
 	2,
 	102, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Fresh clothes",
 	"Image (internal)",
-	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume."
+	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
 	"", -- TODO: motivation,
 	2,
 	103, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Homemade food",
 	"Image (external)",
-	"Eat only homemade food throughout the day."
+	"Eat only homemade food throughout the day.",
 	"", -- TODO: motivation,
 	2,
 	104, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
@@ -209,7 +209,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"", -- TODO: motivation,
 	2,
 	105, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
@@ -219,7 +219,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"", -- TODO: motivation,
 	2,
 	106, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
@@ -229,7 +229,7 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"", -- TODO: motivation,
 	2,
 	107, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
@@ -239,27 +239,27 @@ INSERT INTO task (name, category_name, description, motivation, tier, order_prio
 	"", -- TODO: motivation,
 	2,
 	108, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Diet",
 	"Bodybuilding",
-	"Maintain a proper diet appropriate to current bodybuilding phase throughout the day. Consistently track bodyweight.",
+	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
 	"", -- TODO: motivation,
 	2,
 	109, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 INSERT INTO task (name, category_name, description, motivation, tier, order_priority, points) VALUES (
 	"Cardio",
 	"Bodybuilding",
-	"At least an hour of at least zone two cardio.",
+	"At least an hour of zone two or more intense cardio.",
 	"", -- TODO: motivation,
 	2,
 	110, -- TODO: order_priority,
-	1, -- TODO: points
+	1 -- TODO: points
 );
 
 -- TODO: check against time overlaps for the same task_id
@@ -277,7 +277,7 @@ CREATE TABLE IF NOT EXISTS task_schedule (
 
 INSERT INTO task_schedule (task_name, start_date, period, weekdays) VALUES (
 	"Waking early",
-	"2025-07-07",
+	"2025-07-07", -- TODO: adjust
 	1,
 	127
 );
