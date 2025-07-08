@@ -38,7 +38,12 @@ Roadmap (big picture)
 1. CRUD day & chores (back-end, front-end).
 2. Statistics (day, daily, aggregate).
 3. CRUD task_schedule (back-end, front-end).
-4. CRUD category, task (remove init.sql).
+4. CRUD category, task, task_importance (remove init.sql).
 5. Style (CSS). Better mobile integration.
 6. Documentation. Testing.
 7. Philosophy.
+8. Achievements.
+
+Quality:
+1. Use modern Lua.
+2. Use proper naming in SQL.

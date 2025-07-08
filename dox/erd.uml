@@ -18,7 +18,7 @@ entity Task {
     * Motivation
     * Tier
     * OrderPriority
-    * Points
+    * TaskImportanceLabel <<FK>>
     * Color
 }
 
@@ -30,6 +30,11 @@ entity TaskSchedule {
     * Period
     * Weekdays
     * Notes
+}
+
+entity TaskImportance {
+    * Label <<PK>>
+    * Points
 }
 
 entity Chore {
@@ -48,9 +53,9 @@ entity Day {
     * Percentage <<Generated>>
 }
 
-Chore }o-- Day
-Chore }o-- Task
-Task }o-- Category
-TaskSchedule }o-- Task
+Day --o{ Chore
+Task --o{ Chore
+Category --o{ Task
+Task --o{ TaskSchedule
 
 @enduml
