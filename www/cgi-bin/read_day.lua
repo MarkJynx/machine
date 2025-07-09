@@ -38,9 +38,40 @@ local day_exists = function(db, id)
 	return false
 end
 
-local extract_day = function(db, id)
-	return nil
 	-- TODO: 1/2
+local extract_day = function(db, id)
+	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
+	local result = db:execute(query)
+	if not result then
+		return nil
+	end
+
+	local row = result:fetch({}, "a")
+	while row do
+--		for k, v in pairs(row) do
+--			io.stderr:write(tostring(k) .. "," .. tostring(v) .. "\n")
+--		end
+		io.stderr:write("ID: " .. row.id .. ", notes: " .. tostring(row.notes) .. "\n")
+		row = result:fetch(row, "a")
+	end
+	io.stderr:write("=====================================================================\n")
+
+	local query = "SELECT * FROM rule_instance WHERE day_id = '" .. id .. "'"
+	local result = db:execute(query)
+	if not result then
+		return nil
+	end
+
+	local row = result:fetch({}, "a")
+	while row do
+		for k, v in pairs(row) do
+			io.stderr:write(tostring(k) .. "," .. tostring(v) .. "\n")
+		end
+--		io.stderr:write("ID: " .. row.id .. ", notes: " .. tostring(row.notes) .. "\n")
+		row = result:fetch(row, "a")
+	end
+
+	return nil
 end
 
 local day_to_json = function(day)

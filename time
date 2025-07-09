@@ -33,3 +33,4 @@
 25: refactor read_day.lua.
 26: complete read_day.lua refactorization.
 4: stub.
+18: read_day.lua: extract data.
