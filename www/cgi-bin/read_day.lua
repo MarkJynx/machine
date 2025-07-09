@@ -1,14 +1,11 @@
 #!/usr/bin/env lua
 
-local function main()
-end
-
-local function extract_content_length()
+local extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
 	-- We won't try manually timeouting when there is less data than CONTENT_LENGTH.
 	local content_length = os.getenv("CONTENT_LENGTH")
-	if content_length ~= nil then
+	if content_length then
 		content_length = tonumber(content_length, 10)
 	end
 	if content_length == nil then
@@ -17,32 +14,47 @@ local function extract_content_length()
 	return content_length
 end
 
-local function extract_valid_payload(content_length)
+local extract_valid_payload = function(content_length)
 	local payload = nil
 	if content_length > 0 then
 		payload = io.read(content_length)
 	end
-	if payload ~= nil and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
+	if payload and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
 		return payload
 	end
 	return nil
 end
 
-local response = "null"
-
-if payload ~= nil and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
-	local db = require("luasql.sqlite3").sqlite3():connect("cgi-bin/machine.db") -- TODO: check for errors
-	local query = "SELECT * FROM day WHERE id = '" .. payload .. "'"
-	local result = db:execute(query) -- TODO: check for errors
-	if result:fetch({}, "a") then
-		response = "{}"
-		-- TODO: extract rule instaces
-		-- TODO: extract day.note
-		-- TODO: produce response
-	end
+local open_database = function(path)
+	return require("luasql.sqlite3").sqlite3():connect(path) -- TODO: handle 3 sources of errors
 end
 
-io.write("Status: 200 OK\r\n")
-io.write("Content-Type: application/json;charset=utf-8\r\n")
-io.write("Content-Length: " .. #response .. "\r\n\r\n")
-io.write(response)
+local day_exists = function(db, id)
+	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
+	local result = db:execute(query)
+	if result and result:fetch() then
+		return true
+	end
+	return false
+end
+
+local respond = function(json)
+	io.write("Status: 200 OK\r\n")
+	io.write("Content-Type: application/json;charset=utf-8\r\n")
+	io.write("Content-Length: " .. #json .. "\r\n\r\n")
+	io.write(json)
+end
+
+local main = function()
+	local payload = extract_valid_payload(extract_content_length())
+	local database = open_database("cgi-bin/machine.db")
+	local response
+	if day_exists(database, payload) then
+		response = "{}"
+	else
+		response = "null"
+	end
+	respond(response)
+end
+
+main()
