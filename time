@@ -31,3 +31,4 @@
 44: struggle to open a database.
 31: open the database.
 25: refactor read_day.lua.
+26: complete read_day.lua refactorization.
