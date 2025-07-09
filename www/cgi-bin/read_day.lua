@@ -1,6 +1,6 @@
-#!/usr/bin/env lua5.4
+#!/usr/bin/env lua
 
-require("os")
+local sqlite = require("luasql.sqlite3")
 
 local content_length = os.getenv("CONTENT_LENGTH")
 if content_length ~= nil then
@@ -12,10 +12,19 @@ end
 
 local payload = nil
 if content_length > 0 then
-	payload = io.read(content_length) -- TODO: expect read errors
+	payload = io.read(content_length)
 end
+
+-- TODO: validate (match) payload
+-- TODO: construct SQL query
+-- TODO: execute SQL query
+-- TODO: extract day
+-- TODO: extract rule instaces
+-- TODO: produce response
+
+local response = "null"
 
 io.write("Status: 200 OK\r\n")
 io.write("Content-Type: application/json;charset=utf-8\r\n")
-io.write("Content-Length: " .. #payload .. "\r\n\r\n")
-io.write(payload)
+io.write("Content-Length: " .. #response .. "\r\n\r\n")
+io.write(response)
