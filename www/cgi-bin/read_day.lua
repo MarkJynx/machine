@@ -1,16 +1,16 @@
-#!/usr/bin/env lua5.1
+#!/usr/bin/env lua5.4
 
 require("os")
 
 local content_length = os.getenv("CONTENT_LENGTH")
 if content_length ~= nil then
-	content_length = tonumber(content_length) -- TODO: enforce integer
+	content_length = tonumber(content_length, 10)
 end
 if content_length == nil then
 	content_length = 0
 end
 
-local payload = "null"
+local payload = nil
 if content_length > 0 then
 	payload = io.read(content_length) -- TODO: expect read errors
 end
