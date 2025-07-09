@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS rule_importance (
 -- TODO: generated columns
 -- TODO: consider vacations
 CREATE TABLE IF NOT EXISTS day (
-	id TEXT PRIMARY KEY,
+	id TEXT PRIMARY KEY CHECK(id IS date(id, "+0 days")),
 	notes TEXT
 ) WITHOUT ROWID;
 
@@ -316,3 +316,10 @@ INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 	1,
 	127
 );
+
+---------------------------------------------------------------------------------------------------
+
+-- Test payload
+-- curl --header 'Content-Type: text/plain' --data 2025-07-09 127.0.0.1:8080/cgi-bin/read_day.lua
+INSERT INTO day (id) VALUES ("2025-07-09");
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Early rise", "2025-07-09", 1, 1);
