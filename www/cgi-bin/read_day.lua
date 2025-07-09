@@ -1,13 +1,5 @@
 #!/usr/bin/env lua
 
-local DB_PATH = "my.db"
-
-local sqlite = require("luasql.sqlite3")
-local sqlite_env = sqlite.sqlite3() -- TODO: check for errors
-assert(sqlite_env)
-local sqlite_db = sqlite_env:connect(DB_PATH)
-assert(sqlite_db)
-
 local content_length = os.getenv("CONTENT_LENGTH")
 if content_length ~= nil then
 	content_length = tonumber(content_length, 10)
@@ -23,17 +15,14 @@ end
 
 local response = "null"
 
-os.execute("pwd 1>&2")
-if payload ~= nil and string.match(payload, "^%d%d%d%d-%d%d-%d%d$") then
---	local query = "SELECT * FROM day WHERE id = '" .. payload .. "'"
-	local query = "SELECT id FROM day"
-	local result = sqlite_db:execute(query)
-	assert(result)
-	local row = result:fetch({}, "a")
-	if row then
+if payload ~= nil and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
+	local db = require("luasql.sqlite3").sqlite3():connect("cgi-bin/machine.db") -- TODO: check for errors
+	local query = "SELECT * FROM day WHERE id = '" .. payload .. "'"
+	local result = db:execute(query) -- TODO: check for errors
+	if result:fetch({}, "a") then
 		response = "{}"
-		-- TODO: extract day
 		-- TODO: extract rule instaces
+		-- TODO: extract day.note
 		-- TODO: produce response
 	end
 end

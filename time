@@ -27,4 +27,6 @@
 
 25-07-09.
 18: back-end work.
-65: Lua5.4.
+65: switch to lua 5.4 version.
+44: struggle to open a database.
+31: open the database.
