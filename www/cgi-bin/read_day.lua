@@ -38,7 +38,6 @@ local day_exists = function(db, id)
 	return false
 end
 
-	-- TODO: 1/2
 local extract_day = function(db, id)
 	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
 	local result = db:execute(query)
@@ -46,37 +45,64 @@ local extract_day = function(db, id)
 		return nil
 	end
 
-	local row = result:fetch({}, "a")
-	while row do
---		for k, v in pairs(row) do
---			io.stderr:write(tostring(k) .. "," .. tostring(v) .. "\n")
---		end
-		io.stderr:write("ID: " .. row.id .. ", notes: " .. tostring(row.notes) .. "\n")
-		row = result:fetch(row, "a")
+	-- TODO: make sure there is only one
+	-- TODO: validate keys and value types
+	local day = result:fetch({}, "a")
+	if not day then
+		return nil
 	end
-	io.stderr:write("=====================================================================\n")
 
-	local query = "SELECT * FROM rule_instance WHERE day_id = '" .. id .. "'"
-	local result = db:execute(query)
+	query = "SELECT * FROM rule_instance WHERE day_id = '" .. id .. "' ORDER BY order_priority ASC"
+	result = db:execute(query)
 	if not result then
 		return nil
 	end
 
-	local row = result:fetch({}, "a")
-	while row do
-		for k, v in pairs(row) do
-			io.stderr:write(tostring(k) .. "," .. tostring(v) .. "\n")
-		end
---		io.stderr:write("ID: " .. row.id .. ", notes: " .. tostring(row.notes) .. "\n")
-		row = result:fetch(row, "a")
+	local rule_instances = {}
+	local rule_instance = result:fetch({}, "a")
+	while rule_instance do
+		-- TODO: validate keys and value types and NOT NULL constraint
+		local e = {rule_name = rule_instance.rule_name, done = rule_instance.done}
+		table.insert(rule_instances, e)
+		rule_instance = result:fetch(rule_instance, "a")
 	end
 
-	return nil
+	day.rule_instances = rule_instances
+	return day
+end
+
+local rule_instance_to_table = function(s, rule_instance)
+	table.insert(s, "{'rule_name':")
+	table.insert(s, "'" .. rule_instance.rule_name .. "',")
+	table.insert(s, "'done':")
+	table.insert(s, tostring(rule_instance.done))
+	table.insert(s, "}")
 end
 
 local day_to_json = function(day)
-	return "null"
-	-- TODO 2/2
+	if not day then
+		return "null"
+	end
+
+	local s = {}
+	table.insert(s, "{'id':")
+	table.insert(s, "'" .. day.id .. "',")
+	table.insert(s, "'notes':")
+	if day.notes then
+		table.insert(s, "'" .. day.notes .. "',")
+	else
+		table.insert(s, "null,")
+	end
+	table.insert(s, "'rule_instances':[")
+	for i, rule_instance in ipairs(day.rule_instances) do
+		rule_instance_to_table(s, rule_instance)
+		if i < #day.rule_instances then
+			table.insert(s, ",")
+		end
+	end
+	table.insert(s, "]}")
+
+	return table.concat(s)
 end
 
 local make_day_json = function(db, id)
