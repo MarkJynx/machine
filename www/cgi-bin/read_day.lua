@@ -38,6 +38,20 @@ local day_exists = function(db, id)
 	return false
 end
 
+local extract_day = function(db, id)
+	return nil
+	-- TODO: 1/2
+end
+
+local day_to_json = function(day)
+	return "null"
+	-- TODO 2/2
+end
+
+local make_day_json = function(db, id)
+	return day_to_json(extract_day(db, id))
+end
+
 local respond = function(json)
 	io.write("Status: 200 OK\r\n")
 	io.write("Content-Type: application/json;charset=utf-8\r\n")
@@ -48,13 +62,11 @@ end
 local main = function()
 	local payload = extract_valid_payload(extract_content_length())
 	local database = open_database("cgi-bin/machine.db")
-	local response
 	if day_exists(database, payload) then
-		response = "{}"
+		respond(make_day_json(database, payload))
 	else
-		response = "null"
+		respond("null")
 	end
-	respond(response)
 end
 
 main()
