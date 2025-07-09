@@ -1,16 +1,31 @@
 #!/usr/bin/env lua
 
-local content_length = os.getenv("CONTENT_LENGTH")
-if content_length ~= nil then
-	content_length = tonumber(content_length, 10)
-end
-if content_length == nil then
-	content_length = 0
+local function main()
 end
 
-local payload = nil
-if content_length > 0 then
-	payload = io.read(content_length)
+local function extract_content_length()
+	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
+	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
+	-- We won't try manually timeouting when there is less data than CONTENT_LENGTH.
+	local content_length = os.getenv("CONTENT_LENGTH")
+	if content_length ~= nil then
+		content_length = tonumber(content_length, 10)
+	end
+	if content_length == nil then
+		content_length = 0
+	end
+	return content_length
+end
+
+local function extract_valid_payload(content_length)
+	local payload = nil
+	if content_length > 0 then
+		payload = io.read(content_length)
+	end
+	if payload ~= nil and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
+		return payload
+	end
+	return nil
 end
 
 local response = "null"
