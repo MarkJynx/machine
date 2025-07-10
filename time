@@ -35,3 +35,6 @@
 4: stub.
 18: read_day.lua: extract data.
 41: read_day.lua: complete a rough version.
+
+25-07-10.
+44: delete_day.lua: complete rough version.

@@ -1,42 +1,6 @@
 #!/usr/bin/env lua
 
-local extract_content_length = function()
-	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
-	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
-	-- We won't try manually timeouting when there is less data than CONTENT_LENGTH.
-	local content_length = os.getenv("CONTENT_LENGTH")
-	if content_length then
-		content_length = tonumber(content_length, 10)
-	end
-	if content_length == nil then
-		content_length = 0
-	end
-	return content_length
-end
-
-local extract_valid_payload = function(content_length)
-	local payload = nil
-	if content_length > 0 then
-		payload = io.read(content_length)
-	end
-	if payload and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
-		return payload
-	end
-	return nil
-end
-
-local open_database = function(path)
-	return require("luasql.sqlite3").sqlite3():connect(path) -- TODO: handle 3 sources of errors
-end
-
-local day_exists = function(db, id)
-	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
-	local result = db:execute(query)
-	if result and result:fetch() then
-		return true
-	end
-	return false
-end
+local common = require("cgi-bin.common")
 
 local extract_day = function(db, id)
 	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
@@ -117,9 +81,9 @@ local respond = function(json)
 end
 
 local main = function()
-	local payload = extract_valid_payload(extract_content_length())
-	local database = open_database("cgi-bin/machine.db")
-	if day_exists(database, payload) then
+	local payload = common.extract_valid_payload(common.extract_content_length())
+	local database = common.open_database("cgi-bin/machine.db")
+	if common.day_exists(database, payload) then
 		respond(make_day_json(database, payload))
 	else
 		respond("null")
