@@ -29,6 +29,21 @@ common.open_database = function(path)
 	return require("luasql.sqlite3").sqlite3():connect(path) -- TODO: handle 3 sources of errors, close environment
 end
 
+common.collect_database = function(db, q)
+	local result = db:execute(q)
+	if not result then
+		return nil
+	end
+
+	local collection = {}
+	local element = result:fetch({}, "a")
+	while element do
+		table.insert(collection, element)
+		element = result:fetch(element, "a")
+	end
+	return collection
+end
+
 common.day_exists = function(db, id)
 	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
 	local result = db:execute(query)

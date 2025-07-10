@@ -4,37 +4,18 @@ local common = require("cgi-bin.common")
 
 local extract_day = function(db, id)
 	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
-	local result = db:execute(query)
-	if not result then
+	local day = common.collect_database(db, query)
+	if not day or #day > 1 then
 		return nil
 	end
-
-	-- TODO: make sure there is only one
-	-- TODO: validate keys and value types
-	local day = result:fetch({}, "a")
-	if not day then
-		return nil
-	end
+	day = day[1]
 
 	query = "SELECT * FROM rule_instance WHERE day_id = '" .. id .. "' ORDER BY order_priority ASC"
-	result = db:execute(query)
-	if not result then
-		return nil
-	end
-
-	local rule_instances = {}
-	local rule_instance = result:fetch({}, "a")
-	while rule_instance do
-		-- TODO: validate keys and value types and NOT NULL constraint
-		local e = {rule_name = rule_instance.rule_name, done = rule_instance.done}
-		table.insert(rule_instances, e)
-		rule_instance = result:fetch(rule_instance, "a")
-	end
-
-	day.rule_instances = rule_instances
+	day.rule_instances = common.collect_database(db, query)
 	return day
 end
 
+-- TODO: generic function of table to JSON
 local rule_instance_to_table = function(s, rule_instance)
 	table.insert(s, "{'rule_name':")
 	table.insert(s, "'" .. rule_instance.rule_name .. "',")
