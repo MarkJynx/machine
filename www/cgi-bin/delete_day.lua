@@ -2,6 +2,7 @@
 
 local common = require("cgi-bin.common")
 
+
 local delete_day = function(db, id)
 	s = {}
 	table.insert(s, "BEGIN TRANSACTION")
@@ -18,12 +19,12 @@ local delete_day = function(db, id)
 end
 
 local main = function()
-	local payload = common.extract_valid_payload(common.extract_content_length())
+	local payload = common.extract_valid_date_payload(common.extract_content_length())
 	local database = common.open_database("cgi-bin/machine.db")
 	if common.day_exists(database, payload) and delete_day(database, payload) then
-		common.respond("1")
+		common.respond("true")
 	else
-		common.respond("0")
+		common.respond("false")
 	end
 	database:close()
 end

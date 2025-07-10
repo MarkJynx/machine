@@ -1,8 +1,5 @@
 local common = {}
 
-local cjson = require("cjson") -- TODO: jsonschema
-
--- TODO: validate anything you get from database
 
 common.extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
@@ -18,7 +15,8 @@ common.extract_content_length = function()
 	return content_length
 end
 
-common.extract_valid_payload = function(content_length)
+common.extract_valid_date_payload = function(content_length)
+	-- TODO: convert to JSON
 	local payload = nil
 	if content_length > 0 then
 		payload = io.read(content_length)
@@ -49,16 +47,13 @@ common.collect_database = function(db, q)
 end
 
 common.day_exists = function(db, id)
+	-- TODO: validate anything you get from database
 	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
 	local result = db:execute(query)
 	if result and result:fetch() then
 		return true
 	end
 	return false
-end
-
-common.day_to_json = function(day)
-	return cjson.encode(day)
 end
 
 common.respond = function(json)
