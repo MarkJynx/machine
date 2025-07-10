@@ -1,5 +1,7 @@
 local common = {}
 
+-- TODO: validate anything you get from database
+
 common.extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
@@ -53,7 +55,7 @@ common.day_exists = function(db, id)
 	return false
 end
 
--- TODO: generic function of table to JSON
+-- TODO: require cjson, jsonschema
 local rule_instance_to_table = function(s, rule_instance)
 	table.insert(s, string.format("{'rule_name':'%s','done':%d}", rule_instance.rule_name, rule_instance.done))
 end
@@ -89,6 +91,14 @@ common.respond = function(json)
 	io.write("Content-Type: application/json;charset=utf-8\r\n")
 	io.write("Content-Length: " .. #json .. "\r\n\r\n")
 	io.write(json)
+end
+
+common.date_string_to_date_table = function(s)
+	return {
+		year = tonumber(string.sub(s, 1, 4)),
+		month = tonumber(string.sub(s, 6, 7)),
+		day = tonumber(string.sub(s, 9, 10))
+	}
 end
 
 return common

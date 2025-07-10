@@ -32,20 +32,22 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 		return false
 	end
 
-	local date_table = {
-		year = tonumber(string.sub(date, 1, 4)),
-		month = tonumber(string.sub(date, 6, 7)),
-		day = tonumber(string.sub(date, 9, 10)),
-	}
+	local date_table = common.date_string_to_date_table(date)
 	local date_weekday = os.date("%w", os.time(date_table)) + 1
 	local rule_schedule_weekdays = { }
 	for i = 1, 7 do
 		rule_schedule_weekdays[i] = rule_schedule.weekdays & (2 ^ (i - 1))
-		io.stderr:write(tostring(rule_schedule_weekdays[i]) .. "\n")
 	end
---	if not rule_schedule.weekdays or 
-	-- TODO 1: check weekdays
-	-- TODO 2: compare difference between date and last_rule_instance.day_id and rule_schedule.period
+	if not rule_schedule_weekdays[date_weekday] then
+		return false
+	end
+
+	local old_date_table = common.date_string_to_date_table(last_rule_instance.day_id)
+	local dt = os.difftime(os.time(date_table), os.time(old_date_table))
+	if dt < rule_schedule.period * 86400 then
+		return false
+	end
+
 	return true
 end
 
