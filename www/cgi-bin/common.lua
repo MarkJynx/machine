@@ -1,5 +1,7 @@
 local common = {}
 
+local cjson = require("cjson") -- TODO: jsonschema
+
 -- TODO: validate anything you get from database
 
 common.extract_content_length = function()
@@ -55,35 +57,8 @@ common.day_exists = function(db, id)
 	return false
 end
 
--- TODO: require cjson, jsonschema
-local rule_instance_to_table = function(s, rule_instance)
-	table.insert(s, string.format("{'rule_name':'%s','done':%d}", rule_instance.rule_name, rule_instance.done))
-end
-
 common.day_to_json = function(day)
-	if not day then
-		return "null"
-	end
-
-	local s = {}
-
-	local notes = "null"
-	if day.notes then
-		notes = "'" .. day.notes .. "'"
-	end
-
-	table.insert(s, string.format("{'id':'%s','notes':%s,'rule_instance':[", day.id, notes))
-
-	for i, rule_instance in ipairs(day.rule_instances) do
-		rule_instance_to_table(s, rule_instance)
-		if i < #day.rule_instances then
-			table.insert(s, ",")
-		end
-	end
-
-	table.insert(s, "]}")
-
-	return table.concat(s)
+	return cjson.encode(day)
 end
 
 common.respond = function(json)
