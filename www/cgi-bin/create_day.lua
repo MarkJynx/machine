@@ -72,6 +72,7 @@ local main = function()
 		end
 		common.respond(cjson.encode(day))
 	end
+	database:close()
 end
 
 main()

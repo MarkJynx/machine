@@ -16,6 +16,11 @@ local extract_day = function(db, id)
 	-- TODO: validate anything you get from database
 	query = "SELECT * FROM rule_instance WHERE day_id = '" .. id .. "' ORDER BY order_priority ASC"
 	day.rule_instances = common.collect_database(db, query)
+
+	if not common.validate_day(day) then
+		return nil
+	end
+
 	return day
 end
 

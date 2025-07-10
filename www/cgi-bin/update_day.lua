@@ -11,13 +11,27 @@ local main = function()
 		payload = io.read(content_length)
 	end
 	local day = cjson.decode(payload)
-	io.stderr:write(cjson.encode(day))
+	local database = common.open_database("cgi-bin/machine.db")
 
-	-- TODO: validate day.id, day.rule_instance[].day_id, day.rule_instance[].rule_name, day.rule_instance.done
-	-- TODO: BEGIN, DELETE rule_instance, DELETE day, INSERT day
-	-- TODO: INSERT rule_instance, COMMIT
+	if common.validate_day(day) then
+		s = {}
+		table.insert(s, "BEGIN TRANSACTION")
+		-- TODO: DELETE rule_instance
+		-- TODO: DELETE day
+		local notes = "NULL"
+		if day.notes then
+			notes = "'" .. database:escape(day.notes) .. "'"
+		end
+		-- TODO: INSERT day
+		-- TODO: INSERT rule_instance, COMMIT
+		table.insert(s, "COMMIT")
 
-	common.respond("false")
+		common.respond("true")
+	else
+		common.respond("false")
+	end
+
+	database:close()
 end
 
 main()
