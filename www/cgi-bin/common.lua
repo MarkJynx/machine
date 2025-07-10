@@ -39,7 +39,7 @@ common.collect_database = function(db, q)
 	local element = result:fetch({}, "a")
 	while element do
 		table.insert(collection, element)
-		element = result:fetch(element, "a")
+		element = result:fetch({}, "a")
 	end
 	return collection
 end

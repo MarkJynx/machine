@@ -3,7 +3,7 @@
 local common = require("cgi-bin.common")
 
 local get_rules = function(db)
-	return rules = common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC")
+	return common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 end
 
 local get_rule_schedule = function(db, rule, date)
@@ -18,15 +18,35 @@ local get_rule_schedule = function(db, rule, date)
 	return rule_schedule[1]
 end
 
-local get_last_rule_instance(db, rule)
-	-- TODO
-	return nil
+local get_last_rule_instance = function(db, rule)
+	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. rule.name .. "' ORDER BY JULIANDAY(day_id) ASC LIMIT 1"
+	local rule_instance = common.collect_database(db, q)
+	if #rule_instance ~= 1 then
+		return nil
+	end
+	return rule_instance[1]
 end
 
 local rule_applies = function(rule_schedule, last_rule_instance, date)
+	if not rule_schedule then
+		return false
+	end
+
+	local date_table = {
+		year = tonumber(string.sub(date, 1, 4)),
+		month = tonumber(string.sub(date, 6, 7)),
+		day = tonumber(string.sub(date, 9, 10)),
+	}
+	local date_weekday = os.date("%w", os.time(date_table)) + 1
+	local rule_schedule_weekdays = { }
+	for i = 1, 7 do
+		rule_schedule_weekdays[i] = rule_schedule.weekdays & (2 ^ (i - 1))
+		io.stderr:write(tostring(rule_schedule_weekdays[i]) .. "\n")
+	end
+--	if not rule_schedule.weekdays or 
 	-- TODO 1: check weekdays
 	-- TODO 2: compare difference between date and last_rule_instance.day_id and rule_schedule.period
-	return nil
+	return true
 end
 
 local main = function()
