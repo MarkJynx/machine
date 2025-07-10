@@ -55,11 +55,7 @@ end
 
 -- TODO: generic function of table to JSON
 local rule_instance_to_table = function(s, rule_instance)
-	table.insert(s, "{'rule_name':")
-	table.insert(s, "'" .. rule_instance.rule_name .. "',")
-	table.insert(s, "'done':")
-	table.insert(s, tostring(rule_instance.done))
-	table.insert(s, "}")
+	table.insert(s, string.format("{'rule_name':'%s','done':%d}", rule_instance.rule_name, rule_instance.done))
 end
 
 common.day_to_json = function(day)
@@ -68,21 +64,21 @@ common.day_to_json = function(day)
 	end
 
 	local s = {}
-	table.insert(s, "{'id':")
-	table.insert(s, "'" .. day.id .. "',")
-	table.insert(s, "'notes':")
+
+	local notes = "null"
 	if day.notes then
-		table.insert(s, "'" .. day.notes .. "',")
-	else
-		table.insert(s, "null,")
+		notes = "'" .. day.notes .. "'"
 	end
-	table.insert(s, "'rule_instances':[")
+
+	table.insert(s, string.format("{'id':'%s','notes':%s,'rule_instance':[", day.id, notes))
+
 	for i, rule_instance in ipairs(day.rule_instances) do
 		rule_instance_to_table(s, rule_instance)
 		if i < #day.rule_instances then
 			table.insert(s, ",")
 		end
 	end
+
 	table.insert(s, "]}")
 
 	return table.concat(s)
