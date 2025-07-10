@@ -15,43 +15,8 @@ local extract_day = function(db, id)
 	return day
 end
 
--- TODO: generic function of table to JSON
-local rule_instance_to_table = function(s, rule_instance)
-	table.insert(s, "{'rule_name':")
-	table.insert(s, "'" .. rule_instance.rule_name .. "',")
-	table.insert(s, "'done':")
-	table.insert(s, tostring(rule_instance.done))
-	table.insert(s, "}")
-end
-
-local day_to_json = function(day)
-	if not day then
-		return "null"
-	end
-
-	local s = {}
-	table.insert(s, "{'id':")
-	table.insert(s, "'" .. day.id .. "',")
-	table.insert(s, "'notes':")
-	if day.notes then
-		table.insert(s, "'" .. day.notes .. "',")
-	else
-		table.insert(s, "null,")
-	end
-	table.insert(s, "'rule_instances':[")
-	for i, rule_instance in ipairs(day.rule_instances) do
-		rule_instance_to_table(s, rule_instance)
-		if i < #day.rule_instances then
-			table.insert(s, ",")
-		end
-	end
-	table.insert(s, "]}")
-
-	return table.concat(s)
-end
-
 local make_day_json = function(db, id)
-	return day_to_json(extract_day(db, id))
+	return common.day_to_json(extract_day(db, id))
 end
 
 local respond = function(json)
