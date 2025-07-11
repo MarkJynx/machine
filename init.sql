@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS rule (
 -- TODO: check against time overlaps for the same rule_name
 CREATE TABLE IF NOT EXISTS rule_schedule (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	rule_name INTEGER NOT NULL,
+	rule_name TEXT NOT NULL,
 	start_date TEXT NOT NULL CHECK(start_date IS date(start_date, "+0 days")), -- ISO-8601, YYYY-MM-DD
 	end_date TEXT CHECK(end_date IS date(end_date, "+0 days")), -- ISO-8601, YYYY-MM-DD
 	period INTEGER NOT NULL CHECK(period >= 1 AND period < 7), -- anything less frequent is not worthy to be a rule

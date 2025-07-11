@@ -75,6 +75,7 @@ common.validate_day = function(day)
 	end
 
 	for _, rule_instance in pairs(day.rule_instances) do
+		-- TODO: validate rule_name against available rule names
 		if type(rule_instance.rule_name) ~= "string" then
 			return false
 		end

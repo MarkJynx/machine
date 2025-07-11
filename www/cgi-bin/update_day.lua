@@ -13,8 +13,9 @@ local main = function()
 	local day = cjson.decode(payload)
 	local database = common.open_database("cgi-bin/machine.db")
 
-	if common.validate_day(day) then
+	if day and not common.day_exists(database, day.id) and common.validate_day(day) then
 		s = {}
+		table.insert(s, "PRAGMA foreign_keys = ON")
 		table.insert(s, "BEGIN TRANSACTION")
 		table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. day.id .. "'")
 		table.insert(s, "DELETE FROM day WHERE id = '" .. day.id .. "'")
@@ -23,20 +24,25 @@ local main = function()
 			notes = "'" .. database:escape(day.notes) .. "'"
 		end
 		table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
-		for _, rule_instance in ipairs(day.rule_instances) do
-			-- TODO: refactor into a function
-			local q = {}
-			table.insert(q, "INSERT OR ROLLBACK INTO rule_instance")
-			table.insert(q, "(rule_name, day_id, done, order_priority) VALUES (")
-			table.insert(q, "'" .. database:escape(rule_instance.rule_name) .. "',")
-			table.insert(q, string.format("'%s',%d,%d)", day.id, rule_instance.done, rule_instance.order_priority))
-			table.insert(s, table.concat(q, " "))
+
+		if day.rule_instances then
+			for _, rule_instance in ipairs(day.rule_instances) do
+				-- TODO: refactor into a function
+				local q = {}
+				table.insert(q, "INSERT OR ROLLBACK INTO rule_instance")
+				table.insert(q, "(rule_name, day_id, done, order_priority) VALUES (")
+				table.insert(q, "'" .. database:escape(rule_instance.rule_name) .. "',")
+				table.insert(q, string.format("'%s',%d,%d)", day.id, rule_instance.done, rule_instance.order_priority))
+				table.insert(s, table.concat(q, " "))
+			end
+
 		end
+
 		table.insert(s, "COMMIT")
 
 		local success = true
 		for _, q in ipairs(s) do
-			local result = db:execute(q)
+			local result = database:execute(q)
 			if not result then
 				success = false
 				break
