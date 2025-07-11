@@ -25,4 +25,6 @@ Roadmap (big picture)
 8. Achievements.
 
 Refactorization:
-1. Rewrite Lua to Teal?
+1. Protect well against POST input.
+2. Protect well against corrupted database.
+3. Typed CGI script language.

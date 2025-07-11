@@ -86,6 +86,7 @@ common.validate_day = function(day)
 			return false
 		end
 		if type(rule_instance.order_priority) ~= "number" or rule_instance.order_priority <= 0 then
+			-- TODO: validate it is an integer
 			return false
 		end
 	end

@@ -4,7 +4,7 @@ local common = require("cgi-bin.common")
 
 
 local delete_day = function(db, id)
-	s = {}
+	local s = {}
 	table.insert(s, "BEGIN TRANSACTION")
 	table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. id .. "'")
 	table.insert(s, "DELETE FROM day WHERE id = '" .. id .. "'")
