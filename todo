@@ -1,16 +1,6 @@
 Roadmap (small tasks)
 1. Back-end.
-1. 1. Back-end: update day.
-1. 1. 1. Parse request.
-1. 1. 2. Execute query.
-1. 1. 3. Produce response.
-1. 2. Back-end: create day.
-1. 2. 1. Parse request.
-1. 2. 2. Check day availability.
-1. 2. 3. Check chore applicability (in regards to task schedule).
-1. 2. 4. Check chore applicability (in regards to previous chores).
-1. 2. 5. Produce day chores.
-1. 2. 6. Produce response.
+1. 1. Test it well.
 2. Front-end.
 2. 1. Front-end: read day.
 2. 2. Front-end: navigate days.
@@ -33,3 +23,6 @@ Roadmap (big picture)
 6. Documentation. Testing.
 7. Philosophy.
 8. Achievements.
+
+Refactorization:
+1. Rewrite Lua to Teal?

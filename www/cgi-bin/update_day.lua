@@ -34,9 +34,20 @@ local main = function()
 		end
 		table.insert(s, "COMMIT")
 
-		-- TODO: execute
+		local success = true
+		for _, q in ipairs(s) do
+			local result = db:execute(q)
+			if not result then
+				success = false
+				break
+			end
+		end
 
-		common.respond("true")
+		if success then
+			common.respond("true")
+		else
+			common.respond("false")
+		end
 	else
 		common.respond("false")
 	end

@@ -47,13 +47,14 @@ CREATE TABLE IF NOT EXISTS day (
 	notes TEXT
 ) WITHOUT ROWID;
 
--- TODO: ensure no gaps between order_priority entries for a day
+-- TODO: ensure no gaps and uniqueness between order_priority entries for a day
+-- TODO: consider notes
 CREATE TABLE IF NOT EXISTS rule_instance (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	rule_name TEXT NOT NULL,
 	day_id TEXT NOT NULL,
 	done INTEGER NOT NULL CHECK (done == 0 OR done == 1),
-	order_priority INTEGER NOT NULL,
+	order_priority INTEGER NOT NULL CHECK(order_priority > 0),
 	FOREIGN KEY (rule_name) REFERENCES rule (name),
 	FOREIGN KEY (day_id) REFERENCES day (id)
 );
@@ -323,3 +324,4 @@ INSERT INTO rule_schedule (rule_name, start_date, period, weekdays) VALUES (
 -- curl --header 'Content-Type: text/plain' --data 2025-07-09 127.0.0.1:8080/cgi-bin/read_day.lua
 INSERT INTO day (id) VALUES ("2025-07-09");
 INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Early rise", "2025-07-09", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Early rise", "2025-07-09", 1, 2);
