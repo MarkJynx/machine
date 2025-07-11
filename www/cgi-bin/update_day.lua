@@ -44,17 +44,7 @@ local main = function()
 
 		table.insert(s, "COMMIT")
 
-		-- TODO: refactor into a common function
-		local success = true
-		for _, q in ipairs(s) do
-			local result = database:execute(q)
-			if not result then
-				success = false
-				break
-			end
-		end
-
-		if success then
+		if common.execute_many_database_queries(database, s) then
 			response = "true"
 		end
 	end

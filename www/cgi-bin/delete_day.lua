@@ -9,13 +9,7 @@ local delete_day = function(db, id)
 	table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. id .. "'")
 	table.insert(s, "DELETE FROM day WHERE id = '" .. id .. "'")
 	table.insert(s, "COMMIT")
-	for _, q in ipairs(s) do
-		local result = db:execute(q)
-		if not result then
-			return false
-		end
-	end
-	return true
+	return common.execute_many_database_queryies(db, s)
 end
 
 local main = function()

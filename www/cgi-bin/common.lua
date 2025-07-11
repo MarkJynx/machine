@@ -46,6 +46,18 @@ common.collect_database = function(db, q)
 	return collection
 end
 
+common.execute_many_database_queries = function(db, queries)
+	local success = true
+	for _, query in ipairs(queries) do
+		local result = database:execute(query)
+		if not result then
+			success = false
+			break
+		end
+	end
+	return success
+end
+
 common.day_exists = function(db, id)
 	-- TODO: validate anything you get from database
 	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
