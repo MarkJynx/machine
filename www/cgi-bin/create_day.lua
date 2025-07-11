@@ -58,11 +58,10 @@ end
 local main = function()
 	local payload = common.extract_valid_date_payload(common.extract_content_length())
 	local database = common.open_database("cgi-bin/machine.db")
-	if common.day_exists(database, payload) then
-		common.respond("null")
-	else
+	local response = "null"
+	if not common.day_exists(database, payload) then
 		local day = { id = payload, rule_instances = {} }
-		local rules = get_rules(database)
+		local rules = get_rules(database) or {}
 		for _, rule in ipairs(rules) do
 			local rule_schedule = get_rule_schedule(database, rule, payload)
 			local last_rule_instance = get_last_rule_instance(database, rule)
@@ -70,8 +69,9 @@ local main = function()
 				table.insert(day.rule_instances, { rule_name = rule.name, done = 0 })
 			end
 		end
-		common.respond(cjson.encode(day))
+		response = cjson.encode(day) or "null"
 	end
+	common.respond(response)
 	database:close()
 end
 

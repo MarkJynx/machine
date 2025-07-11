@@ -21,11 +21,11 @@ end
 local main = function()
 	local payload = common.extract_valid_date_payload(common.extract_content_length())
 	local database = common.open_database("cgi-bin/machine.db")
+	local response = "false"
 	if common.day_exists(database, payload) and delete_day(database, payload) then
-		common.respond("true")
-	else
-		common.respond("false")
+		response = "true"
 	end
+	common.respond(response)
 	database:close()
 end
 

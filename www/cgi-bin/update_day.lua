@@ -21,6 +21,7 @@ local main = function()
 	end
 	local day = cjson.decode(payload)
 	local database = common.open_database("cgi-bin/machine.db")
+	local response = "false"
 
 	if day and not common.day_exists(database, day.id) and common.validate_day(day) then
 		local s = {}
@@ -43,6 +44,7 @@ local main = function()
 
 		table.insert(s, "COMMIT")
 
+		-- TODO: refactor into a common function
 		local success = true
 		for _, q in ipairs(s) do
 			local result = database:execute(q)
@@ -53,14 +55,11 @@ local main = function()
 		end
 
 		if success then
-			common.respond("true")
-		else
-			common.respond("false")
+			response = "true"
 		end
-	else
-		common.respond("false")
 	end
 
+	common.respond(response)
 	database:close()
 end
 

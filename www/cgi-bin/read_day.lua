@@ -24,21 +24,14 @@ local extract_day = function(db, id)
 	return day
 end
 
-local respond = function(json)
-	io.write("Status: 200 OK\r\n")
-	io.write("Content-Type: application/json;charset=utf-8\r\n")
-	io.write("Content-Length: " .. #json .. "\r\n\r\n")
-	io.write(json)
-end
-
 local main = function()
 	local payload = common.extract_valid_date_payload(common.extract_content_length())
 	local database = common.open_database("cgi-bin/machine.db")
+	local response = "null"
 	if common.day_exists(database, payload) then
-		respond(cjson.encode(extract_day(database, payload)))
-	else
-		respond("null")
+		response = cjson.encode(extract_day(database, payload)) or "null"
 	end
+	common.respond(response)
 end
 
 main()
