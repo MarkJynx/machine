@@ -49,7 +49,7 @@ end
 common.execute_many_database_queries = function(db, queries)
 	local success = true
 	for _, query in ipairs(queries) do
-		local result = database:execute(query)
+		local result = db:execute(query)
 		if not result then
 			success = false
 			break
