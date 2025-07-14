@@ -29,16 +29,10 @@ document.body.appendChild(x)
 // TODO 25: HTML: task_table_generation: add DELETE button
 // TODO 26: JS:   task_table_generation: add empty DELETE handler
 // TODO 27: JS:   task_table_generation: add proper DELETE handler
-// TODO 28: LUA:  enfore REQUEST_METHOD env var
-// TODO 29: LUA:  read_task.lua: stub
-// TODO 30: LUA:  read_task.lua: enforce GET
-// TODO 31: LUA:  read_task.lua: print out everything
-// TODO 32: LUA:  read_task.lua: test and fix
-// TODO 33: LUA:  call read_task.lua
-// TODO 34: HTML: add ADD_TASK button
-// TODO 35: HTML: add ADD_TASK dropdown
-// TODO 36: JS:   add ADD_TASK button empty handler
-// TODO 37: JS:   add ADD_TASK button console handler
-// TODO 38: JS:   add ADD_TASK button proper handler (attach to end of the list)
-// TODO 39: HTML: add day.NOTES with payload already
-// TODO 40: JS:   save day.NOTES with payload
+// TODO 28: HTML: add ADD_TASK button
+// TODO 29: HTML: add ADD_TASK dropdown
+// TODO 30: JS:   add ADD_TASK button empty handler
+// TODO 31: JS:   add ADD_TASK button console handler
+// TODO 32: JS:   add ADD_TASK button proper handler (attach to end of the list)
+// TODO 33: HTML: add day.NOTES with payload already
+// TODO 34: JS:   save day.NOTES with payload
