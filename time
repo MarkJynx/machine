@@ -48,3 +48,6 @@
 22: update_day.lua: complete rough version.
 30: update_day.lua: fix all the errors.
 24: clean up a bit.
+
+25-07-14.
+25: index.js: smaller TODO steps.
