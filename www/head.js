@@ -1,7 +1,28 @@
 function generate_day(day, rules) {
 	document.body.replaceChildren()
 	if (day == null) {
-		document.body.textContent = "null"
+		// TODO: do not copy and paste
+		let navigation_table = document.createElement("table")
+		let navigation_row = navigation_table.insertRow()
+		let navigation_cell = navigation_row.insertCell()
+		let navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "←"
+		navigation_cell.appendChild(navigation_button)
+
+		navigation_cell = navigation_row.insertCell()
+		navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "+"
+		navigation_cell.appendChild(navigation_button)
+
+		navigation_cell = navigation_row.insertCell()
+		navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "→"
+		navigation_cell.appendChild(navigation_button)
+
+		document.body.appendChild(navigation_table)
 	} else {
 		console.log(day)
 		let task_table = document.createElement("table")
@@ -60,5 +81,33 @@ function generate_day(day, rules) {
 		cell.appendChild(selection)
 
 		document.body.appendChild(task_table)
+
+		let navigation_table = document.createElement("table")
+		let navigation_row = navigation_table.insertRow()
+		let navigation_cell = navigation_row.insertCell()
+		let navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "←"
+		navigation_cell.appendChild(navigation_button)
+
+		navigation_cell = navigation_row.insertCell()
+		navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "❌"
+		navigation_cell.appendChild(navigation_button)
+
+		navigation_cell = navigation_row.insertCell()
+		navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "→"
+
+		navigation_cell.appendChild(navigation_button)
+		navigation_cell = navigation_row.insertCell()
+		navigation_button = document.createElement("input")
+		navigation_button.type = "button"
+		navigation_button.value = "💾"
+		navigation_cell.appendChild(navigation_button)
+
+		document.body.appendChild(navigation_table)
 	}
 }

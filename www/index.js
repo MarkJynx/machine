@@ -27,26 +27,22 @@ async function main() {
 
 main()
 
-// TODO  1: HTML: add button "Save"
-// TODO  2: HTML: add button "Delete"
-// TODO  3: HTML: add day.NOTES with payload already
-// TODO  4: HTML: add navigation buttons ("Previous day", "Next day")
-// TODO  5: HTML: in case of "null", button "Create Day"
-// TODO  6: JS:   task_table_generatino: add UP and DOWN button empty handlers
-// TODO  7: JS:   task_table_generation: add UP and DOWN button full handlers
-// TODO  8: JS:   task_table_generation: add empty DELETE handler
-// TODO  9: JS:   task_table_generation: add proper DELETE handler
-// TODO 10: JS:   add empty navigation handlers
-// TODO 11: JS:   GET index.htm
-// TODO 12: JS:   add empty "Delete" handler
-// TODO 13: JS:   call delete_day.lua
-// TODO 14: JS:   empty "Create Day" handler
-// TODO 15: JS:   call create_day.lua
-// TODO 16: JS:   add empty "Save" handler
-// TODO 17: JS:   save handler: convert table to console.log
-// TODO 18: JS:   save handler: convert table to JSON
-// TODO 19: JS:   call update_day.lua
-// TODO 20: JS:   add ADD_TASK button empty handler
-// TODO 21: JS:   add ADD_TASK button console handler
-// TODO 22: JS:   add ADD_TASK button proper handler (attach to end of the list)
-// TODO 23: JS:   save day.NOTES with payload
+// TODO  1: JS:   task_table_generatino: add UP and DOWN button empty handlers
+// TODO  2: JS:   task_table_generation: add UP and DOWN button full handlers
+// TODO  3: JS:   task_table_generation: add empty DELETE handler
+// TODO  4: JS:   task_table_generation: add proper DELETE handler
+// TODO  5: JS:   add empty navigation handlers
+// TODO  6: JS:   GET index.htm
+// TODO  7: JS:   add empty "Delete" handler
+// TODO  8: JS:   call delete_day.lua
+// TODO  9: JS:   empty "Create Day" handler
+// TODO 10: JS:   call create_day.lua
+// TODO 11: JS:   add empty "Save" handler
+// TODO 12: JS:   save handler: convert table to console.log
+// TODO 13: JS:   save handler: convert table to JSON
+// TODO 14: JS:   call update_day.lua
+// TODO 15: JS:   add ADD_TASK button empty handler
+// TODO 16: JS:   add ADD_TASK button console handler
+// TODO 17: JS:   add ADD_TASK button proper handler (attach to end of the list)
+// TODO 18: JS:   save day.NOTES with payload
+// TODO 19: HTML: add day.NOTES with payload already

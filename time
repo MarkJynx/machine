@@ -57,4 +57,5 @@
 35: GET date.
 
 25-07-15.
-63: HTML to add a task.
+63: generate HTML when day is not null.
+11: generate HTML when day is null.
