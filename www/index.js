@@ -1,9 +1,13 @@
-let x = document.createElement("pre")
-x.textContent = "Hello World"
-document.body.appendChild(x)
+const current_date = new Date()
+const current_date_string = current_date.toISOString().substring(0, 10)
 
-// TODO  1: JS:   determine what day is today
-// TODO  2: JS:   call read_day.lua
+fetch('cgi-bin/read_day.lua', {
+  method: 'POST',
+  headers: { 'Content-Type': 'text/plain' },
+  body: current_date_string
+}).then(response => response.json())
+  .then(response => generate_day(response))
+
 // TODO  3: HTML: in case of "null", button "Create Day"
 // TODO  4: JS:   empty "Create Day" handler
 // TODO  5: JS:   call create_day.lua
