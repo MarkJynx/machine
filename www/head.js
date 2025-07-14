@@ -3,6 +3,6 @@ function generate_day(day) {
 	if (day == null) {
 		document.body.textContent = "null"
 	} else {
-		docuemnt.body.textContent = "not null"
+		document.body.textContent = "not null"
 	}
 }

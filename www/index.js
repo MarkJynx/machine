@@ -1,17 +1,20 @@
+const url_arguments = new URLSearchParams(window.location.search)
+let specified_date = null
+if (url_arguments.size == 1 && url_arguments.has("date") && url_arguments.get("date") && url_arguments.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+	specified_date = url_arguments.get("date");
+}
+
 const current_date = new Date()
 const current_date_string = current_date.toISOString().substring(0, 10)
+specified_date = specified_date ? specified_date : current_date_string;
 
 fetch('cgi-bin/read_day.lua', {
   method: 'POST',
   headers: { 'Content-Type': 'text/plain' },
-  body: current_date_string
+  body: specified_date
 }).then(response => response.json())
   .then(response => generate_day(response))
 
-// TODO  1: SQL:  fill up rule_instance table for day 2025-07-14 with tier 1 rules
-// TODO  2: JS:   index.js: read GET arguments
-// TODO  3: JS:   index.js: validate GET arguments
-// TODO  4: JS:   index.js: supersede current day in case of valid GET arguments
 // TODO  5: HTML: table of tasks
 // TODO  6: HTML: task_table_generation: add UP and DOWN buttons
 // TODO  7: HTML: task_table_generation: add DELETE button
