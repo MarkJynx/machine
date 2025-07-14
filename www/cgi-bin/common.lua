@@ -1,6 +1,14 @@
 local common = {}
 
 
+common.enforce_http_method = function(method)
+	local request_method = os.getenv("REQUEST_METHOD")
+	if request_method ~= method then
+		os.exit(0)
+	end
+end
+
+
 common.extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.

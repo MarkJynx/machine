@@ -13,6 +13,7 @@ local delete_day = function(db, id)
 end
 
 local main = function()
+	common.enforce_http_method("POST")
 	local payload = common.extract_valid_date_payload(common.extract_content_length())
 	local database = common.open_database("cgi-bin/machine.db")
 	local response = "false"

@@ -14,6 +14,7 @@ local rule_instance_to_insert_query = function(rule_instance, day_id, database)
 end
 
 local main = function()
+	common.enforce_http_method("POST")
 	local content_length = common.extract_content_length()
 	local payload = nil
 	if content_length > 0 then
