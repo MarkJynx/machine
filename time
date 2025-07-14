@@ -55,3 +55,6 @@
 27: read_rules.lua: complete rough version.
 33: index.js: reorder tasks.
 35: GET date.
+
+25-07-15.
+63: HTML to add a task.
