@@ -320,12 +320,18 @@ INSERT INTO rule_schedule ( rule_name, start_date, end_date, period, weekdays) V
 
 ---------------------------------------------------------------------------------------------------
 
--- Test payload
--- curl --header 'Content-Type: text/plain' --data 2025-07-09 127.0.0.1:8080/cgi-bin/read_day.lua
 INSERT INTO day (id) VALUES ("2025-07-14");
 INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Early rise", "2025-07-14", 1, 1);
 INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Home cleaning", "2025-07-14", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Dental care (after sleep)", "2025-07-14", 1, 1);
 INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Shower", "2025-07-14", 1, 1);
 INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Hair care", "2025-07-14", 1, 1);
 INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Face shave", "2025-07-14", 1, 1);
-INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Dental care (after sleep)", "2025-07-14", 1, 1);
+
+INSERT INTO day (id) VALUES ("2025-07-15");
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Early rise", "2025-07-15", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Home cleaning", "2025-07-15", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Dental care (after sleep)", "2025-07-15", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Shower", "2025-07-15", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Hair care", "2025-07-15", 1, 1);
+INSERT INTO rule_instance ( rule_name, day_id, done, order_priority) VALUES ( "Face shave", "2025-07-15", 1, 1);
