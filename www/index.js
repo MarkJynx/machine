@@ -133,17 +133,18 @@ function generate_day(day, rules) {
 	}
 }
 
-async function main() {
-	const url_arguments = new URLSearchParams(window.location.search)
-	let specified_date = null
-	// TODO: better validation / error-reporting
-	if (url_arguments.size == 1 && url_arguments.has("date") && url_arguments.get("date") && url_arguments.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
-		specified_date = url_arguments.get("date")
-	}
+// TODO: turn specified_date from global to local
+const url_arguments = new URLSearchParams(window.location.search)
+let specified_date = null
+// TODO: better validation / error-reporting
+if (url_arguments.size == 1 && url_arguments.has("date") && url_arguments.get("date") && url_arguments.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+	specified_date = url_arguments.get("date")
+}
+const current_date = new Date()
+const current_date_string = current_date.toISOString().substring(0, 10)
+specified_date = specified_date ? specified_date : current_date_string
 
-	const current_date = new Date()
-	const current_date_string = current_date.toISOString().substring(0, 10)
-	specified_date = specified_date ? specified_date : current_date_string
+async function main() {
 
 	// TODO: handle errors, validate with JSON schema
 	let day = await fetch("cgi-bin/read_day.lua", {
