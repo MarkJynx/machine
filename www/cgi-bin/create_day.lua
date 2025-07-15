@@ -23,7 +23,7 @@ end
 
 local get_last_rule_instance = function(db, rule)
 	-- TODO: validate anything you get from database
-	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. rule.name .. "' ORDER BY JULIANDAY(day_id) ASC LIMIT 1"
+	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. rule.name .. "' ORDER BY JULIANDAY(day_id) DESC LIMIT 1"
 	local rule_instance = common.collect_database(db, q)
 	if not rule_instance or #rule_instance ~= 1 then
 		return nil
