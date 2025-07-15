@@ -12,10 +12,10 @@ local get_rule_schedule = function(db, rule, date)
 	local q = {}
 	-- TODO: validate anything you get from database
 	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule.name))
-	table.insert(q, string.format("JULIANDAY(start_date) >= JULIANDAY('%s') AND ", date))
-	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) <= JULIANDAY('%s'))", date))
+	table.insert(q, string.format("JULIANDAY(start_date) <= JULIANDAY('%s') AND ", date))
+	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
 	local rule_schedule = common.collect_database(db, table.concat(q))
-	if #rule_schedule ~= 1 then
+	if not rule_schedule or #rule_schedule ~= 1 then
 		return nil
 	end
 	return rule_schedule[1]
@@ -25,7 +25,7 @@ local get_last_rule_instance = function(db, rule)
 	-- TODO: validate anything you get from database
 	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. rule.name .. "' ORDER BY JULIANDAY(day_id) ASC LIMIT 1"
 	local rule_instance = common.collect_database(db, q)
-	if #rule_instance ~= 1 then
+	if not rule_instance or #rule_instance ~= 1 then
 		return nil
 	end
 	return rule_instance[1]

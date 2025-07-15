@@ -40,10 +40,25 @@ async function delete_day() {
 	  headers: { "Content-Type": "text/plain" },
 	  body: specified_date
 	})
-	console.log(deletion);
 	let deletionData = await deletion.json()
 
 	window.location.reload()
+}
+
+// Copied straight from main(), only replaced read_day.lua with create_day.lua
+async function create_day() {
+	let day = await fetch("cgi-bin/create_day.lua", {
+	  method: "POST",
+	  headers: { "Content-Type": "text/plain" },
+	  body: specified_date
+	})
+	let dayData = await day.json()
+
+	// TODO: handle errors, validate with JSON schema
+	let rules = await fetch("cgi-bin/read_rules.lua")
+	let rulesData = await rules.json()
+
+	generate_day(dayData, rulesData)
 }
 
 function generate_day(day, rules) {
@@ -63,6 +78,7 @@ function generate_day(day, rules) {
 		navigation_button = document.createElement("input")
 		navigation_button.type = "button"
 		navigation_button.value = "+"
+		navigation_button.onclick = create_day
 		navigation_cell.appendChild(navigation_button)
 
 		navigation_cell = navigation_row.insertCell()

@@ -27,12 +27,6 @@ async function main() {
 
 main()
 
-// TODO  1: JS:   empty "Create Day" handler
-// TODO  2: JS:   call create_day.lua
-// TODO  3: JS:   add empty "Save" handler
-// TODO  4: JS:   save handler: convert table to JSON
-// TODO  5: JS:   call update_day.lua
-// TODO  6: JS:   add ADD_TASK button empty handler
-// TODO  7: JS:   add ADD_TASK button proper handler (do not allow duplicates)
-// TODO  8: HTML: add day.NOTES with payload already
-// TODO  9: JS:   save day.NOTES with payload
+// TODO 1: save handler: convert table to JSON
+// TODO 2: call update_day.lua
+// TODO 3: add ADD_TASK button proper handler (do not allow duplicates)
