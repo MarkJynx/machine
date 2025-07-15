@@ -27,18 +27,16 @@ async function main() {
 
 main()
 
-// TODO  5: JS:   add empty navigation handlers
-// TODO  6: JS:   GET index.htm
-// TODO  7: JS:   add empty "Delete" handler
-// TODO  8: JS:   call delete_day.lua
-// TODO  9: JS:   empty "Create Day" handler
-// TODO 10: JS:   call create_day.lua
-// TODO 11: JS:   add empty "Save" handler
-// TODO 12: JS:   save handler: convert table to console.log
-// TODO 13: JS:   save handler: convert table to JSON
-// TODO 14: JS:   call update_day.lua
-// TODO 15: JS:   add ADD_TASK button empty handler
-// TODO 16: JS:   add ADD_TASK button console handler
-// TODO 17: JS:   add ADD_TASK button proper handler (attach to end of the list)
-// TODO 18: JS:   save day.NOTES with payload
-// TODO 19: HTML: add day.NOTES with payload already
+// TODO  1: JS:   add empty navigation handlers
+// TODO  2: JS:   GET index.htm
+// TODO  3: JS:   add empty "Delete" handler
+// TODO  4: JS:   call delete_day.lua
+// TODO  5: JS:   empty "Create Day" handler
+// TODO  6: JS:   call create_day.lua
+// TODO  7: JS:   add empty "Save" handler
+// TODO  8: JS:   save handler: convert table to JSON
+// TODO  9: JS:   call update_day.lua
+// TODO 10: JS:   add ADD_TASK button empty handler
+// TODO 11: JS:   add ADD_TASK button proper handler (do not allow duplicates)
+// TODO 12: HTML: add day.NOTES with payload already
+// TODO 13: JS:   save day.NOTES with payload
