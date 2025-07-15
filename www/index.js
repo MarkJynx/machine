@@ -27,10 +27,6 @@ async function main() {
 
 main()
 
-// TODO  1: JS:   task_table_generatino: add UP and DOWN button empty handlers
-// TODO  2: JS:   task_table_generation: add UP and DOWN button full handlers
-// TODO  3: JS:   task_table_generation: add empty DELETE handler
-// TODO  4: JS:   task_table_generation: add proper DELETE handler
 // TODO  5: JS:   add empty navigation handlers
 // TODO  6: JS:   GET index.htm
 // TODO  7: JS:   add empty "Delete" handler
