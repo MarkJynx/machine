@@ -60,33 +60,25 @@ async function create_day() {
 	generate_day(dayData, rulesData)
 }
 
+
+function make_button_cell(row, txt, fn) {
+	let cell = row.insertCell()
+	let button = document.createElement("input")
+	button.type = "button"
+	button.value = txt
+	button.onclick = fn
+	cell.appendChild(button)
+}
+
 function generate_day(day, rules) {
 	document.body.replaceChildren()
 	if (day == null) {
 		// TODO: do not copy and paste
 		let navigation_table = document.createElement("table")
 		let navigation_row = navigation_table.insertRow()
-		let navigation_cell = navigation_row.insertCell()
-		let navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "←"
-		navigation_button.onclick = function() { navigate_to_day(-1) }
-		navigation_cell.appendChild(navigation_button)
-
-		navigation_cell = navigation_row.insertCell()
-		navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "+"
-		navigation_button.onclick = create_day
-		navigation_cell.appendChild(navigation_button)
-
-		navigation_cell = navigation_row.insertCell()
-		navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "→"
-		navigation_button.onclick = function() { navigate_to_day(1) }
-		navigation_cell.appendChild(navigation_button)
-
+		make_button_cell(navigation_row, "←", function() { navigate_to_day(-1) })
+		make_button_cell(navigation_row, "+", create_day)
+		make_button_cell(navigation_row, "→", function() { navigate_to_day(1) })
 		document.body.appendChild(navigation_table)
 	} else {
 		let task_table = document.createElement("table")
@@ -97,28 +89,11 @@ function generate_day(day, rules) {
 			let row = task_table.insertRow()
 			row.id = rule_name
 
+			make_button_cell(row, "⨯", delete_me)
+			make_button_cell(row, "↑", move_up)
+			make_button_cell(row, "↓", move_down)
+
 			let cell = row.insertCell()
-			let button = document.createElement("input")
-			button.type = "button"
-			button.value = "❌"
-			button.onclick = delete_me
-			cell.appendChild(button)
-
-			cell = row.insertCell()
-			button = document.createElement("input")
-			button.type = "button"
-			button.value = "↑"
-			button.onclick = move_up
-			cell.appendChild(button)
-
-			cell = row.insertCell()
-			button = document.createElement("input")
-			button.type = "button"
-			button.value = "↓"
-			button.onclick = move_down
-			cell.appendChild(button)
-
-			cell = row.insertCell()
 			let checkbox = document.createElement("input")
 			checkbox.type = "checkbox"
 			checkbox.checked = Boolean(done)
@@ -131,25 +106,9 @@ function generate_day(day, rules) {
 		let row = task_table.insertRow()
 		let cell = row.insertCell()
 
-		cell = row.insertCell()
-		let button = document.createElement("input")
-		button.type = "button"
-		button.value = "↑"
-		button.onclick = move_up
-		cell.appendChild(button)
-
-		cell = row.insertCell()
-		button = document.createElement("input")
-		button.type = "button"
-		button.value = "↓"
-		button.onclick = move_down
-		cell.appendChild(button)
-
-		cell = row.insertCell()
-		button = document.createElement("input")
-		button.type = "button"
-		button.value = "+"
-		cell.appendChild(button)
+		make_button_cell(row, "↑", move_up)
+		make_button_cell(row, "↓", move_down)
+		make_button_cell(row, "+", function(){}) // TODO
 
 		cell = row.insertCell()
 		let selection = document.createElement("select")
@@ -164,32 +123,11 @@ function generate_day(day, rules) {
 
 		let navigation_table = document.createElement("table")
 		let navigation_row = navigation_table.insertRow()
-		let navigation_cell = navigation_row.insertCell()
-		let navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "←"
-		navigation_button.onclick = function() { navigate_to_day(-1) }
-		navigation_cell.appendChild(navigation_button)
 
-		navigation_cell = navigation_row.insertCell()
-		navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "❌"
-		navigation_button.onclick = delete_day
-		navigation_cell.appendChild(navigation_button)
-
-		navigation_cell = navigation_row.insertCell()
-		navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "→"
-		navigation_button.onclick = function() { navigate_to_day(1) }
-		navigation_cell.appendChild(navigation_button)
-
-		navigation_cell = navigation_row.insertCell()
-		navigation_button = document.createElement("input")
-		navigation_button.type = "button"
-		navigation_button.value = "💾"
-		navigation_cell.appendChild(navigation_button)
+		make_button_cell(navigation_row, "←", function() { navigate_to_day(-1) })
+		make_button_cell(navigation_row, "⨯", delete_day)
+		make_button_cell(navigation_row, "→", function() { navigate_to_day(1) })
+		make_button_cell(navigation_row, "💾", function(){}) // TODO
 
 		document.body.appendChild(navigation_table)
 	}
