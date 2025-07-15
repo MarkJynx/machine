@@ -1,25 +1,50 @@
+function add_days(date, days) {
+	let result = new Date(date)
+	result.setDate(result.getDate() + days)
+	return result
+}
+
+
+function navigate_to_day(offset) {
+	// TODO: declare specified_date in main() and pass it through there
+	let target_date_string = add_days(specified_date, offset).toISOString().substring(0, 10)
+	window.location = "?date=" + target_date_string
+}
+
 function move_up(e) {
-	let row = e.target.parentNode.parentNode;
-	let previous = row.previousElementSibling;
-	let tbody = row.parentNode;
+	let row = e.target.parentNode.parentNode
+	let previous = row.previousElementSibling
+	let tbody = row.parentNode
 	if (previous) {
-		tbody.insertBefore(row, previous);
+		tbody.insertBefore(row, previous)
 	}
 }
 
 function move_down(e) {
-	let row = e.target.parentNode.parentNode;
-	let next = row.nextElementSibling;
-	let tbody = row.parentNode;
+	let row = e.target.parentNode.parentNode
+	let next = row.nextElementSibling
+	let tbody = row.parentNode
 	if (next) {
-		tbody.insertBefore(next, row);
+		tbody.insertBefore(next, row)
 	}
 }
 
 function delete_me(e) {
-	e.target.parentNode.parentNode.remove();
+	e.target.parentNode.parentNode.remove()
 }
 
+
+async function delete_day() {
+	let deletion = await fetch("cgi-bin/delete_day.lua", {
+	  method: "POST",
+	  headers: { "Content-Type": "text/plain" },
+	  body: specified_date
+	})
+	console.log(deletion);
+	let deletionData = await deletion.json()
+
+	window.location.reload()
+}
 
 function generate_day(day, rules) {
 	document.body.replaceChildren()
@@ -31,6 +56,7 @@ function generate_day(day, rules) {
 		let navigation_button = document.createElement("input")
 		navigation_button.type = "button"
 		navigation_button.value = "←"
+		navigation_button.onclick = function() { navigate_to_day(-1) }
 		navigation_cell.appendChild(navigation_button)
 
 		navigation_cell = navigation_row.insertCell()
@@ -43,6 +69,7 @@ function generate_day(day, rules) {
 		navigation_button = document.createElement("input")
 		navigation_button.type = "button"
 		navigation_button.value = "→"
+		navigation_button.onclick = function() { navigate_to_day(1) }
 		navigation_cell.appendChild(navigation_button)
 
 		document.body.appendChild(navigation_table)
@@ -59,21 +86,21 @@ function generate_day(day, rules) {
 			let button = document.createElement("input")
 			button.type = "button"
 			button.value = "❌"
-			button.onclick = delete_me;
+			button.onclick = delete_me
 			cell.appendChild(button)
 
 			cell = row.insertCell()
 			button = document.createElement("input")
 			button.type = "button"
 			button.value = "↑"
-			button.onclick = move_up;
+			button.onclick = move_up
 			cell.appendChild(button)
 
 			cell = row.insertCell()
 			button = document.createElement("input")
 			button.type = "button"
 			button.value = "↓"
-			button.onclick = move_down;
+			button.onclick = move_down
 			cell.appendChild(button)
 
 			cell = row.insertCell()
@@ -93,14 +120,14 @@ function generate_day(day, rules) {
 		let button = document.createElement("input")
 		button.type = "button"
 		button.value = "↑"
-		button.onclick = move_up;
+		button.onclick = move_up
 		cell.appendChild(button)
 
 		cell = row.insertCell()
 		button = document.createElement("input")
 		button.type = "button"
 		button.value = "↓"
-		button.onclick = move_down;
+		button.onclick = move_down
 		cell.appendChild(button)
 
 		cell = row.insertCell()
@@ -126,20 +153,23 @@ function generate_day(day, rules) {
 		let navigation_button = document.createElement("input")
 		navigation_button.type = "button"
 		navigation_button.value = "←"
+		navigation_button.onclick = function() { navigate_to_day(-1) }
 		navigation_cell.appendChild(navigation_button)
 
 		navigation_cell = navigation_row.insertCell()
 		navigation_button = document.createElement("input")
 		navigation_button.type = "button"
 		navigation_button.value = "❌"
+		navigation_button.onclick = delete_day
 		navigation_cell.appendChild(navigation_button)
 
 		navigation_cell = navigation_row.insertCell()
 		navigation_button = document.createElement("input")
 		navigation_button.type = "button"
 		navigation_button.value = "→"
-
+		navigation_button.onclick = function() { navigate_to_day(1) }
 		navigation_cell.appendChild(navigation_button)
+
 		navigation_cell = navigation_row.insertCell()
 		navigation_button = document.createElement("input")
 		navigation_button.type = "button"

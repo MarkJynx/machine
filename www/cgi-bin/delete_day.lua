@@ -9,7 +9,7 @@ local delete_day = function(db, id)
 	table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. id .. "'")
 	table.insert(s, "DELETE FROM day WHERE id = '" .. id .. "'")
 	table.insert(s, "COMMIT")
-	return common.execute_many_database_queryies(db, s)
+	return common.execute_many_database_queries(db, s)
 end
 
 local main = function()

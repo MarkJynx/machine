@@ -61,3 +61,4 @@
 11: generate HTML when day is null.
 25: task table: handle reordering and deletion.
 4: adjust TODO.
+25: call delete_day.lua.
