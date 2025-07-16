@@ -1,15 +1,7 @@
 Roadmap (small tasks)
 1. Front-end.
-1. 1. Front-end: read day.
-1. 2. Front-end: navigate days.
-1. 3. Front-end: create day.
-1. 4. Front-end: update day (chore.done).
-1. 5. Front-end: delete day.
-1. 6. Front-end: update day (chore.order_priority).
-1. 7. Front-end: update day (delete chore).
-1. 8. Front-end: update day (add chore).
-1. 9. Front-end: update day (day.notes).
-1. 10. Front-end: update day (chore.notes).
+1. 1. Front-end: update day (add chore).
+1. 2. Front-end: update day (day.notes).
 2. Deploy.
 
 Roadmap (big picture)

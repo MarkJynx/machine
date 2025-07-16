@@ -24,14 +24,14 @@ local main = function()
 	local database = common.open_database("cgi-bin/machine.db")
 	local response = "false"
 
-	if day and not common.day_exists(database, day.id) and common.validate_day(day) then
+	if day and common.validate_day(day) then
 		local s = {}
 		table.insert(s, "PRAGMA foreign_keys = ON")
 		table.insert(s, "BEGIN TRANSACTION")
 		table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. day.id .. "'")
 		table.insert(s, "DELETE FROM day WHERE id = '" .. day.id .. "'")
 		local notes = "NULL"
-		if day.notes then
+		if type(day.notes) == "string" then
 			notes = "'" .. database:escape(day.notes) .. "'"
 		end
 		table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')

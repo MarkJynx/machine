@@ -32,6 +32,43 @@ function delete_me(e) {
 	e.target.parentNode.parentNode.remove()
 }
 
+function make_button_cell(row, txt, fn) {
+	let cell = row.insertCell()
+	let button = document.createElement("input")
+	button.type = "button"
+	button.value = txt
+	button.onclick = fn
+	cell.appendChild(button)
+}
+
+async function save_day() {
+	let json = {"id": specified_date, "notes": null, "rule_instances": []}
+
+	let table = document.getElementById("task_table")
+	for (let i = 0; i < table.rows.length; i++) {
+		let row = table.rows[i]
+		if (row.class != "rule_row") {
+			continue;
+		}
+
+		let rule_name = row.cells[4].innerText // TODO: validate against rules
+		let rule_done = row.cells[3].firstChild.checked
+
+		json.rule_instances.push({
+			"day_id": specified_date,
+			"rule_name": rule_name,
+			"done": Number(rule_done),
+			"order_priority": json.rule_instances.length + 1
+		})
+	}
+
+	let deletion = await fetch("cgi-bin/update_day.lua", {
+	  method: "POST",
+	  headers: { "Content-Type": "application/json" },
+	  body: JSON.stringify(json)
+	})
+	let deletionData = await deletion.json()
+}
 
 async function delete_day() {
 	let deletion = await fetch("cgi-bin/delete_day.lua", {
@@ -61,15 +98,6 @@ async function create_day() {
 }
 
 
-function make_button_cell(row, txt, fn) {
-	let cell = row.insertCell()
-	let button = document.createElement("input")
-	button.type = "button"
-	button.value = txt
-	button.onclick = fn
-	cell.appendChild(button)
-}
-
 function generate_day(day, rules) {
 	document.body.replaceChildren()
 	if (day == null) {
@@ -82,12 +110,13 @@ function generate_day(day, rules) {
 		document.body.appendChild(navigation_table)
 	} else {
 		let task_table = document.createElement("table")
+		task_table.id = "task_table"
 		for (i = 0; day.rule_instances != null && i < day.rule_instances.length; i++) {
 			let rule_name = day.rule_instances[i].rule_name
 			let done = day.rule_instances[i].done
 
 			let row = task_table.insertRow()
-			row.id = rule_name
+			row.class = "rule_row"
 
 			make_button_cell(row, "⨯", delete_me)
 			make_button_cell(row, "↑", move_up)
@@ -108,7 +137,7 @@ function generate_day(day, rules) {
 
 		make_button_cell(row, "↑", move_up)
 		make_button_cell(row, "↓", move_down)
-		make_button_cell(row, "+", function(){}) // TODO
+		make_button_cell(row, "+", create_day)
 
 		cell = row.insertCell()
 		let selection = document.createElement("select")
@@ -127,7 +156,7 @@ function generate_day(day, rules) {
 		make_button_cell(navigation_row, "←", function() { navigate_to_day(-1) })
 		make_button_cell(navigation_row, "⨯", delete_day)
 		make_button_cell(navigation_row, "→", function() { navigate_to_day(1) })
-		make_button_cell(navigation_row, "💾", function(){}) // TODO
+		make_button_cell(navigation_row, "💾", save_day)
 
 		document.body.appendChild(navigation_table)
 	}
@@ -145,7 +174,6 @@ const current_date_string = current_date.toISOString().substring(0, 10)
 specified_date = specified_date ? specified_date : current_date_string
 
 async function main() {
-
 	// TODO: handle errors, validate with JSON schema
 	let day = await fetch("cgi-bin/read_day.lua", {
 	  method: "POST",
@@ -163,6 +191,4 @@ async function main() {
 
 main()
 
-// TODO 1: save handler: convert table to JSON
-// TODO 2: call update_day.lua
-// TODO 3: add ADD_TASK button proper handler (do not allow duplicates)
+// TODO 1: add ADD_TASK button proper handler (do not allow duplicates)
