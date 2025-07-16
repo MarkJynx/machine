@@ -46,8 +46,8 @@ function delete_me(e) {
 }
 
 function rule_name_is_unique(name) {
-	let rows = Array.from(document.getElementById("task_table").rows)
-	return rows.reduce((x, r) => r.class == "rule_row" && r.cells[4].innerText == name ? false : x, true)
+	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
+	return rows.reduce((x, r) => r.cells[4].innerText == name ? false : x, true)
 }
 
 function make_rule_instance_row(name, done) {
@@ -90,27 +90,21 @@ function make_button_cell(row, txt, fn) {
 	cell.appendChild(button)
 }
 
+function rule_row_to_dict(row, index) {
+	let name = row.cells[4].innerText // TODO: validate against rules; check if exists
+	let done = row.cells[3].firstChild.checked // TODO: check if exists
+	return {
+		"day_id": specified_date,
+		"rule_name": name,
+		"done": Number(done),
+		"order_priority": index + 1
+	}
+}
+
 async function save_day() {
 	let json = {"id": specified_date, "notes": null, "rule_instances": []}
-
-	// TODO REFACTOR: REDUCE
-	let table = document.getElementById("task_table") // TODO: check if exists
-	for (let i = 0; i < table.rows.length; i++) {
-		let row = table.rows[i]
-		if (row.class != "rule_row") {
-			continue;
-		}
-
-		let rule_name = row.cells[4].innerText // TODO: validate against rules; check if exists
-		let rule_done = row.cells[3].firstChild.checked // TODO: check if exists
-
-		json.rule_instances.push({
-			"day_id": specified_date,
-			"rule_name": rule_name,
-			"done": Number(rule_done),
-			"order_priority": json.rule_instances.length + 1
-		})
-	}
+	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
+	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length)); return a}, [])
 
 	let deletion = await fetch("cgi-bin/update_day.lua", {
 	  method: "POST",
