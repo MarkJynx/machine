@@ -155,29 +155,17 @@ function generate_day(day, rules) {
 	} else {
 		let task_table = document.createElement("table")
 		task_table.id = "task_table"
-		// TODO REFACTOR: REDUCE / MAP
-		for (i = 0; day.rule_instances != null && i < day.rule_instances.length; i++) {
-			// TODO: function to make a rule instance row, that will be reuse in generate_day() and insert_task()
-			let rule_name = day.rule_instances[i].rule_name
-			let done = day.rule_instances[i].done
-			task_table.appendChild(make_rule_instance_row(rule_name, done))
-		}
+		day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
 
 		let row = task_table.insertRow()
 		let cell = row.insertCell()
-
 		make_button_cell(row, "↑", move_up)
 		make_button_cell(row, "↓", move_down)
 		make_button_cell(row, "+", insert_task)
 
 		cell = row.insertCell()
 		let selection = document.createElement("select")
-		// TODO REFACTOR: REDUCE / MAP
-		for (let i = 0; rules != null && i < rules.length; i++) {
-			let option = document.createElement("option")
-			option.text = rules[i].name
-			selection.add(option)
-		}
+		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) })
 		cell.appendChild(selection)
 
 		document.body.appendChild(task_table)
