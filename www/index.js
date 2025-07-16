@@ -93,6 +93,7 @@ function make_button_cell(row, txt, fn) {
 async function save_day() {
 	let json = {"id": specified_date, "notes": null, "rule_instances": []}
 
+	// TODO REFACTOR: REDUCE
 	let table = document.getElementById("task_table") // TODO: check if exists
 	for (let i = 0; i < table.rows.length; i++) {
 		let row = table.rows[i]
@@ -160,6 +161,7 @@ function generate_day(day, rules) {
 	} else {
 		let task_table = document.createElement("table")
 		task_table.id = "task_table"
+		// TODO REFACTOR: REDUCE / MAP
 		for (i = 0; day.rule_instances != null && i < day.rule_instances.length; i++) {
 			// TODO: function to make a rule instance row, that will be reuse in generate_day() and insert_task()
 			let rule_name = day.rule_instances[i].rule_name
@@ -176,6 +178,7 @@ function generate_day(day, rules) {
 
 		cell = row.insertCell()
 		let selection = document.createElement("select")
+		// TODO REFACTOR: REDUCE / MAP
 		for (let i = 0; rules != null && i < rules.length; i++) {
 			let option = document.createElement("option")
 			option.text = rules[i].name
