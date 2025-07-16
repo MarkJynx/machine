@@ -61,7 +61,6 @@ function rule_name_is_unique(name) {
 }
 
 function make_rule_instance_row(name, done) {
-	// TODO: make this into a function
 	let row = document.createElement("tr")
 	row.class = "rule_row"
 
