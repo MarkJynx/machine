@@ -18,7 +18,7 @@ function get_url_date_string(url) {
 }
 
 function navigate_to_day(offset) {
-	// TODO: declare specified_date in main() and pass it through there
+	// TODO: retrieve specified_date through arguments
 	let target_date_string = add_days(specified_date, offset).toISOString().substring(0, 10)
 	window.location = "?date=" + target_date_string
 }
@@ -207,8 +207,6 @@ function generate_day(day, rules) {
 	}
 }
 
-let specified_date = get_url_date_string(window.location.search) || get_local_date_string() // TODO: turn to local
-
 async function main() {
 	// TODO: handle errors, validate with JSON schema
 	let day = await fetch("cgi-bin/read_day.lua", {
@@ -225,4 +223,5 @@ async function main() {
 	generate_day(dayData, rulesData)
 }
 
+let specified_date = get_url_date_string(window.location.search) || get_local_date_string() // TODO: turn to local
 main()
