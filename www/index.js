@@ -46,18 +46,8 @@ function delete_me(e) {
 }
 
 function rule_name_is_unique(name) {
-	let table = document.getElementById("task_table")
-	for (let i = 0; table && i < table.rows.length; i++) {
-		let row = table.rows[i]
-		if (row.class != "rule_row") {
-			continue;
-		}
-		let rule_name = row.cells[4].innerText // TODO: validate against rules; check if exists
-		if (rule_name == name) {
-			return false
-		}
-	}
-	return true
+	let rows = Array.from(document.getElementById("task_table").rows)
+	return rows.reduce((x, r) => r.class == "rule_row" && r.cells[4].innerText == name ? false : x, true)
 }
 
 function make_rule_instance_row(name, done) {
