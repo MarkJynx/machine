@@ -9,6 +9,14 @@ function get_local_date_string() {
 	return new Date(new Date() - tzoffset).toISOString().substring(0, 10)
 }
 
+function get_url_date_string(url) {
+	const args = new URLSearchParams(url)
+	if (args.size == 1 && args.has("date") && args.get("date") && args.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+		return args.get("date")
+	}
+	return null
+}
+
 function navigate_to_day(offset) {
 	// TODO: declare specified_date in main() and pass it through there
 	let target_date_string = add_days(specified_date, offset).toISOString().substring(0, 10)
@@ -208,14 +216,7 @@ function generate_day(day, rules) {
 	}
 }
 
-// TODO: turn specified_date from global to local
-const url_arguments = new URLSearchParams(window.location.search)
-let specified_date = null
-// TODO: better validation / error-reporting
-if (url_arguments.size == 1 && url_arguments.has("date") && url_arguments.get("date") && url_arguments.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
-	specified_date = url_arguments.get("date")
-}
-specified_date = specified_date ? specified_date : get_local_date_string()
+let specified_date = get_url_date_string(window.location.search) || get_local_date_string() // TODO: turn to local
 
 async function main() {
 	// TODO: handle errors, validate with JSON schema
