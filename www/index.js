@@ -4,6 +4,11 @@ function add_days(date, days) {
 	return result
 }
 
+function get_local_date_string() {
+	let tzoffset = (new Date()).getTimezoneOffset() * 60000 // offset in milliseconds
+	return new Date(new Date() - tzoffset).toISOString().substring(0, 10)
+}
+
 function navigate_to_day(offset) {
 	// TODO: declare specified_date in main() and pass it through there
 	let target_date_string = add_days(specified_date, offset).toISOString().substring(0, 10)
@@ -210,9 +215,7 @@ let specified_date = null
 if (url_arguments.size == 1 && url_arguments.has("date") && url_arguments.get("date") && url_arguments.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 	specified_date = url_arguments.get("date")
 }
-const current_date = new Date()
-const current_date_string = current_date.toISOString().substring(0, 10)
-specified_date = specified_date ? specified_date : current_date_string
+specified_date = specified_date ? specified_date : get_local_date_string()
 
 async function main() {
 	// TODO: handle errors, validate with JSON schema
