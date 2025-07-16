@@ -32,6 +32,46 @@ function delete_me(e) {
 	e.target.parentNode.parentNode.remove()
 }
 
+function rule_name_is_unique(name) {
+	let table = document.getElementById("task_table")
+	for (let i = 0; table && i < table.rows.length; i++) {
+		let row = table.rows[i]
+		if (row.class != "rule_row") {
+			continue;
+		}
+		let rule_name = row.cells[4].innerText // TODO: validate against rules; check if exists
+		console.log("checking " + rule_name + " against " + name)
+		if (rule_name == name) {
+			return false
+		}
+	}
+	return true
+}
+
+function insert_task(e) {
+	let creation_row = e.target.parentNode.parentNode
+	let rule_name = creation_row.cells[4].firstChild.value // TODO: check if exists
+	if (!rule_name_is_unique(rule_name)) {
+		return
+	}
+
+	// TODO: make this into a function
+	let row = document.createElement("tr")
+	row.class = "rule_row"
+	make_button_cell(row, "⨯", delete_me)
+	make_button_cell(row, "↑", move_up)
+	make_button_cell(row, "↓", move_down)
+	let cell = row.insertCell()
+	let checkbox = document.createElement("input")
+	checkbox.type = "checkbox"
+	cell.appendChild(checkbox)
+	cell = row.insertCell()
+	cell.innerText = rule_name
+
+	let tbody = creation_row.parentNode
+	tbody.insertBefore(row, creation_row)
+}
+
 function make_button_cell(row, txt, fn) {
 	let cell = row.insertCell()
 	let button = document.createElement("input")
@@ -44,15 +84,15 @@ function make_button_cell(row, txt, fn) {
 async function save_day() {
 	let json = {"id": specified_date, "notes": null, "rule_instances": []}
 
-	let table = document.getElementById("task_table")
+	let table = document.getElementById("task_table") // TODO: check if exists
 	for (let i = 0; i < table.rows.length; i++) {
 		let row = table.rows[i]
 		if (row.class != "rule_row") {
 			continue;
 		}
 
-		let rule_name = row.cells[4].innerText // TODO: validate against rules
-		let rule_done = row.cells[3].firstChild.checked
+		let rule_name = row.cells[4].innerText // TODO: validate against rules; check if exists
+		let rule_done = row.cells[3].firstChild.checked // TODO: check if exists
 
 		json.rule_instances.push({
 			"day_id": specified_date,
@@ -112,6 +152,7 @@ function generate_day(day, rules) {
 		let task_table = document.createElement("table")
 		task_table.id = "task_table"
 		for (i = 0; day.rule_instances != null && i < day.rule_instances.length; i++) {
+			// TODO: function to make a rule instance row, that will be reuse in generate_day() and insert_task()
 			let rule_name = day.rule_instances[i].rule_name
 			let done = day.rule_instances[i].done
 
@@ -137,7 +178,7 @@ function generate_day(day, rules) {
 
 		make_button_cell(row, "↑", move_up)
 		make_button_cell(row, "↓", move_down)
-		make_button_cell(row, "+", create_day)
+		make_button_cell(row, "+", insert_task)
 
 		cell = row.insertCell()
 		let selection = document.createElement("select")
@@ -190,5 +231,3 @@ async function main() {
 }
 
 main()
-
-// TODO 1: add ADD_TASK button proper handler (do not allow duplicates)
