@@ -53,12 +53,32 @@ function rule_name_is_unique(name) {
 			continue;
 		}
 		let rule_name = row.cells[4].innerText // TODO: validate against rules; check if exists
-		console.log("checking " + rule_name + " against " + name)
 		if (rule_name == name) {
 			return false
 		}
 	}
 	return true
+}
+
+function make_rule_instance_row(name, done) {
+	// TODO: make this into a function
+	let row = document.createElement("tr")
+	row.class = "rule_row"
+
+	make_button_cell(row, "⨯", delete_me)
+	make_button_cell(row, "↑", move_up)
+	make_button_cell(row, "↓", move_down)
+
+	let cell = row.insertCell()
+	let checkbox = document.createElement("input")
+	checkbox.type = "checkbox"
+	checkbox.checked = Boolean(done)
+	cell.appendChild(checkbox)
+
+	cell = row.insertCell()
+	cell.innerText = name
+
+	return row
 }
 
 function insert_task(e) {
@@ -68,21 +88,8 @@ function insert_task(e) {
 		return
 	}
 
-	// TODO: make this into a function
-	let row = document.createElement("tr")
-	row.class = "rule_row"
-	make_button_cell(row, "⨯", delete_me)
-	make_button_cell(row, "↑", move_up)
-	make_button_cell(row, "↓", move_down)
-	let cell = row.insertCell()
-	let checkbox = document.createElement("input")
-	checkbox.type = "checkbox"
-	cell.appendChild(checkbox)
-	cell = row.insertCell()
-	cell.innerText = rule_name
-
 	let tbody = creation_row.parentNode
-	tbody.insertBefore(row, creation_row)
+	tbody.insertBefore(make_rule_instance_row(rule_name, 0), creation_row)
 }
 
 function make_button_cell(row, txt, fn) {
@@ -168,22 +175,7 @@ function generate_day(day, rules) {
 			// TODO: function to make a rule instance row, that will be reuse in generate_day() and insert_task()
 			let rule_name = day.rule_instances[i].rule_name
 			let done = day.rule_instances[i].done
-
-			let row = task_table.insertRow()
-			row.class = "rule_row"
-
-			make_button_cell(row, "⨯", delete_me)
-			make_button_cell(row, "↑", move_up)
-			make_button_cell(row, "↓", move_down)
-
-			let cell = row.insertCell()
-			let checkbox = document.createElement("input")
-			checkbox.type = "checkbox"
-			checkbox.checked = Boolean(done)
-			cell.appendChild(checkbox)
-
-			cell = row.insertCell()
-			cell.innerText = rule_name
+			task_table.appendChild(make_rule_instance_row(rule_name, done))
 		}
 
 		let row = task_table.insertRow()
