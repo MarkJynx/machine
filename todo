@@ -1,15 +1,19 @@
-Roadmap (big picture)
-1. CRUD day & chores (back-end, front-end).
-2. Undo/redo.
-3. Statistics (day, daily, aggregate).
-4. CRUD task_schedule (back-end, front-end).
-5. CRUD category, task, task_importance (remove init.sql).
-6. Style (CSS). Better mobile integration.
-7. Documentation. Testing.
-8. Philosophy.
-9. Achievements.
-
-Refactorization:
-1. Protect well against POST input.
-2. Protect well against corrupted database.
-3. Typed CGI script language.
+* FEATURE: Matrix view.
+* REFACTORIZATION: Robustness (front-end).
+* REFACTORIZATION: Robustness (back-end).
+* REFACTORIZATION: JSON back-ups.
+* REFACTORIZATION: No global state (front-end).
+* REFACTORIZATION: No reloads (front-end).
+* FEATURE: Notes (front-end).
+* FEATURE: Informational headers (front-end).
+* FEATURE: Undo/Redo (front-end).
+* REFACTORIZATION: Documentation.
+* REFACTORIZATION: Test suite.
+* REFACTORIZATION: Philosophy.
+* FEATURE: Achievements.
+* REFACTORIZATION: CSS. Mobile integration.
+* FEATURE: CRUD rule_schedule.
+* FEATURE: Other CRUD tables (remove init.sql).
+* FEATURE: Statistics (day, daily, aggregate).
+* REFACTORIZATION: Typed (compiled?) back-end language.
+* REFACTORIZATION: Typed front-end language.
