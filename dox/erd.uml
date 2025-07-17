@@ -40,6 +40,7 @@ entity RuleImportance {
 entity RuleInstance {
     * ID <<PK>>
     * RuleName <<FK>>
+    * RuleSchedule <<FK>>
     * DayID <<FK>>
     * Done
     * OrderPriority
@@ -53,10 +54,11 @@ entity Day {
     * Percentage <<Generated>>
 }
 
-Day --o{ RuleInstance
-Rule --o{ RuleInstance
 RuleCategory --o{ Rule
-Rule --o{ RuleSchedule
 RuleImportance --o{ Rule
+Rule --o{ RuleInstance
+Day --o{ RuleInstance
+RuleSchedule --o{ RuleInstance
+Rule --o{ RuleSchedule
 
 @enduml
