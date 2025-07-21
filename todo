@@ -5,6 +5,7 @@
 	* CLI
 
 * FEATURE: Matrix view.
+
 * REFACTORIZATION: Robustness (front-end).
 * REFACTORIZATION: Robustness (back-end).
 * REFACTORIZATION: No global state (front-end).
