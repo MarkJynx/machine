@@ -1,7 +1,12 @@
+* FEATURE: JSON back-ups.
+	* common.lua:db_to_json()
+	* common.lua:json_to_db()
+	* integrate into back-end
+	* CLI
+
 * FEATURE: Matrix view.
 * REFACTORIZATION: Robustness (front-end).
 * REFACTORIZATION: Robustness (back-end).
-* REFACTORIZATION: JSON back-ups.
 * REFACTORIZATION: No global state (front-end).
 * REFACTORIZATION: No reloads (front-end).
 * FEATURE: Notes (front-end).
