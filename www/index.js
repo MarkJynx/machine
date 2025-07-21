@@ -125,20 +125,22 @@ async function delete_day() {
 	window.location.reload()
 }
 
+async function post_date_request(endpoint, date) {
+	let response = await fetch("cgi-bin/" + endpoint + ".lua", {
+		method: "POST",
+		headers: { "Content-Type": "text/plain" },
+		body: date
+	})
+
+	let json = await response.json()
+	return json
+}
+
 // Copied straight from main(), only replaced read_day.lua with create_day.lua
 async function create_day() {
-	let day = await fetch("cgi-bin/create_day.lua", {
-	  method: "POST",
-	  headers: { "Content-Type": "text/plain" },
-	  body: specified_date
-	})
-	let dayData = await day.json()
-
-	// TODO: handle errors, validate with JSON schema
-	let rules = await fetch("cgi-bin/read_rules.lua")
-	let rulesData = await rules.json()
-
-	generate_day(dayData, rulesData)
+	let day = await post_date_request("create_day", specified_date)
+	let rules = await post_date_request("read_rules", specified_date)
+	generate_day(day, rules)
 }
 
 

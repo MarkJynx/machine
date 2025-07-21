@@ -1,12 +1,10 @@
 1. FIX: rule_schedule integration.
-1. 1. Integrate rule_schedule into read_rules.lua.
-1. 1. 1. Front-end: make it a POST, send a date.
-1. 1. 2. Back-end: expect a POST, validate a date.
-1. 1. 3. Return applicable rule schedule.
+1. 1. Test back-end rule_schedule integration.
 1. 2. Integrate rule_schedule into front-end.
 1. 2. 1. Integrate rule_schedule into new rule instance creation.
 1. 2. 2. Integrate rule_schedule into task_table.
 1. 2. 3. Integrate rule_schedule into save_day().
+
 2. FEATURE: Matrix view.
 2. 1. Extract rules.
 2. 2. Extract rule schedule into rule.

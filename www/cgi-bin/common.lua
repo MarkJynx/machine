@@ -54,6 +54,26 @@ common.collect_database = function(db, q)
 	return collection
 end
 
+common.get_rule_schedule = function(db, rule, date) -- TODO: make common functions bullet-proof, check everything
+	if not date then
+		return nil
+	end
+
+	local q = {}
+	-- TODO: validate anything you get from database
+	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule.name))
+	table.insert(q, string.format("JULIANDAY(start_date) <= JULIANDAY('%s') AND ", date))
+	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
+	q = table.concat(q)
+
+	local rule_schedule = common.collect_database(db, table.concat(q))
+	if not rule_schedule or #rule_schedule ~= 1 then
+		return nil
+	end
+
+	return rule_schedule[1]
+end
+
 common.execute_many_database_queries = function(db, queries)
 	local success = true
 	for _, query in ipairs(queries) do

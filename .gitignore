@@ -2,3 +2,4 @@ www/.htpasswd
 www/cgi-bin/.htpasswd
 www/cgi-bin/machine.db
 www/cgi-bin/machine.db-journal
+dox/*.png
