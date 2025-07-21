@@ -11,14 +11,14 @@ local database_to_sql_day = function(day_id, database, sql_script)
 	local rule_instances = common.collect_database(database, q)
 	for _, r in ipairs(rule_instances or {}) do
 		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
-		local padding = string.rep(" ", 25 - #r.rule_name)
-		s = s .. string.format('"%s",%s %2d, "%s", %d, %d);\n', r.rule_name, padding, r.rule_schedule_id, r.day_id, r.done, r.order_priority)
+		-- TODO: dynamic padding
+		local rule_name = '"' .. r.rule_name .. '",' .. string.rep(" ", 26 - #r.rule_name)
+		s = s .. string.format('%s%2d, "%s", %d, %2d);\n', rule_name, r.rule_schedule_id, r.day_id, r.done, r.order_priority)
 		sql_script:write(s)
 	end
 end
 
 local database_to_sql = function (database, sql_path)
-	io.stderr:write(sql_path .. "\n")
 	local sql_script = io.open(sql_path, "wb")
 	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC")
 	for index, day in ipairs(days or {}) do
@@ -33,8 +33,9 @@ end
 local rule_instance_to_insert_query = function(rule_instance, day_id, database)
 	local q = {}
 	table.insert(q, "INSERT OR ROLLBACK INTO rule_instance")
-	table.insert(q, "(rule_name, day_id, done, order_priority) VALUES (")
+	table.insert(q, "(rule_name, rule_schedule_id, day_id, done, order_priority) VALUES (")
 	table.insert(q, "'" .. database:escape(rule_instance.rule_name) .. "',")
+	table.insert(q, tostring(rule_instance.rule_schedule_id))
 	table.insert(q, string.format("'%s',%d,%d)", day_id, rule_instance.done, rule_instance.order_priority))
 	return table.concat(q)
 end
