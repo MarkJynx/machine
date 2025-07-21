@@ -1,6 +1,10 @@
+1. Add remaining two days to init.sql.
+2. Add rule_schedule foreign key to every rule_instance.
+3. db_to_sql.lua
+
 * FEATURE: JSON back-ups.
-	* common.lua:db_to_json()
-	* common.lua:json_to_db()
+	* common.lua:json_to_sql()
+	* common.lua:sql_to_json()
 	* integrate into back-end
 	* CLI
 
