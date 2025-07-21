@@ -155,18 +155,22 @@ function generate_day(day, rules) {
 	} else {
 		let task_table = document.createElement("table")
 		task_table.id = "task_table"
-		day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
+		if (Array.isArray(day.rule_instances)) {
+			day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
+		}
 
-		let row = task_table.insertRow()
-		let cell = row.insertCell()
-		make_button_cell(row, "↑", move_up)
-		make_button_cell(row, "↓", move_down)
-		make_button_cell(row, "+", insert_task)
+		if (Array.isArray(rules)) {
+			let row = task_table.insertRow()
+			let cell = row.insertCell()
+			make_button_cell(row, "↑", move_up)
+			make_button_cell(row, "↓", move_down)
+			make_button_cell(row, "+", insert_task)
 
-		cell = row.insertCell()
-		let selection = document.createElement("select")
-		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) })
-		cell.appendChild(selection)
+			cell = row.insertCell()
+			let selection = document.createElement("select")
+			rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) })
+			cell.appendChild(selection)
+		}
 
 		document.body.appendChild(task_table)
 
