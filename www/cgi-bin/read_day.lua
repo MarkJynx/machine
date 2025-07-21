@@ -6,12 +6,10 @@ local cjson = require("cjson.safe")
 
 local extract_day = function(db, id)
 	-- TODO: validate anything you get from database
-	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
-	local day = common.collect_database(db, query)
-	if not day or #day > 1 then
+	local day = common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. id .. "'")
+	if not day then
 		return nil
 	end
-	day = day[1]
 
 	-- TODO: validate anything you get from database
 	query = "SELECT * FROM rule_instance WHERE day_id = '" .. id .. "' ORDER BY order_priority ASC"
@@ -33,6 +31,7 @@ local main = function()
 		response = cjson.encode(extract_day(database, payload)) or "null"
 	end
 	common.respond(response)
+	database:close()
 end
 
 main()

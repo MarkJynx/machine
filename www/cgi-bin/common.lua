@@ -54,6 +54,14 @@ common.collect_database = function(db, q)
 	return collection
 end
 
+common.collect_single_record = function(db, q)
+	local results = common.collect_database(db, q)
+	if #results == 1 then
+		return results[1]
+	end
+	return nil
+end
+
 common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common functions bullet-proof, check everything
 	if not date then
 		return nil
@@ -66,12 +74,7 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
 	q = table.concat(q)
 
-	local rule_schedule = common.collect_database(db, q)
-	if not rule_schedule or #rule_schedule ~= 1 then
-		return nil
-	end
-
-	return rule_schedule[1]
+	return common.collect_single_records(db, q)
 end
 
 common.execute_many_database_queries = function(db, queries)
