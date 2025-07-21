@@ -1,25 +1,18 @@
-1. FIX: rule_schedule integration.
-1. 1. Test back-end rule_schedule integration.
-1. 2. Integrate rule_schedule into front-end.
-1. 2. 1. Integrate rule_schedule into new rule instance creation.
-1. 2. 2. Integrate rule_schedule into task_table.
-1. 2. 3. Integrate rule_schedule into save_day().
-
-2. FEATURE: Matrix view.
-2. 1. Extract rules.
-2. 2. Extract rule schedule into rule.
-2. 3. Extract rule_instance into rule.
-2. 4. Find earliest available day.
-2. 5. Find latest available day.
-2. 6. Iterate over days.
-2. 6. 1. If day is unavailable, fill with -1 and go to [2.6].
-2. 6. 2. Iterate over rules.
-2. 6. 2. 1. Check if applicable rule schedule exists. If not, fill with -1 and go to [2.6.2].
-2. 6. 2. 2. Check if mandatory (iterate over rule schedules & (last) instances).
-2. 6. 2. 3. Check if done (iterate over rule instances).
-2. 6. 2. 4. Return from 0 to 3.
-2. 7. Report results.
-2. 8. Front-end work...
+1. FEATURE: Matrix view.
+1. 1. Extract rules.
+1. 2. Extract rule schedule into rule.
+1. 3. Extract rule_instance into rule.
+1. 4. Find earliest available day.
+1. 5. Find latest available day.
+1. 6. Iterate over days.
+1. 6. 1. If day is unavailable, fill with -1 and go to [2.6].
+1. 6. 2. Iterate over rules.
+1. 6. 2. 1. Check if applicable rule schedule exists. If not, fill with -1 and go to [2.6.2].
+1. 6. 2. 2. Check if mandatory (iterate over rule schedules & (last) instances).
+1. 6. 2. 3. Check if done (iterate over rule instances).
+1. 6. 2. 4. Return from 0 to 3.
+1. 7. Report results.
+1. 8. Front-end work...
 
 * REFACTORIZATION: Robustness (front-end).
 * REFACTORIZATION: Robustness (back-end).
