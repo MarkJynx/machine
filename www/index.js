@@ -115,7 +115,7 @@ async function save_day() {
 }
 
 async function delete_day() {
-	let deletion_data = post_date_request("delete_day", specified_date)
+	let deletion_data = await post_date_request("delete_day", specified_date)
 	window.location.reload()
 }
 
