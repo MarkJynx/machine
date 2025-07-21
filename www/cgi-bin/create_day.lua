@@ -23,7 +23,7 @@ end
 
 local get_last_rule_instance = function(db, rule)
 	-- TODO: validate anything you get from database
-	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. rule.name .. "' ORDER BY JULIANDAY(day_id) DESC LIMIT 1"
+	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. rule.name .. "' AND done = 1 ORDER BY JULIANDAY(day_id) DESC LIMIT 1"
 	local rule_instance = common.collect_database(db, q)
 	if not rule_instance or #rule_instance ~= 1 then
 		return nil
@@ -44,6 +44,10 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 	end
 	if not rule_schedule_weekdays[date_weekday] then
 		return false
+	end
+
+	if not last_rule_instance then
+		return true
 	end
 
 	local old_date_table = common.date_string_to_date_table(last_rule_instance.day_id)
