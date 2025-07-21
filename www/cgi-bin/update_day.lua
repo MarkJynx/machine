@@ -4,6 +4,32 @@ local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
+local database_to_sql_day = function(day_id, database, sql_script)
+	sql_script:write(string.format('INSERT INTO day (id) VALUES ("%s");\n', day_id))
+
+	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day_id .. "' ORDER BY order_priority ASC"
+	local rule_instances = common.collect_database(database, q)
+	for _, r in ipairs(rule_instances or {}) do
+		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
+		local padding = string.rep(" ", 25 - #r.rule_name)
+		s = s .. string.format('"%s",%s %2d, "%s", %d, %d);\n', r.rule_name, padding, r.rule_schedule_id, r.day_id, r.done, r.order_priority)
+		sql_script:write(s)
+	end
+end
+
+local database_to_sql = function (database, sql_path)
+	io.stderr:write(sql_path .. "\n")
+	local sql_script = io.open(sql_path, "wb")
+	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC")
+	for index, day in ipairs(days or {}) do
+		database_to_sql_day(day.id, database, sql_script)
+		if index ~= #days then
+			sql_script:write("\n")
+		end
+	end
+	sql_script:close()
+end
+
 local rule_instance_to_insert_query = function(rule_instance, day_id, database)
 	local q = {}
 	table.insert(q, "INSERT OR ROLLBACK INTO rule_instance")
@@ -49,6 +75,8 @@ local main = function()
 			response = "true"
 		end
 	end
+
+	database_to_sql(database, "cgi-bin/machine.sql")
 
 	common.respond(response)
 	database:close()
