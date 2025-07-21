@@ -1,6 +1,7 @@
-1. Add remaining two days to init.sql.
-2. Add rule_schedule foreign key to every rule_instance.
-3. db_to_sql.lua
+1. db_to_sql.lua
+2. common.lua
+3. Itegrate into back-end.
+4. Gitignore.
 
 * FEATURE: JSON back-ups.
 	* common.lua:json_to_sql()
