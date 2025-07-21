@@ -115,13 +115,7 @@ async function save_day() {
 }
 
 async function delete_day() {
-	let deletion = await fetch("cgi-bin/delete_day.lua", {
-	  method: "POST",
-	  headers: { "Content-Type": "text/plain" },
-	  body: specified_date
-	})
-	let deletionData = await deletion.json()
-
+	let deletion_data = post_date_request("delete_day", specified_date)
 	window.location.reload()
 }
 
@@ -132,8 +126,7 @@ async function post_date_request(endpoint, date) {
 		body: date
 	})
 
-	let json = await response.json()
-	return json
+	return await response.json()
 }
 
 // Copied straight from main(), only replaced read_day.lua with create_day.lua
@@ -190,18 +183,9 @@ function generate_day(day, rules) {
 
 async function main() {
 	// TODO: handle errors, validate with JSON schema
-	let day = await fetch("cgi-bin/read_day.lua", {
-	  method: "POST",
-	  headers: { "Content-Type": "text/plain" },
-	  body: specified_date
-	})
-	let dayData = await day.json()
-
-	// TODO: handle errors, validate with JSON schema
-	let rules = await fetch("cgi-bin/read_rules.lua")
-	let rulesData = await rules.json()
-
-	generate_day(dayData, rulesData)
+	let day = await post_date_request("read_day", specified_date)
+	let rules = await post_date_request("read_rules", specified_date)
+	generate_day(day, rules)
 }
 
 let specified_date = get_url_date_string(window.location.search) || get_local_date_string() // TODO: turn to local

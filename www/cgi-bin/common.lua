@@ -61,12 +61,12 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 
 	local q = {}
 	-- TODO: validate anything you get from database
-	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule.name))
+	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule_name))
 	table.insert(q, string.format("JULIANDAY(start_date) <= JULIANDAY('%s') AND ", date))
 	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
 	q = table.concat(q)
 
-	local rule_schedule = common.collect_database(db, table.concat(q))
+	local rule_schedule = common.collect_database(db, q)
 	if not rule_schedule or #rule_schedule ~= 1 then
 		return nil
 	end
