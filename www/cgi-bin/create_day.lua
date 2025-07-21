@@ -55,7 +55,7 @@ local main = function()
 		local day = { id = payload, rule_instances = {} }
 		local rules = get_rules(database) or {}
 		for _, rule in ipairs(rules) do
-			local rule_schedule = common.get_rule_schedule(database, rule, payload)
+			local rule_schedule = common.get_rule_schedule(database, rule.name, payload)
 			local last_rule_instance = get_last_rule_instance(database, rule)
 			if rule_applies(rule_schedule, last_rule_instance, payload) then
 				table.insert(day.rule_instances, { rule_name = rule.name, done = 0 })

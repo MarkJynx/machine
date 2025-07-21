@@ -6,10 +6,13 @@ local cjson = require("cjson.safe")
 
 local collect_rules = function(database, date)
 	local rules = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC")
+	local scheduled_rules = {}
 	for _, rule in ipairs(rules) do
-		rule.schedule = common.get_rule_schedule(database, rule, date)
+		if common.get_rule_schedule(database, rule.name, date) then
+			table.insert(scheduled_rules, rule)
+		end
 	end
-	return rules
+	return scheduled_rules
 end
 
 local main = function()

@@ -54,7 +54,7 @@ common.collect_database = function(db, q)
 	return collection
 end
 
-common.get_rule_schedule = function(db, rule, date) -- TODO: make common functions bullet-proof, check everything
+common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common functions bullet-proof, check everything
 	if not date then
 		return nil
 	end
