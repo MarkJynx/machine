@@ -137,6 +137,13 @@ common.validate_day = function(day)
 	return true
 end
 
+common.datediff = function(d1, d2)
+	local t1 = os.time(common.date_string_to_date_table(d1))
+	local t2 = os.time(common.date_string_to_date_table(d2))
+	local dt = os.difftime(t1, t2)
+	return dt // 86400
+end
+
 common.respond = function(json)
 	io.write("Status: 200 OK\r\n")
 	io.write("Content-Type: application/json;charset=utf-8\r\n")

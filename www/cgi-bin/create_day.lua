@@ -33,9 +33,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 		return true
 	end
 
-	local old_date_table = common.date_string_to_date_table(last_rule_instance.day_id)
-	local dt = os.difftime(os.time(date_table), os.time(old_date_table))
-	if dt < rule_schedule.period * 86400 then
+	if common.datediff(date, last_rule_instance.day_id) < rule_schedule.period then
 		return false
 	end
 

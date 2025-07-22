@@ -5,9 +5,12 @@ local cjson = require("cjson.safe")
 
 
 local extract_rules = function(database)
-	--1. 1. Extract rules.
-	--1. 2. Extract rule schedule into rule.
-	--1. 3. Extract rule_instance into rule.
+	local rules = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC")
+	for _, rule in ipairs(rules or {}) do
+		rule.schedules = common.collect_database(database, "SELECT * FROM rule_schedule ORDER BY JULIANDAY(start_date)")
+		rule.instances = common.collect_database(database, "SELECT * FROM rule_instance ORDER BY JULIANDAY(day_id)")
+	end
+	return rules
 end
 
 local extract_extreme_day = function(database, order)
@@ -19,25 +22,40 @@ local extract_extreme_day = function(database, order)
 	return nil
 end
 
+local add_days = function(date, days)
+	local t = os.time(common.date_string_to_date_table(date))
+	local t2 = os.date("*t", t + days * 86400)
+	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
+end
+
+local process_day = function(matrix, date)
+	io.stderr:write(date .. "\n")
+	--1. 6. 1. If day is unavailable, fill with -1 and go to [2.6].
+	--1. 6. 2. Iterate over rules.
+	--1. 6. 2. 1. Check if applicable rule schedule exists. If not, fill with -1 and go to [2.6.2].
+	--1. 6. 2. 2. Check if mandatory (iterate over rule schedules & (last) instances).
+	--1. 6. 2. 3. Check if done (iterate over rule instances).
+	--1. 6. 2. 4. Return from 0 to 3.
+end
+
 local main = function()
 	common.enforce_http_method("GET")
 	local database = common.open_database("cgi-bin/machine.db")
+	local rules = extract_rules(database)
 	local first_day = extract_extreme_day(database, "ASC")
 	local last_day = extract_extreme_day(database, "DESC")
-	io.stderr:write(string.format("%s .. %s\n", tostring(first_day), tostring(last_day)))
-	local response = "null"
+	local response = "false"
+	local matrix = {}
+	if first_day and last_day then
+		local day_count = common.datediff(last_day, first_day)
+		for i = 1, day_count + 1 do
+			process_day(matrix, add_days(first_day, i - 1))
+		end
+	end
+	--1. 7. Report results.
+	--1. 8. Front-end work...
 	common.respond(response)
 	database:close()
 end
 
 main()
-
---1. 6. Iterate over days.
---1. 6. 1. If day is unavailable, fill with -1 and go to [2.6].
---1. 6. 2. Iterate over rules.
---1. 6. 2. 1. Check if applicable rule schedule exists. If not, fill with -1 and go to [2.6.2].
---1. 6. 2. 2. Check if mandatory (iterate over rule schedules & (last) instances).
---1. 6. 2. 3. Check if done (iterate over rule instances).
---1. 6. 2. 4. Return from 0 to 3.
---1. 7. Report results.
---1. 8. Front-end work...
