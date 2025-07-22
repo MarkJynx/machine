@@ -74,7 +74,7 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
 	q = table.concat(q)
 
-	return common.collect_single_records(db, q)
+	return common.collect_single_record(db, q)
 end
 
 common.execute_many_database_queries = function(db, queries)
