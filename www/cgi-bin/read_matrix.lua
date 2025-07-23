@@ -15,9 +15,11 @@ local extract_rule_done_lookup_table = function(rule)
 end
 
 local extract_rule_schedule_lookup_table = function(rule)
+	local lookup_table = {}
 	for _, schedule in ipairs(rule.rule_schedules or {}) do
 		-- TODO: for each applicable weekday in schedule
 	end
+	return lookup_table
 end
 
 local extract_rules = function(database)
