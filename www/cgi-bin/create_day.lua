@@ -19,8 +19,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 		return false
 	end
 
-	local date_table = common.date_string_to_date_table(date)
-	local date_weekday = os.date("%w", os.time(date_table)) + 1
+	local date_weekday = common.dateweekday(date)
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(rule_schedule)
 	if not rule_schedule_weekdays[date_weekday] then
 		return false

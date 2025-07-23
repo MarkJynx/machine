@@ -4,6 +4,12 @@ local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
+local add_days = function(date, days)
+	local t = os.time(common.date_string_to_date_table(date))
+	local t2 = os.date("*t", t + days * 86400)
+	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
+end
+
 local extract_rule_done_lookup_table = function(rule)
 	local lookup_table = {}
 	for _, instance in ipairs(rule.rule_instances or {}) do
@@ -16,11 +22,32 @@ end
 
 local extract_rule_schedule_lookup_table_schedule = function(lt, done_lt, schedule, first_day, last_day)
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
-	-- TODO 1: iterate
-	-- TODO 2: ensure day >= first_day
-	-- TODO 3: ensure last_day == nil || day <= last_day
-	-- TODO 4: ensure weekday(day) in schedule_weekdays
-	-- TODO 5: ensure any(done_lt[day - schedule.period + 1 : day - 1]) == false
+
+	local start_date = first_day
+	if schedule.start_date and common.datediff(schedule.start_date, first_day) > 0 then
+		start_date = schedule.start_date
+	end
+
+	local stop_date = last_day
+	if schedule.stop_date and common.datediff(schedule.stop_date, last_day) < 0 then
+		stop_date = schedule.stop_date
+	end
+
+	local day_count = common.datediff(stop_date, start_date) + 1
+	local not_done_streak = 1
+	for i = 1, day_count do
+		local current_date = add_days(start_date, i)
+		local date_weekday = common.dateweekday(current_date)
+
+		if schedule.period <= not_done_streak and rule_schedule_weekdays[date_weekday] then
+			lt[current_date] = true
+		end
+
+		not_done_streak = not_done_streak + 1
+		if done_lt[current_date] then
+			not_done_streak = 1
+		end
+	end
 end
 
 local extract_rule_schedule_lookup_table = function(rule, first_day, last_day)
@@ -60,12 +87,6 @@ local extract_day_lookup_table = function(database)
 	return lookup_table
 end
 
-local add_days = function(date, days)
-	local t = os.time(common.date_string_to_date_table(date))
-	local t2 = os.date("*t", t + days * 86400)
-	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
-end
-
 local process_day_rule = function(row, date, rule, day_lt)
 	if not day_lt[date] then
 		table.insert(row, -1)
@@ -100,8 +121,8 @@ local main = function()
 	local day_lt = extract_day_lookup_table(database)
 	local matrix = {}
 	if first_day and last_day then
-		local day_count = common.datediff(last_day, first_day)
-		for i = 1, day_count + 1 do
+		local day_count = common.datediff(last_day, first_day) + 1
+		for i = 1, day_count do
 			process_day(matrix, add_days(first_day, i - 1), rules, day_lt)
 		end
 	end
