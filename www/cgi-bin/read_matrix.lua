@@ -14,21 +14,30 @@ local extract_rule_done_lookup_table = function(rule)
 	return lookup_table
 end
 
-local extract_rule_schedule_lookup_table = function(rule)
+local extract_rule_schedule_lookup_table_schedule = function(lt, done_lt, schedule, first_day, last_day)
+	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
+	-- TODO 1: iterate
+	-- TODO 2: ensure day >= first_day
+	-- TODO 3: ensure last_day == nil || day <= last_day
+	-- TODO 4: ensure weekday(day) in schedule_weekdays
+	-- TODO 5: ensure any(done_lt[day - schedule.period + 1 : day - 1]) == false
+end
+
+local extract_rule_schedule_lookup_table = function(rule, first_day, last_day)
 	local lookup_table = {}
 	for _, schedule in ipairs(rule.rule_schedules or {}) do
-		-- TODO: for each applicable weekday in schedule
+		extract_rule_schedule_lookup_table_schedule(lookup_table, rule.done_lt, schedule, first_day, last_day)
 	end
 	return lookup_table
 end
 
-local extract_rules = function(database)
+local extract_rules = function(database, first_day, last_day)
 	local rules = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC")
 	for _, rule in ipairs(rules or {}) do
 		rule.schedules = common.collect_database(database, "SELECT * FROM rule_schedule ORDER BY JULIANDAY(start_date)")
 		rule.instances = common.collect_database(database, "SELECT * FROM rule_instance ORDER BY JULIANDAY(day_id)")
 		rule.done_lt = extract_rule_done_lookup_table(rule)
-		rule.schedule_lt = extract_rule_schedule_lookup_table(rule)
+		rule.schedule_lt = extract_rule_schedule_lookup_table(rule, first_day, last_day)
 	end
 	return rules
 end
@@ -57,12 +66,6 @@ local add_days = function(date, days)
 	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
 end
 
-local rule_is_mandatory = function(date, schedule, done_lt)
-	-- TODO: use done[rule][date] lookup table (check for up to schedule.period iterations)
-	--1. 6. 2. 2. Check if mandatory (iterate over rule schedules & (last) instances).
-	return false
-end
-
 local process_day_rule = function(row, date, rule, day_lt)
 	if not day_lt[date] then
 		table.insert(row, -1)
@@ -76,9 +79,8 @@ local process_day_rule = function(row, date, rule, day_lt)
 	end
 
 	local done = rule.done_lt[date] and 1 or 0
-	local mandatory = rule_is_mandatory(date, schedule, rule.done_lt)
-
-	return done + (mandatory and 2 or 0)
+	local mandatory = rule.schedule_lt[date] and 2 or 0
+	return done + mandatory
 end
 
 local process_day = function(matrix, date, rules, day_lt)
@@ -92,11 +94,10 @@ end
 local main = function()
 	common.enforce_http_method("GET")
 	local database = common.open_database("cgi-bin/machine.db")
-	local rules = extract_rules(database)
-	local day_lt = extract_day_lookup_table(database)
 	local first_day = extract_extreme_day(database, "ASC")
 	local last_day = extract_extreme_day(database, "DESC")
-	local response = "false"
+	local rules = extract_rules(database)
+	local day_lt = extract_day_lookup_table(database)
 	local matrix = {}
 	if first_day and last_day then
 		local day_count = common.datediff(last_day, first_day)
@@ -104,8 +105,7 @@ local main = function()
 			process_day(matrix, add_days(first_day, i - 1), rules, day_lt)
 		end
 	end
-	--1. 7. Report results.
-	--1. 8. Front-end work...
+	local response = cjson.encode(matrix)
 	common.respond(response)
 	database:close()
 end

@@ -77,6 +77,14 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 	return common.collect_single_record(db, q)
 end
 
+common.get_rule_schedule_weekdays = function(rule_schedule)
+	local rule_schedule_weekdays = { }
+	for i = 1, 7 do
+		rule_schedule_weekdays[i] = rule_schedule.weekdays & (2 ^ (i - 1))
+	end
+	return rule_schedule_weekdays
+end
+
 common.execute_many_database_queries = function(db, queries)
 	local success = true
 	for _, query in ipairs(queries) do

@@ -21,10 +21,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 
 	local date_table = common.date_string_to_date_table(date)
 	local date_weekday = os.date("%w", os.time(date_table)) + 1
-	local rule_schedule_weekdays = { }
-	for i = 1, 7 do
-		rule_schedule_weekdays[i] = rule_schedule.weekdays & (2 ^ (i - 1))
-	end
+	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(rule_schedule)
 	if not rule_schedule_weekdays[date_weekday] then
 		return false
 	end
