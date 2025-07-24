@@ -37,8 +37,9 @@ local extract_rule_schedule_lookup_table_schedule = function(lt, done_lt, schedu
 	local not_done_streak = 999 -- TODO: use token value
 	for i = 1, day_count do
 		local current_date = add_days(start_date, i - 1)
-		local date_weekday = common.dateweekday(current_date)
+		lt[current_date] = false
 
+		local date_weekday = common.dateweekday(current_date)
 		if schedule.period <= not_done_streak and rule_schedule_weekdays[date_weekday] then
 			lt[current_date] = true
 		end
@@ -96,17 +97,22 @@ local process_day_rule = function(row, date, rule, day_lt)
 		return
 	end
 
+	if rule.schedule_lt[date] == nil then
+		table.insert(row, -1)
+		return
+	end
+
 	local done = rule.done_lt[date] and 1 or 0
 	local mandatory = rule.schedule_lt[date] and 2 or 0
 	table.insert(row, done + mandatory)
 end
 
 local process_day = function(matrix, date, rules, day_lt)
+	local row = {}
 	for _, rule in ipairs(rules or {}) do
-		local row = {}
 		process_day_rule(row, date, rule, day_lt)
-		table.insert(matrix, row)
 	end
+	table.insert(matrix, row)
 end
 
 local main = function()
@@ -115,6 +121,7 @@ local main = function()
 	local first_day = extract_extreme_day(database, "ASC")
 	local last_day = extract_extreme_day(database, "DESC")
 	local matrix = {}
+	local json = {}
 	if first_day and last_day then
 		local rules = extract_rules(database, first_day, last_day)
 		local day_lt = extract_day_lookup_table(database)
@@ -122,8 +129,13 @@ local main = function()
 		for i = 1, day_count do
 			process_day(matrix, add_days(first_day, i - 1), rules, day_lt)
 		end
+
+		json.first_day = first_day
+		json.last_day = last_day
+		json.rules = common.collect_database(database, "SELECT name FROM rule ORDER BY order_priority ASC")
+		json.matrix = matrix
 	end
-	local response = cjson.encode(matrix)
+	local response = cjson.encode(json)
 	common.respond(response)
 	database:close()
 end

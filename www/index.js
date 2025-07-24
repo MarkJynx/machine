@@ -46,12 +46,14 @@ function delete_me(e) {
 }
 
 function rule_name_is_unique(name) {
+	// TODO: do not use .class
 	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
 	return rows.reduce((x, r) => r.cells[4].innerText == name ? false : x, true)
 }
 
 function make_rule_instance_row(name, done) {
 	let row = document.createElement("tr")
+	// TODO: do not use .class
 	row.class = "rule_row"
 
 	make_button_cell(row, "⨯", delete_me)
@@ -103,6 +105,7 @@ function rule_row_to_dict(row, index) {
 
 async function save_day() {
 	let json = {"id": specified_date, "notes": null, "rule_instances": []}
+	// TODO: do not use .class
 	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
 	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length)); return a}, [])
 
