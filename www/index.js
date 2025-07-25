@@ -1,9 +1,18 @@
 async function main() {
 	// TODO: handle errors, validate with JSON schema
 	let date = get_url_date_string(window.location.search) || get_local_date_string()
-	let day = await post_date_request("read_day", date)
-	let rules = await post_date_request("read_rules", date)
-	generate_day(date, day, rules)
+	if (url_params_is_matrix(window.location.search)) {
+		generate_matrix()
+	} else {
+		let day = await post_date_request("read_day", date)
+		let rules = await post_date_request("read_rules", date)
+		generate_day(date, day, rules)
+	}
+}
+
+function url_params_is_matrix(url) {
+	const args = new URLSearchParams(url)
+	return args.size == 1 && args.has("view") && args.get("view") && args.get("view") == "matrix"
 }
 
 function get_url_date_string(url) {
@@ -27,6 +36,39 @@ async function post_date_request(endpoint, date) {
 	})
 
 	return await response.json()
+}
+
+// Matrix generation
+
+async function generate_matrix() {
+	let response = await fetch("cgi-bin/read_matrix.lua")
+	let json = await response.json()
+	let matrix = json.matrix
+
+	let matrix_table = document.createElement("table")
+	let header_row = matrix_table.insertRow()
+	let empty_cell = header_row.insertCell()
+	for (let i = 0; i < json.rules.length; i++) {
+		let header_cell = header_row.insertCell()
+		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
+	}
+
+	for (let row_index = 0; row_index < matrix.length; row_index++) {
+		let current_date = add_days(json.first_day, row_index)
+		let row = matrix_table.insertRow()
+		let date_cell = row.insertCell()
+		date_cell.innerText = current_date
+		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
+			let cell = row.insertCell()
+			let key = String(matrix[row_index][col_index])
+			let values = { "-1": "unscheduled", "0": "not_done_not_due", "1": "done_not_due", "2": "not_done_due", "3": "done_due" }
+			if (key in values) {
+				cell.className = values[key]
+			}
+		}
+	}
+
+	document.body.appendChild(matrix_table)
 }
 
 // Day generation
@@ -129,8 +171,7 @@ async function delete_day(date) {
 
 async function save_day(date) {
 	let json = {"id": date, "notes": null, "rule_instances": []}
-	// TODO: do not use .class
-	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
+	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.className == "rule_row") // TODO: check if exists
 	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length, date)); return a}, [])
 
 	let deletion = await fetch("cgi-bin/update_day.lua", {
@@ -156,8 +197,7 @@ function rule_row_to_dict(row, index, date) {
 
 function make_rule_instance_row(name, done) {
 	let row = document.createElement("tr")
-	// TODO: do not use .class
-	row.class = "rule_row"
+	row.className = "rule_row"
 
 	make_button_cell(row, "⨯", delete_me)
 	make_button_cell(row, "↑", move_up)
@@ -211,8 +251,7 @@ function insert_task(e) {
 }
 
 function rule_name_is_unique(name) {
-	// TODO: do not use .class
-	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
+	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.className == "rule_row") // TODO: check if exists
 	return rows.reduce((x, r) => r.cells[4].innerText == name ? false : x, true)
 }
 
