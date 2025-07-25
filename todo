@@ -2,6 +2,7 @@
 * REFACTORIZATION: matrix view in same page.
 * REFACTORIZATION: reduce javascript code (mostly previous matrix.js code).
 * REFACTORIZATION: reduce Lua code (mostly through putting everything into common.lua)
+* REFACTORIZATION: optimize human-readable back-ups through date-directory structure.
 
 * REFACTORIZATION: Robustness (front-end).
 * REFACTORIZATION: Robustness (back-end).
