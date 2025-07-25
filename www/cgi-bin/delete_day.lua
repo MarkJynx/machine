@@ -21,6 +21,7 @@ local main = function()
 		response = "true"
 	end
 	common.respond(response)
+	common.database_to_sql(database, "cgi-bin/machine.sql")
 	database:close()
 end
 

@@ -107,6 +107,33 @@ common.day_exists = function(db, id)
 	return false
 end
 
+local database_to_sql_day = function(day_id, database, sql_script)
+	sql_script:write(string.format('INSERT INTO day (id) VALUES ("%s");\n', day_id))
+
+	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day_id .. "' ORDER BY order_priority ASC"
+	local rule_instances = common.collect_database(database, q)
+	for _, r in ipairs(rule_instances or {}) do
+		local rule_schedule = common.get_rule_schedule(database, r.rule_name, day_id) -- TODO: extremely inefficient bit in an extremely inefficient function
+		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
+		-- TODO: dynamic padding
+		local rule_name = '"' .. r.rule_name .. '",' .. string.rep(" ", 26 - #r.rule_name)
+		s = s .. string.format('%s%2d, "%s", %d, %2d);\n', rule_name, rule_schedule.id, r.day_id, r.done, r.order_priority)
+		sql_script:write(s)
+	end
+end
+
+common.database_to_sql = function (database, sql_path)
+	local sql_script = io.open(sql_path, "wb")
+	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC")
+	for index, day in ipairs(days or {}) do
+		database_to_sql_day(day.id, database, sql_script)
+		if index ~= #days then
+			sql_script:write("\n")
+		end
+	end
+	sql_script:close()
+end
+
 common.validate_day = function(day)
 	-- TODO: use JSON schema and Teal
 	if type(day) ~= "table" then

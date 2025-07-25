@@ -1,6 +1,5 @@
 * REFACTORIZATION: Robustness (front-end).
 * REFACTORIZATION: Robustness (back-end).
-* REFACTORIZATION: No reloads (front-end).
 * REFACTORIZATION: Profile and optimize (back-end).
 * FEATURE: Notes (front-end).
 * FEATURE: Informational headers (front-end).
