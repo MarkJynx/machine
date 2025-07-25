@@ -1,18 +1,13 @@
 #!/usr/bin/env lua
 
+require("fun")()
 local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
 local collect_rules = function(database, date)
-	local rules = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC")
-	local scheduled_rules = {}
-	for _, rule in ipairs(rules) do
-		if common.get_rule_schedule(database, rule.name, date) then
-			table.insert(scheduled_rules, rule)
-		end
-	end
-	return scheduled_rules
+	local r = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC")
+	return totable(filter(function(x) return common.get_rule_schedule(database, r.name, date) ~= nil end, r))
 end
 
 local main = function()
