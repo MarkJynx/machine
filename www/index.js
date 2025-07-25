@@ -17,8 +17,12 @@ function get_url_date_string(url) {
 	return null
 }
 
-function navigate_to_day(date, offset) {
-	window.location = "?date=" + add_days(date, offset)
+async function navigate_to_day(date, offset) {
+	document.body.innerHTML = ""
+	let new_date = add_days(date, offset)
+	let new_day = await post_date_request("read_day", new_date)
+	let new_rules = await post_date_request("read_rules", new_date)
+	generate_day(new_date, new_day, new_rules)
 }
 
 function move_up(e) {
