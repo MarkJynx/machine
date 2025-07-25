@@ -1,7 +1,7 @@
 function add_days(date, days) {
 	let result = new Date(date)
 	result.setDate(result.getDate() + days)
-	return result
+	return result.toISOString().substring(0, 10)
 }
 
 function get_local_date_string() {
@@ -17,10 +17,8 @@ function get_url_date_string(url) {
 	return null
 }
 
-function navigate_to_day(offset) {
-	// TODO: retrieve specified_date through arguments
-	let target_date_string = add_days(specified_date, offset).toISOString().substring(0, 10)
-	window.location = "?date=" + target_date_string
+function navigate_to_day(date, offset) {
+	window.location = "?date=" + add_days(date, offset)
 }
 
 function move_up(e) {
@@ -92,22 +90,22 @@ function make_button_cell(row, txt, fn) {
 	cell.appendChild(button)
 }
 
-function rule_row_to_dict(row, index) {
+function rule_row_to_dict(row, index, date) {
 	let name = row.cells[4].innerText // TODO: validate against rules; check if exists
 	let done = row.cells[3].firstChild.checked // TODO: check if exists
 	return {
-		"day_id": specified_date,
+		"day_id": date,
 		"rule_name": name,
 		"done": Number(done),
 		"order_priority": index + 1
 	}
 }
 
-async function save_day() {
-	let json = {"id": specified_date, "notes": null, "rule_instances": []}
+async function save_day(date) {
+	let json = {"id": date, "notes": null, "rule_instances": []}
 	// TODO: do not use .class
 	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.class == "rule_row") // TODO: check if exists
-	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length)); return a}, [])
+	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length, date)); return a}, [])
 
 	let deletion = await fetch("cgi-bin/update_day.lua", {
 	  method: "POST",
@@ -117,8 +115,8 @@ async function save_day() {
 	let deletionData = await deletion.json()
 }
 
-async function delete_day() {
-	let deletion_data = await post_date_request("delete_day", specified_date)
+async function delete_day(date) {
+	let deletion_data = await post_date_request("delete_day", date)
 	window.location.reload()
 }
 
@@ -132,23 +130,20 @@ async function post_date_request(endpoint, date) {
 	return await response.json()
 }
 
-// Copied straight from main(), only replaced read_day.lua with create_day.lua
-async function create_day() {
-	let day = await post_date_request("create_day", specified_date)
-	let rules = await post_date_request("read_rules", specified_date)
-	generate_day(day, rules)
+async function create_day(date, rules) {
+	let day = await post_date_request("create_day", date)
+	generate_day(date, day, rules)
 }
 
-
-function generate_day(day, rules) {
+function generate_day(date, day, rules) {
 	document.body.replaceChildren()
 	if (day == null) {
 		// TODO: do not copy and paste
 		let navigation_table = document.createElement("table")
 		let navigation_row = navigation_table.insertRow()
-		make_button_cell(navigation_row, "←", function() { navigate_to_day(-1) })
-		make_button_cell(navigation_row, "+", create_day)
-		make_button_cell(navigation_row, "→", function() { navigate_to_day(1) })
+		make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
+		make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
+		make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
 		document.body.appendChild(navigation_table)
 	} else {
 		let task_table = document.createElement("table")
@@ -175,10 +170,10 @@ function generate_day(day, rules) {
 		let navigation_table = document.createElement("table")
 		let navigation_row = navigation_table.insertRow()
 
-		make_button_cell(navigation_row, "←", function() { navigate_to_day(-1) })
-		make_button_cell(navigation_row, "⨯", delete_day)
-		make_button_cell(navigation_row, "→", function() { navigate_to_day(1) })
-		make_button_cell(navigation_row, "💾", save_day)
+		make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
+		make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
+		make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
+		make_button_cell(navigation_row, "💾", function() { save_day(date) })
 
 		document.body.appendChild(navigation_table)
 	}
@@ -186,10 +181,10 @@ function generate_day(day, rules) {
 
 async function main() {
 	// TODO: handle errors, validate with JSON schema
-	let day = await post_date_request("read_day", specified_date)
-	let rules = await post_date_request("read_rules", specified_date)
-	generate_day(day, rules)
+	let date = get_url_date_string(window.location.search) || get_local_date_string()
+	let day = await post_date_request("read_day", date)
+	let rules = await post_date_request("read_rules", date)
+	generate_day(date, day, rules)
 }
 
-let specified_date = get_url_date_string(window.location.search) || get_local_date_string() // TODO: turn to local
 main()

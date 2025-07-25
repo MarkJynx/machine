@@ -1,7 +1,7 @@
 function add_days(date, days) { // TODO: do not copy-paste from index.js
 	let result = new Date(date)
 	result.setDate(result.getDate() + days)
-	return result
+	return result.toISOString().substring(0, 10)
 }
 
 async function main() {
@@ -19,7 +19,7 @@ async function main() {
 	}
 
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = add_days(json.first_day, row_index).toISOString().substring(0, 10)
+		let current_date = add_days(json.first_day, row_index)
 		let row = matrix_table.insertRow()
 		let date_cell = row.insertCell()
 		date_cell.innerText = current_date
