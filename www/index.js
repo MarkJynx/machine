@@ -34,14 +34,18 @@ async function post_date_request(endpoint, date) {
 function generate_day(date, day, rules) {
 	document.body.replaceChildren()
 	if (day == null) {
-		generate_date_empty(date, rules)
+		generate_day_empty(date, rules)
 	} else {
-		generate_date_full(date, day, rules)
+		generate_day_full(date, day, rules)
 	}
 }
 
 function generate_day_empty(date, rules) {
 	let navigation_table = document.createElement("table")
+	let header_row = navigation_table.insertRow()
+	let header_cell = header_row.insertCell()
+	header_cell.colSpan = 3
+	header_cell.innerText = date
 	let navigation_row = navigation_table.insertRow()
 	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
 	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
@@ -52,6 +56,12 @@ function generate_day_empty(date, rules) {
 function generate_day_full(date, day, rules) {
 	let task_table = document.createElement("table")
 	task_table.id = "task_table"
+
+	let header_row = task_table.insertRow()
+	let header_cell = header_row.insertCell()
+	header_cell.colSpan = 5
+	header_cell.innerText = date
+
 	if (Array.isArray(day.rule_instances)) {
 		day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
 	}
