@@ -142,44 +142,6 @@ common.database_to_sql = function (database, sql_path)
 	sql_script:close()
 end
 
-common.validate_day = function(day)
-	-- TODO: use JSON schema and Teal
-	if type(day) ~= "table" then
-		return false
-	end
-
-	if type(day.id) ~= "string" or not string.match(day.id, "^%d%d%d%d%-%d%d%-%d%d$") then
-		return false
-	end
-
-	if day.rule_instances == nil then
-		return true
-	end
-
-	if type(day.rule_instances) ~= "table" then
-		return false
-	end
-
-	for _, rule_instance in pairs(day.rule_instances) do
-		-- TODO: validate rule_name against available rule names
-		if type(rule_instance.rule_name) ~= "string" then
-			return false
-		end
-		if rule_instance.day_id ~= day.id then
-			return false
-		end
-		if rule_instance.done ~= 0 and rule_instance.done ~= 1 then
-			return false
-		end
-		if type(rule_instance.order_priority) ~= "number" or rule_instance.order_priority <= 0 then
-			-- TODO: validate it is an integer
-			return false
-		end
-	end
-
-	return true
-end
-
 common.respond = function(json)
 	io.write("Status: 200 OK\r\n")
 	io.write("Content-Type: application/json;charset=utf-8\r\n")

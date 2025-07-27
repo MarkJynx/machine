@@ -41,7 +41,7 @@ local main = function()
 	local response = "false"
 	local schedules_assigned = assign_rule_schedules(day, database)
 
-	if day and common.validate_day(day) and schedules_assigned then
+	if day and schedules_assigned then
 		local s = {}
 		table.insert(s, "PRAGMA foreign_keys = ON")
 		table.insert(s, "BEGIN TRANSACTION")
