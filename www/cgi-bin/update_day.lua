@@ -19,11 +19,16 @@ local rule_instance_to_insert_query = function(rule_instance, day_id, database)
 end
 
 local main = function()
-	common.enforce_http_method("POST")
+	common.http_enforce_method("POST")
 
-	local day = cjson.decode(io.read(common.extract_content_length()))
+	local content_length = common.http_extract_content_length()
+	if content_length <= 0 then
+		common.http_respond(nil)
+	end
+
+	local day = cjson.decode(io.read(content_length))
 	if not day or day.id or assign_rule_schedules(day, database) then
-		os.exit(0) -- TODO: common.bail()
+		common.http_respond(nil)
 	end
 
 	local database = common.open_database("cgi-bin/machine.db")
@@ -47,7 +52,7 @@ local main = function()
 		common.database_to_sql(database, "cgi-bin/machine.sql")
 	end
 
-	common.respond(response)
+	common.http_respond(response)
 	database:close()
 end
 

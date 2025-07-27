@@ -25,56 +25,49 @@ end
 
 ------------------------------------------------------------------
 -- HTTP utilities
--- TODO: fix these up and refactor
 
-common.enforce_http_method = function(method)
-	local request_method = os.getenv("REQUEST_METHOD")
-	if request_method ~= method then
-		os.exit(0)
+common.http_respond = function(json)
+	if json then
+		io.write("Status: 200 OK\r\n")
+		io.write("Content-Type: application/json;charset=utf-8\r\n")
+		io.write("Content-Length: " .. #json .. "\r\n\r\n")
+		io.write(json)
+	else
+		io.write("Status: 500 Internal Server Error\r\n")
 	end
+	os.exit(0)
 end
 
-common.enforce_date_payload = function()
-	common.enforce_http_method("POST")
-	local date = common.extract_valid_date_payload(common.extract_content_length())
-	if not date then
-		os.exit(0)
-	end
-	return date
-end
-
-common.respond = function(json)
-	io.write("Status: 200 OK\r\n")
-	io.write("Content-Type: application/json;charset=utf-8\r\n")
-	io.write("Content-Length: " .. #json .. "\r\n\r\n")
-	io.write(json)
-end
-
-common.extract_content_length = function()
+common.http_extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
 	-- We won't try manually timeouting when there is less data than CONTENT_LENGTH.
 	local content_length = os.getenv("CONTENT_LENGTH")
 	if content_length then
-		content_length = tonumber(content_length, 10)
+		content_length = math.tointeger(content_length)
 	end
 	return content_length and content_length or 0
 end
 
-------------------------------------------------------------------
--- Other
-
-common.extract_valid_date_payload = function(content_length)
-	-- TODO: convert to JSON
-	local payload = nil
-	if content_length > 0 then
-		payload = io.read(content_length)
+common.http_enforce_method = function(method)
+	local request_method = os.getenv("REQUEST_METHOD")
+	if request_method ~= method then
+		common.http_respond(nil)
 	end
+end
+
+common.http_enforce_date_payload = function()
+	common.http_enforce_method("POST")
+	local content_length = common.http_extract_content_length()
+	local payload = content_length > 0 and io.read(content_length) or nil
 	if payload and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
 		return payload
 	end
-	return nil
+	common.http_respond(nil)
 end
+
+------------------------------------------------------------------
+-- Other
 
 common.open_database = function(path)
 	return require("luasql.sqlite3").sqlite3():connect(path) -- TODO: handle 3 sources of errors, close environment

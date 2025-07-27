@@ -34,7 +34,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 end
 
 local main = function()
-	local date = common.enforce_date_payload()
+	local date = common.http_enforce_date_payload()
 	local db = common.open_database("cgi-bin/machine.db")
 	local response = "null"
 	if date and not common.day_exists(db, date) then
@@ -45,7 +45,7 @@ local main = function()
 		each(function(r) table.insert(day.rule_instances, { rule_name = r.name, done = 0 }) end, rules)
 		response = cjson.encode(day) or "null"
 	end
-	common.respond(response)
+	common.http_respond(response)
 	db:close()
 end
 

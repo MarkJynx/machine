@@ -72,7 +72,7 @@ local process_day = function(matrix, date, rules, day_lt)
 end
 
 local main = function()
-	common.enforce_http_method("GET")
+	common.http_enforce_method("GET")
 	local database = common.open_database("cgi-bin/machine.db")
 	local json = { matrix = {} }
 	json.first_day = extract_extreme_day(database, "ASC")
@@ -85,7 +85,7 @@ local main = function()
 		json.rules = common.collect_database(database, "SELECT name FROM rule ORDER BY order_priority ASC")
 	end
 	local response = cjson.encode(json)
-	common.respond(response)
+	common.http_respond(response)
 	database:close()
 end
 
