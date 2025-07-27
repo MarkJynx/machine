@@ -5,12 +5,6 @@ local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
-local add_days = function(date, days)
-	local t = os.time(common.date_string_to_date_table(date))
-	local t2 = os.date("*t", t + days * 86400)
-	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
-end
-
 local extract_rule_done_lt = function(rule)
 	return reduce(function(a, r) if r.done then a[r.day_id] = true end return a end, {}, rule.instances or {})
 end
@@ -31,7 +25,7 @@ local extract_rule_schedule_lt_schedule = function(lt, done_lt, schedule, first_
 	local day_count = common.datediff(stop_date, start_date) + 1
 	local not_done_streak = 999 -- TODO: use token value
 	for i = 1, day_count do
-		local current_date = add_days(start_date, i - 1)
+		local current_date = common.add_days(start_date, i - 1)
 		lt[current_date] = false
 
 		local date_weekday = common.dateweekday(current_date)
@@ -104,7 +98,7 @@ local main = function()
 		local rules = extract_rules(database, first_day, last_day)
 		local day_lt = extract_day_lt(database)
 		local day_count = common.datediff(last_day, first_day) + 1
-		each(function(i) process_day(matrix, add_days(first_day, i - 1), rules, day_lt) end, range(day_count))
+		each(function(i) process_day(matrix, common.add_days(first_day, i - 1), rules, day_lt) end, range(day_count))
 
 		json.first_day = first_day
 		json.last_day = last_day

@@ -203,4 +203,10 @@ common.dateweekday = function(d)
 	return os.date("%w", os.time(common.date_string_to_date_table(d))) + 1
 end
 
+common.add_days = function(date, days)
+	local t = os.time(common.date_string_to_date_table(date))
+	local t2 = os.date("*t", t + days * 86400)
+	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
+end
+
 return common
