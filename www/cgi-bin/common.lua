@@ -1,3 +1,4 @@
+require("fun")()
 local common = {}
 
 
@@ -86,11 +87,7 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 end
 
 common.get_rule_schedule_weekdays = function(rule_schedule)
-	local rule_schedule_weekdays = { }
-	for i = 1, 7 do
-		rule_schedule_weekdays[i] = rule_schedule.weekdays & (2 ^ (i - 1))
-	end
-	return rule_schedule_weekdays
+	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
 end
 
 common.execute_many_database_queries = function(db, queries)
