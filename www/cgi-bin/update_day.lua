@@ -5,10 +5,6 @@ local cjson = require("cjson.safe")
 
 
 local assign_rule_schedules = function(day, database)
-	if not day or not day.rule_instances then
-		return false
-	end
-
 	return all(function(i) i.rule_schedule = common.get_rule_schedule(database, i.rule_name, i.day_id) return i.rule_schedule ~= nil end, day.rule_instances)
 end
 
@@ -24,35 +20,32 @@ end
 
 local main = function()
 	common.enforce_http_method("POST")
-	local content_length = common.extract_content_length()
-	local payload = nil
-	if content_length > 0 then
-		payload = io.read(content_length)
+
+	local day = cjson.decode(io.read(common.extract_content_length()))
+	if not day or day.id or assign_rule_schedules(day, database) then
+		os.exit(0) -- TODO: common.bail()
 	end
-	local day = cjson.decode(payload)
+
 	local database = common.open_database("cgi-bin/machine.db")
 	local response = "false"
-	local schedules_assigned = assign_rule_schedules(day, database)
 
-	if day and schedules_assigned then
-		local s = {}
-		table.insert(s, "PRAGMA foreign_keys = ON")
-		table.insert(s, "BEGIN TRANSACTION")
-		table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. day.id .. "'")
-		table.insert(s, "DELETE FROM day WHERE id = '" .. day.id .. "'")
-		local notes = "NULL"
-		if type(day.notes) == "string" then
-			notes = "'" .. database:escape(day.notes) .. "'"
-		end
-		table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
-		each(function(i) table.insert(s, rule_instance_to_insert_query(i, day.id, database)) end, day.rule_instances or {})
-		table.insert(s, "COMMIT")
-		if common.execute_many_database_queries(database, s) then
-			response = "true"
-		end
+	local s = {}
+	table.insert(s, "PRAGMA foreign_keys = ON")
+	table.insert(s, "BEGIN TRANSACTION")
+	table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. day.id .. "'")
+	table.insert(s, "DELETE FROM day WHERE id = '" .. day.id .. "'")
+	local notes = "NULL"
+	if type(day.notes) == "string" then
+		notes = "'" .. database:escape(day.notes) .. "'"
 	end
+	table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
+	each(function(i) table.insert(s, rule_instance_to_insert_query(i, day.id, database)) end, day.rule_instances or {})
+	table.insert(s, "COMMIT")
 
-	common.database_to_sql(database, "cgi-bin/machine.sql")
+	if common.execute_many_database_queries(database, s) then
+		response = "true"
+		common.database_to_sql(database, "cgi-bin/machine.sql")
+	end
 
 	common.respond(response)
 	database:close()
