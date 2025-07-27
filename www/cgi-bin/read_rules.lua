@@ -6,7 +6,7 @@ local cjson = require("cjson.safe")
 
 
 local collect_rules = function(database, date)
-	local r = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC")
+	local r = common.collect_database(database, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
 	return totable(filter(function(x) return common.get_rule_schedule(database, r.name, date) ~= nil end, r))
 end
 
