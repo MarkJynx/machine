@@ -16,7 +16,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 		return false
 	end
 
-	local date_weekday = common.dateweekday(date)
+	local date_weekday = common.date_weekday(date)
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(rule_schedule)
 	if not rule_schedule_weekdays[date_weekday] then
 		return false
@@ -26,7 +26,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 		return true
 	end
 
-	if common.datediff(date, last_rule_instance.day_id) < rule_schedule.period then
+	if common.date_diff(date, last_rule_instance.day_id) < rule_schedule.period then
 		return false
 	end
 

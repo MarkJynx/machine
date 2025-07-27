@@ -2,6 +2,28 @@ require("fun")()
 local common = {}
 
 
+-- Date string functions
+
+local date_table = function(d)
+	return { year = tonumber(string.sub(d, 1, 4)), month = tonumber(string.sub(d, 6, 7)), day = tonumber(string.sub(d, 9, 10)) }
+end
+
+common.date_diff = function(d1, d2)
+	return os.difftime(os.time(date_table(d1)), os.time(date_table(d2))) // 86400
+end
+
+common.date_weekday = function(d)
+	return os.date("%w", os.time(date_table(d))) + 1
+end
+
+common.date_add = function(date, days)
+	local t = os.time(date_table(date))
+	local t2 = os.date("*t", t + days * 86400)
+	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
+end
+
+------------------------------------------------------------------
+
 common.enforce_http_method = function(method)
 	local request_method = os.getenv("REQUEST_METHOD")
 	if request_method ~= method then
@@ -182,31 +204,6 @@ common.respond = function(json)
 	io.write("Content-Type: application/json;charset=utf-8\r\n")
 	io.write("Content-Length: " .. #json .. "\r\n\r\n")
 	io.write(json)
-end
-
-common.date_string_to_date_table = function(s)
-	return {
-		year = tonumber(string.sub(s, 1, 4)),
-		month = tonumber(string.sub(s, 6, 7)),
-		day = tonumber(string.sub(s, 9, 10))
-	}
-end
-
-common.datediff = function(d1, d2)
-	local t1 = os.time(common.date_string_to_date_table(d1))
-	local t2 = os.time(common.date_string_to_date_table(d2))
-	local dt = os.difftime(t1, t2)
-	return dt // 86400
-end
-
-common.dateweekday = function(d)
-	return os.date("%w", os.time(common.date_string_to_date_table(d))) + 1
-end
-
-common.add_days = function(date, days)
-	local t = os.time(common.date_string_to_date_table(date))
-	local t2 = os.date("*t", t + days * 86400)
-	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
 end
 
 return common

@@ -13,22 +13,22 @@ local extract_rule_schedule_lt_schedule = function(lt, done_lt, schedule, first_
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 
 	local start_date = first_day
-	if schedule.start_date and common.datediff(schedule.start_date, first_day) > 0 then
+	if schedule.start_date and common.date_diff(schedule.start_date, first_day) > 0 then
 		start_date = schedule.start_date
 	end
 
 	local stop_date = last_day
-	if schedule.stop_date and common.datediff(schedule.stop_date, last_day) < 0 then
+	if schedule.stop_date and common.date_diff(schedule.stop_date, last_day) < 0 then
 		stop_date = schedule.stop_date
 	end
 
-	local day_count = common.datediff(stop_date, start_date) + 1
+	local day_count = common.date_diff(stop_date, start_date) + 1
 	local not_done_streak = 999 -- TODO: use token value
 	for i = 1, day_count do
-		local current_date = common.add_days(start_date, i - 1)
+		local current_date = common.date_add(start_date, i - 1)
 		lt[current_date] = false
 
-		local date_weekday = common.dateweekday(current_date)
+		local date_weekday = common.date_weekday(current_date)
 		if schedule.period <= not_done_streak and rule_schedule_weekdays[date_weekday] then
 			lt[current_date] = true
 		end
@@ -97,8 +97,8 @@ local main = function()
 	if first_day and last_day then
 		local rules = extract_rules(database, first_day, last_day)
 		local day_lt = extract_day_lt(database)
-		local day_count = common.datediff(last_day, first_day) + 1
-		each(function(i) process_day(matrix, common.add_days(first_day, i - 1), rules, day_lt) end, range(day_count))
+		local day_count = common.date_diff(last_day, first_day) + 1
+		each(function(i) process_day(matrix, common.date_add(first_day, i - 1), rules, day_lt) end, range(day_count))
 
 		json.first_day = first_day
 		json.last_day = last_day
