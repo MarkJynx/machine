@@ -39,10 +39,7 @@ common.extract_content_length = function()
 	if content_length then
 		content_length = tonumber(content_length, 10)
 	end
-	if content_length == nil then
-		content_length = 0
-	end
-	return content_length
+	return content_length and content_length or 0
 end
 
 common.extract_valid_date_payload = function(content_length)
@@ -87,10 +84,7 @@ end
 
 common.collect_single_record = function(db, q)
 	local results = common.collect_database(db, q)
-	if #results == 1 then
-		return results[1]
-	end
-	return nil
+	return #results == 1 and results[1] or nil
 end
 
 common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common functions bullet-proof, check everything
@@ -113,25 +107,12 @@ common.get_rule_schedule_weekdays = function(rule_schedule)
 end
 
 common.execute_many_database_queries = function(db, queries)
-	local success = true
-	for _, query in ipairs(queries) do
-		local result = db:execute(query)
-		if not result then
-			success = false
-			break
-		end
-	end
-	return success
+	return all(function(q) return db:execute(q) ~= nil end, queries)
 end
 
 common.day_exists = function(db, id)
 	-- TODO: validate anything you get from database
-	local query = "SELECT * FROM day WHERE id = '" .. id .. "'"
-	local result = db:execute(query)
-	if result and result:fetch() then
-		return true
-	end
-	return false
+	return common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. id .. "'") ~= nil
 end
 
 local database_to_sql_day = function(day_id, database, sql_script)
