@@ -13,11 +13,10 @@ local delete_day = function(db, id)
 end
 
 local main = function()
-	common.enforce_http_method("POST")
-	local payload = common.extract_valid_date_payload(common.extract_content_length())
+	local date = common.enforce_date_payload()
 	local database = common.open_database("cgi-bin/machine.db")
 	local response = "false"
-	if common.day_exists(database, payload) and delete_day(database, payload) then
+	if common.day_exists(database, date) and delete_day(database, date) then
 		response = "true"
 	end
 	common.respond(response)

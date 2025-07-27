@@ -34,8 +34,7 @@ local rule_applies = function(rule_schedule, last_rule_instance, date)
 end
 
 local main = function()
-	common.enforce_http_method("POST")
-	local date = common.extract_valid_date_payload(common.extract_content_length())
+	local date = common.enforce_date_payload()
 	local db = common.open_database("cgi-bin/machine.db")
 	local response = "null"
 	if date and not common.day_exists(db, date) then

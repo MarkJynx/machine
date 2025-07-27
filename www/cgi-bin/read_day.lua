@@ -23,12 +23,11 @@ local extract_day = function(db, id)
 end
 
 local main = function()
-	common.enforce_http_method("POST")
-	local payload = common.extract_valid_date_payload(common.extract_content_length())
+	local date = common.enforce_date_payload()
 	local database = common.open_database("cgi-bin/machine.db")
 	local response = "null"
-	if common.day_exists(database, payload) then
-		response = cjson.encode(extract_day(database, payload)) or "null"
+	if common.day_exists(database, date) then
+		response = cjson.encode(extract_day(database, date)) or "null"
 	end
 	common.respond(response)
 	database:close()
