@@ -43,7 +43,7 @@ local main = function()
 		rules = totable(filter(function(r) return rule_applies(common.get_rule_schedule(db, r.name, date), get_last_rule_instance(db, r), date) end, rules))
 
 		local day = { id = date, rule_instances = {} }
-	    each(function(r) table.insert(day.rule_instances, { rule_name = r.name, done = 0 }) end, rules)
+		each(function(r) table.insert(day.rule_instances, { rule_name = r.name, done = 0 }) end, rules)
 		response = cjson.encode(day) or "null"
 	end
 	common.respond(response)

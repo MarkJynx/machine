@@ -8,7 +8,6 @@ common.enforce_http_method = function(method)
 	end
 end
 
-
 common.extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
@@ -33,6 +32,15 @@ common.extract_valid_date_payload = function(content_length)
 		return payload
 	end
 	return nil
+end
+
+common.enforce_date_payload = function()
+	common.enforce_http_method("POST")
+	local date = common.extract_valid_date_payload(common.extract_content_length())
+	if not date then
+		os.exit(0)
+	end
+	return date
 end
 
 common.open_database = function(path)
