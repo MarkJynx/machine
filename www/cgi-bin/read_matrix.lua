@@ -1,5 +1,6 @@
 #!/usr/bin/env lua
 
+require("fun")()
 local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
@@ -10,17 +11,11 @@ local add_days = function(date, days)
 	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
 end
 
-local extract_rule_done_lookup_table = function(rule)
-	local lookup_table = {}
-	for _, instance in ipairs(rule.instances or {}) do
-		if instance.done then
-			lookup_table[instance.day_id] = true
-		end
-	end
-	return lookup_table
+local extract_rule_done_lt = function(rule)
+	return reduce(function(a, r) if r.done then a[r.day_id] = true end return a end, {}, rule.instances or {})
 end
 
-local extract_rule_schedule_lookup_table_schedule = function(lt, done_lt, schedule, first_day, last_day)
+local extract_rule_schedule_lt_schedule = function(lt, done_lt, schedule, first_day, last_day)
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 
 	local start_date = first_day
@@ -49,14 +44,12 @@ local extract_rule_schedule_lookup_table_schedule = function(lt, done_lt, schedu
 			not_done_streak = 1
 		end
 	end
+
+	return lt
 end
 
-local extract_rule_schedule_lookup_table = function(rule, first_day, last_day)
-	local lookup_table = {}
-	for _, schedule in ipairs(rule.schedules or {}) do
-		extract_rule_schedule_lookup_table_schedule(lookup_table, rule.done_lt, schedule, first_day, last_day)
-	end
-	return lookup_table
+local extract_rule_schedule_lt = function(rule, first_day, last_day)
+	return reduce(function(a, s) return extract_rule_schedule_lt_schedule(a, rule.done_lt, s, first_day, last_day) end, {}, rule.schedules or {})
 end
 
 local extract_rules = function(database, first_day, last_day)
@@ -67,8 +60,8 @@ local extract_rules = function(database, first_day, last_day)
 		local q2 = "SELECT * FROM rule_instance " .. selector .. " AND done = 1 ORDER BY JULIANDAY(day_id) ASC"
 		rule.schedules = common.collect_database(database, q1)
 		rule.instances = common.collect_database(database, q2)
-		rule.done_lt = extract_rule_done_lookup_table(rule)
-		rule.schedule_lt = extract_rule_schedule_lookup_table(rule, first_day, last_day)
+		rule.done_lt = extract_rule_done_lt(rule)
+		rule.schedule_lt = extract_rule_schedule_lt(rule, first_day, last_day)
 	end
 	return rules
 end
@@ -76,42 +69,27 @@ end
 local extract_extreme_day = function(database, order)
 	local q = "SELECT day_id FROM rule_instance ORDER BY JULIANDAY(day_id) %s LIMIT 1"
 	local rule_instance = common.collect_single_record(database, string.format(q, order))
-	if rule_instance then
-		return rule_instance.day_id
-	end
-	return nil
+	return rule_instance and rule_instance.day_id or nil
 end
 
-local extract_day_lookup_table = function(database)
-	local lookup_table = {}
-	local days = common.collect_database(database, "SELECT * FROM day")
-	for _, day in ipairs(days or {}) do
-		lookup_table[day.id] = true
-	end
-	return lookup_table
+local extract_day_lt = function(database)
+	local days = common.collect_database(database, "SELECT * FROM day") or {}
+	return reduce(function(a, d) a[d.id] = true return a end, {}, days)
 end
 
 local process_day_rule = function(row, date, rule, day_lt)
-	if not day_lt[date] then
+	if not day_lt[date] or rule.schedule_lt[date] == nil then
 		table.insert(row, -1)
-		return
+	else
+		local done = rule.done_lt[date] and 1 or 0
+		local mandatory = rule.schedule_lt[date] and 2 or 0
+		table.insert(row, done + mandatory)
 	end
-
-	if rule.schedule_lt[date] == nil then
-		table.insert(row, -1)
-		return
-	end
-
-	local done = rule.done_lt[date] and 1 or 0
-	local mandatory = rule.schedule_lt[date] and 2 or 0
-	table.insert(row, done + mandatory)
+	return row
 end
 
 local process_day = function(matrix, date, rules, day_lt)
-	local row = {}
-	for _, rule in ipairs(rules or {}) do
-		process_day_rule(row, date, rule, day_lt)
-	end
+	local row = reduce(function(a, r) return process_day_rule(a, date, r, day_lt) end, {}, rules or {})
 	table.insert(matrix, row)
 end
 
@@ -124,11 +102,9 @@ local main = function()
 	local json = {}
 	if first_day and last_day then
 		local rules = extract_rules(database, first_day, last_day)
-		local day_lt = extract_day_lookup_table(database)
+		local day_lt = extract_day_lt(database)
 		local day_count = common.datediff(last_day, first_day) + 1
-		for i = 1, day_count do
-			process_day(matrix, add_days(first_day, i - 1), rules, day_lt)
-		end
+		each(function(i) process_day(matrix, add_days(first_day, i - 1), rules, day_lt) end, range(day_count))
 
 		json.first_day = first_day
 		json.last_day = last_day
