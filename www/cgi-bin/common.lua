@@ -2,7 +2,8 @@ require("fun")()
 local common = {}
 
 
--- Date string functions
+------------------------------------------------------------------
+-- Date string utilities
 
 local date_table = function(d)
 	return { year = tonumber(string.sub(d, 1, 4)), month = tonumber(string.sub(d, 6, 7)), day = tonumber(string.sub(d, 9, 10)) }
@@ -23,12 +24,30 @@ common.date_add = function(date, days)
 end
 
 ------------------------------------------------------------------
+-- HTTP utilities
+-- TODO: fix these up and refactor
 
 common.enforce_http_method = function(method)
 	local request_method = os.getenv("REQUEST_METHOD")
 	if request_method ~= method then
 		os.exit(0)
 	end
+end
+
+common.enforce_date_payload = function()
+	common.enforce_http_method("POST")
+	local date = common.extract_valid_date_payload(common.extract_content_length())
+	if not date then
+		os.exit(0)
+	end
+	return date
+end
+
+common.respond = function(json)
+	io.write("Status: 200 OK\r\n")
+	io.write("Content-Type: application/json;charset=utf-8\r\n")
+	io.write("Content-Length: " .. #json .. "\r\n\r\n")
+	io.write(json)
 end
 
 common.extract_content_length = function()
@@ -42,6 +61,9 @@ common.extract_content_length = function()
 	return content_length and content_length or 0
 end
 
+------------------------------------------------------------------
+-- Other
+
 common.extract_valid_date_payload = function(content_length)
 	-- TODO: convert to JSON
 	local payload = nil
@@ -52,15 +74,6 @@ common.extract_valid_date_payload = function(content_length)
 		return payload
 	end
 	return nil
-end
-
-common.enforce_date_payload = function()
-	common.enforce_http_method("POST")
-	local date = common.extract_valid_date_payload(common.extract_content_length())
-	if not date then
-		os.exit(0)
-	end
-	return date
 end
 
 common.open_database = function(path)
@@ -135,13 +148,6 @@ common.database_to_sql = function (database, sql_path)
 	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
 	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
 	sql_script:close()
-end
-
-common.respond = function(json)
-	io.write("Status: 200 OK\r\n")
-	io.write("Content-Type: application/json;charset=utf-8\r\n")
-	io.write("Content-Length: " .. #json .. "\r\n\r\n")
-	io.write(json)
 end
 
 return common
