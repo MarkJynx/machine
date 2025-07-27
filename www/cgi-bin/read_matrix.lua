@@ -5,11 +5,11 @@ local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
-local extract_rule_done_lt = function(rule)
-	return reduce(function(a, r) if r.done then a[r.day_id] = true end return a end, {}, rule.instances or {})
+local extract_rule_done_lt = function(instances)
+	return reduce(function(a, i) if i.done then a[i.day_id] = true end return a end, {}, instances)
 end
 
-local extract_rule_schedule_lt_schedule = function(lt, done_lt, schedule, first_day, last_day)
+local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day)
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 	local start_date = max({schedule.start_date, first_day})
 	local stop_date = schedule.stop_date and min({schedule.stop_day, last_day}) or last_day
@@ -26,8 +26,8 @@ local extract_rule_schedule_lt_schedule = function(lt, done_lt, schedule, first_
 	return lt
 end
 
-local extract_rule_schedule_lt = function(rule, first_day, last_day)
-	return reduce(function(a, s) return extract_rule_schedule_lt_schedule(a, rule.done_lt, s, first_day, last_day) end, {}, rule.schedules or {})
+local extract_rule_schedule_lt_all = function(first_day, last_day, done_lt, schedules)
+	return reduce(function(a, s) return extract_rule_schedule_lt(a, done_lt, s, first_day, last_day) end, {}, schedules)
 end
 
 local extract_rules = function(database, first_day, last_day)
@@ -38,8 +38,8 @@ local extract_rules = function(database, first_day, last_day)
 		local q2 = "SELECT * FROM rule_instance " .. selector .. " AND done = 1 ORDER BY JULIANDAY(day_id) ASC"
 		rule.schedules = common.collect_database(database, q1)
 		rule.instances = common.collect_database(database, q2)
-		rule.done_lt = extract_rule_done_lt(rule)
-		rule.schedule_lt = extract_rule_schedule_lt(rule, first_day, last_day)
+		rule.done_lt = extract_rule_done_lt(rule.instances or {})
+		rule.schedule_lt = extract_rule_schedule_lt_all(first_day, last_day, rule.done_lt, rule.schedules or {})
 	end
 	return rules
 end

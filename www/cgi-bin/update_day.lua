@@ -9,14 +9,7 @@ local assign_rule_schedules = function(day, database)
 		return false
 	end
 
-	for _, i in ipairs(day.rule_instances) do
-		i.rule_schedule = common.get_rule_schedule(database, i.rule_name, i.day_id)
-		if not i.rule_schedule then
-			return false
-		end
-	end
-
-	return true
+	return all(function(i) i.rule_schedule = common.get_rule_schedule(database, i.rule_name, i.day_id) return i.rule_schedule ~= nil end, day.rule_instances)
 end
 
 local rule_instance_to_insert_query = function(rule_instance, day_id, database)
@@ -52,16 +45,8 @@ local main = function()
 			notes = "'" .. database:escape(day.notes) .. "'"
 		end
 		table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
-
-		if day.rule_instances then
-			for _, rule_instance in ipairs(day.rule_instances) do
-				table.insert(s, rule_instance_to_insert_query(rule_instance, day.id, database))
-			end
-
-		end
-
+		each(function(i) table.insert(s, rule_instance_to_insert_query(i, day.id, database)) end, day.rule_instances or {})
 		table.insert(s, "COMMIT")
-
 		if common.execute_many_database_queries(database, s) then
 			response = "true"
 		end

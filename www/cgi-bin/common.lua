@@ -132,13 +132,8 @@ end
 
 common.database_to_sql = function (database, sql_path)
 	local sql_script = io.open(sql_path, "wb")
-	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC")
-	for index, day in ipairs(days or {}) do
-		database_to_sql_day(day.id, database, sql_script)
-		if index ~= #days then
-			sql_script:write("\n")
-		end
-	end
+	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
+	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
 	sql_script:close()
 end
 
