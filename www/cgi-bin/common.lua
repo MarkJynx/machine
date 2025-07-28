@@ -101,18 +101,11 @@ end
 
 -- TODO: delete / convert to local function
 local get_rule_schedule = function(db, rule_name, date) -- TODO: make common functions bullet-proof, check everything
-	if not date then
-		return nil
-	end
-
 	local q = {}
-	-- TODO: validate anything you get from database
 	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule_name))
 	table.insert(q, string.format("JULIANDAY(start_date) <= JULIANDAY('%s') AND ", date))
 	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
-	q = table.concat(q)
-
-	return collect_single_record(db, q) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
+	return collect_single_record(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
 end
 
 common.db_delete_day = function(date)
