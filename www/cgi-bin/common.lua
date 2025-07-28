@@ -194,10 +194,6 @@ common.db_read_deep = function()
 	return r
 end
 
-local assign_rule_schedules = function(day, database)
-	return all(function(i) i.rule_schedule = get_rule_schedule(database, i.rule_name, i.day_id) return i.rule_schedule ~= nil end, day.rule_instances)
-end
-
 local rule_instance_to_insert_query = function(i, db)
 	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES "
 	local s2 = string.format("('%s',%d,'%s',%d,%d)", db:escape(i.rule_name), i.rule_schedule.id, i.day_id, i.done, i.order_priority)
@@ -207,7 +203,7 @@ end
 common.db_insert_day = function(day)
 	local db = open_database(DB_PATH)
 
-	if not assign_rule_schedules(day, db) then
+	if any(function(i) i.rule_schedule = get_rule_schedule(db, i.rule_name, i.day_id) return i.rule_schedule == nil end, day.rule_instances) then
 		db:close()
 		return false
 	end
