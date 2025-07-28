@@ -67,12 +67,14 @@ common.http_enforce_date_payload = function()
 end
 
 ------------------------------------------------------------------
--- Other
+-- Stateless database operations
 
+-- TODO: delete / convert to local function
 common.open_database = function(path)
 	return require("luasql.sqlite3").sqlite3():connect(path) -- TODO: handle 3 sources of errors, close environment
 end
 
+-- TODO: delete / convert to local function
 common.collect_database = function(db, q)
 	local result = db:execute(q)
 	if not result then
@@ -88,11 +90,13 @@ common.collect_database = function(db, q)
 	return collection
 end
 
+-- TODO: delete / convert to local function
 common.collect_single_record = function(db, q)
 	local results = common.collect_database(db, q)
 	return #results == 1 and results[1] or nil
 end
 
+-- TODO: delete / convert to local function
 common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common functions bullet-proof, check everything
 	if not date then
 		return nil
@@ -108,17 +112,38 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 	return common.collect_single_record(db, q)
 end
 
+-- TODO: delete / convert to local function
+common.day_exists = function(db, id)
+	-- TODO: validate anything you get from database
+	return common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. id .. "'") ~= nil
+end
+
+common.db_delete_day = function(day)
+	local database = common.open_database("cgi-bin/machine.db")
+
+	local q = {}
+	table.insert(q, "BEGIN TRANSACTION")
+	table.insert(q, "DELETE FROM rule_instance WHERE day_id = '" .. day .. "'")
+	table.insert(q, "DELETE FROM day WHERE id = '" .. day .. "'")
+	table.insert(q, "COMMIT")
+	local retval = common.execute_many_database_queries(database, q)
+
+	database:close()
+
+	return retval
+end
+
+------------------------------------------------------------------
+-- Other
+
+-- TODO: separate backup functions
+
 common.get_rule_schedule_weekdays = function(rule_schedule)
 	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
 end
 
 common.execute_many_database_queries = function(db, queries)
 	return all(function(q) return db:execute(q) ~= nil end, queries)
-end
-
-common.day_exists = function(db, id)
-	-- TODO: validate anything you get from database
-	return common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. id .. "'") ~= nil
 end
 
 local database_to_sql_day = function(day_id, database, sql_script)
