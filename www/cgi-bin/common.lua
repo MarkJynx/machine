@@ -72,13 +72,11 @@ end
 local DB_PATH = "cgi-bin/machine.db"
 local DB_BACKUP_PATH = "cgi-bin/machine.sql"
 
--- TODO: delete / convert to local function
-local open_database = function(path)
-	return require("luasql.sqlite3").sqlite3():connect(path) -- TODO: handle 3 sources of errors, close environment
+local db_open = function(path) -- TODO: this needs refactorization: handle 3 sources of errors, close environment
+	return require("luasql.sqlite3").sqlite3():connect(path)
 end
 
--- TODO: delete / convert to local function
-local collect_database = function(db, q)
+local db_collect = function(db, q)
 	local result = db:execute(q)
 	if not result then
 		return nil
@@ -93,23 +91,21 @@ local collect_database = function(db, q)
 	return collection
 end
 
--- TODO: delete / convert to local function
-local collect_single_record = function(db, q)
-	local results = collect_database(db, q)
+local db_collect_single = function(db, q)
+	local results = db_collect(db, q)
 	return (results and #results == 1) and results[1] or nil
 end
 
--- TODO: delete / convert to local function
-local get_rule_schedule = function(db, rule_name, date) -- TODO: make common functions bullet-proof, check everything
+local db_get_rule_schedule = function(db, rule_name, date)
 	local q = {}
 	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule_name))
 	table.insert(q, string.format("JULIANDAY(start_date) <= JULIANDAY('%s') AND ", date))
 	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
-	return collect_single_record(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
+	return db_collect_single(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
 end
 
 common.db_delete_day = function(date)
-	local db = open_database(DB_PATH)
+	local db = db_open(DB_PATH)
 	local queries = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
 	queries[2] = string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", date)
 	queries[3] = string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", date)
@@ -118,22 +114,22 @@ common.db_delete_day = function(date)
 	return retval
 end
 
-local get_last_rule_instance = function(db, name)
+local db_get_last_rule_instance = function(db, name)
 	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. db:escape(name) .. "' AND done = 1 ORDER BY JULIANDAY(day_id) DESC LIMIT 1"
-	return collect_single_record(db, q)
+	return db_collect_single(db, q)
 end
 
 common.db_read_shallow = function(date)
-	local db = open_database(DB_PATH)
+	local db = db_open(DB_PATH)
 
-	local rules = collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
-	each(function(r) r.schedule = get_rule_schedule(db, r.name, date) end, rules)
-	each(function(r) r.last_instance = get_last_rule_instance(db, r.name) end, rules)
+	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
+	each(function(r) r.schedule = db_get_rule_schedule(db, r.name, date) end, rules)
+	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name) end, rules)
 
-	local day = collect_single_record(db, "SELECT * FROM day WHERE id = '" .. date .. "'")
+	local day = db_collect_single(db, "SELECT * FROM day WHERE id = '" .. date .. "'")
 	if day then
 		local q = "SELECT * FROM rule_instance WHERE day_id = '" .. date .. "' ORDER BY order_priority ASC"
-		day.rule_instances = collect_database(db, q)
+		day.rule_instances = db_collect(db, q)
 	end
 
 	db:close()
@@ -142,16 +138,15 @@ common.db_read_shallow = function(date)
 end
 
 local db_read_deep_days = function(r, db)
-	local days = collect_database(db, "SELECT * FROM day ORDER BY id ASC")
-	if not days or #days < 1 then
-		return
+	local days = db_collect(db, "SELECT * FROM day ORDER BY id ASC")
+	if days and #days > 0 then
+		r.day_first = days[1].id
+		r.day_last = days[#days].id
+		r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
 	end
-	r.day_first = days[1].id
-	r.day_last = days[#days].id
-	r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
 end
 
-local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day)
+local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day) -- TODO: refactor, at least the name
 	if not first_day or not last_day then
 		return lt
 	end
@@ -172,38 +167,36 @@ end
 
 local db_read_deep_rule = function(r, db, rule)
 	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY JULIANDAY(%s) ASC"
-	rule.schedules = collect_database(db, string.format(s, "rule_schedule", "", "start_date"))
-	rule.instances = collect_database(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
+	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "start_date"))
+	rule.instances = db_collect(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances or {})
 	rule.schedule_lt = reduce(function(a, s) return extract_rule_schedule_lt(a, rule.done_lt, s, r.day_first, r.day_last) end, {}, rule.schedules or {})
 end
 
 local db_read_deep_rules = function(r, db)
-	r.rules = collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC")
+	r.rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules or {})
 end
 
 common.db_read_deep = function()
 	local r = {}
-	local db = open_database(DB_PATH)
-
+	local db = db_open(DB_PATH)
 	db_read_deep_days(r, db)
 	db_read_deep_rules(r, db)
-
 	db:close()
 	return r
 end
 
-local rule_instance_to_insert_query = function(i, db)
+local db_rule_instance_to_insert_query = function(i, db)
 	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES "
 	local s2 = string.format("('%s',%d,'%s',%d,%d)", db:escape(i.rule_name), i.rule_schedule.id, i.day_id, i.done, i.order_priority)
 	return s1 .. s2
 end
 
 common.db_insert_day = function(day)
-	local db = open_database(DB_PATH)
+	local db = db_open(DB_PATH)
 
-	if any(function(i) i.rule_schedule = get_rule_schedule(db, i.rule_name, i.day_id) return i.rule_schedule == nil end, day.rule_instances) then
+	if any(function(i) i.rule_schedule = db_get_rule_schedule(db, i.rule_name, i.day_id) return i.rule_schedule == nil end, day.rule_instances) then
 		db:close()
 		return false
 	end
@@ -213,7 +206,7 @@ common.db_insert_day = function(day)
 	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", date))
 	local notes = type(day.notes) == "string" and string.format("'%s'", db:escape(notes)) or "NULL"
 	table.insert(s, string.format("INSERT OR ROLLBACK INTO DAY (id, notes) VALUES ('%s', %s)", day.id, notes))
-	each(function(i) table.insert(s, rule_instance_to_insert_query(i, db)) end, day.rule_instances or {})
+	each(function(i) table.insert(s, db_rule_instance_to_insert_query(i, db)) end, day.rule_instances or {})
 	table.insert(s, "COMMIT")
 
 	local retval = all(function(q) return db:execute(q) ~= nil end, s)
@@ -221,13 +214,13 @@ common.db_insert_day = function(day)
 	return retval
 end
 
-local database_to_sql_day = function(day_id, database, sql_script)
+local database_to_sql_day = function(day_id, database, sql_script) -- TODO: refactor, at least the name
 	sql_script:write(string.format('INSERT INTO day (id) VALUES ("%s");\n', day_id))
 
 	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day_id .. "' ORDER BY order_priority ASC"
-	local rule_instances = collect_database(database, q)
+	local rule_instances = db_collect(database, q)
 	for _, r in ipairs(rule_instances or {}) do
-		local rule_schedule = get_rule_schedule(database, r.rule_name, day_id) -- TODO: extremely inefficient bit in an extremely inefficient function
+		local rule_schedule = db_get_rule_schedule(database, r.rule_name, day_id) -- TODO: extremely inefficient bit in an extremely inefficient function
 		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
 		-- TODO: dynamic padding
 		local rule_name = '"' .. r.rule_name .. '",' .. string.rep(" ", 26 - #r.rule_name)
@@ -237,10 +230,10 @@ local database_to_sql_day = function(day_id, database, sql_script)
 end
 
 common.db_backup = function()
-	local database = open_database(DB_PATH)
+	local database = db_open(DB_PATH)
 	local sql_script = io.open(DB_BACKUP_PATH, "wb")
 
-	local days = collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
+	local days = db_collect(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
 	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
 
 	sql_script:close()
