@@ -212,20 +212,15 @@ common.db_insert_day = function(day)
 		return false
 	end
 
-	local s = {}
-	table.insert(s, "PRAGMA foreign_keys = ON")
-	table.insert(s, "BEGIN TRANSACTION")
-	table.insert(s, "DELETE FROM rule_instance WHERE day_id = '" .. day.id .. "'")
-	table.insert(s, "DELETE FROM day WHERE id = '" .. day.id .. "'")
-	local notes = "NULL"
-	if type(day.notes) == "string" then
-		notes = "'" .. db:escape(day.notes) .. "'"
-	end
-	table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
+	local s = { "PRAGMA foreign_keys = ON", "BEGIN TRANSACTION" }
+	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", date))
+	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", date))
+	local notes = type(day.notes) == "string" and string.format("'%s'", db:escape(notes)) or "NULL"
+	table.insert(s, string.format("INSERT OR ROLLBACK INTO DAY (id, notes) VALUES ('%s', %s)", day.id, notes))
 	each(function(i) table.insert(s, rule_instance_to_insert_query(i, db)) end, day.rule_instances or {})
 	table.insert(s, "COMMIT")
-	local retval = all(function(q) return db:execute(q) ~= nil end, s)
 
+	local retval = all(function(q) return db:execute(q) ~= nil end, s)
 	db:close()
 	return retval
 end
@@ -250,7 +245,7 @@ common.db_backup = function()
 	local sql_script = io.open(DB_BACKUP_PATH, "wb")
 
 	local days = collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
-	each(function(day) database_to_sql_day(day.id, database, DB_BACKUP_PATH) end, days)
+	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
 
 	sql_script:close()
 	database:close()
