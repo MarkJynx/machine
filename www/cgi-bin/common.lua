@@ -150,7 +150,7 @@ end
 
 local db_read_deep_days = function(r, db)
 	local days = collect_database(db, "SELECT * FROM day ORDER BY id ASC")
-	if not days then
+	if not days or #days < 1 then
 		return
 	end
 	r.day_first = days[1].id
@@ -158,11 +158,11 @@ local db_read_deep_days = function(r, db)
 	r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
 end
 
-local extract_rule_done_lt = function(instances)
-	return reduce(function(a, i) if i.done then a[i.day_id] = true end return a end, {}, instances)
-end
-
 local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day)
+	if not first_day or not last_day then
+		return lt
+	end
+
 	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 	local start_date = max({schedule.start_date, first_day})
 	local stop_date = schedule.stop_date and min({schedule.stop_day, last_day}) or last_day
@@ -179,18 +179,14 @@ local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last
 	return lt
 end
 
-local extract_rule_schedule_lt_all = function(first_day, last_day, done_lt, schedules)
-	return reduce(function(a, s) return extract_rule_schedule_lt(a, done_lt, s, first_day, last_day) end, {}, schedules)
-end
-
 local db_read_deep_rule = function(r, db, rule)
 	local selector = "WHERE rule_name = '" .. db:escape(rule.name) .. "'"
 	local q1 = "SELECT * FROM rule_schedule " .. selector .. " ORDER BY JULIANDAY(start_date) ASC"
 	local q2 = "SELECT * FROM rule_instance " .. selector .. " AND done = 1 ORDER BY JULIANDAY(day_id) ASC"
 	rule.schedules = collect_database(db, q1)
 	rule.instances = collect_database(db, q2)
-	rule.done_lt = extract_rule_done_lt(rule.instances or {})
-	rule.schedule_lt = extract_rule_schedule_lt_all(r.day_first, r.day_last, rule.done_lt, rule.schedules or {})
+	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances or {})
+	rule.schedule_lt = reduce(function(a, s) return extract_rule_schedule_lt(a, rule.done_lt, s, r.day_first, r.day_last) end, {}, rule.schedules or {})
 end
 
 local db_read_deep_rules = function(r, db)

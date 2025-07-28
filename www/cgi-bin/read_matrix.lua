@@ -26,6 +26,7 @@ local main = function()
 	local json = common.db_read_deep()
 	json.matrix = {}
 
+	-- TODO: warn about scheduled not-done spots without not-done rule instances
 	if json.day_first and json.day_last then
 		local day_count = common.date_diff(json.day_last, json.day_first) + 1
 		each(function(i) process_day(json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_lt) end, range(day_count))
