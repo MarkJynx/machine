@@ -20,7 +20,7 @@ local main = function()
 	local response = "false"
 
 	common.db_insert_day(day)
-
+	common.db_backup()
 	common.http_respond(response)
 end
 

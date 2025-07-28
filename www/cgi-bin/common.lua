@@ -68,6 +68,8 @@ end
 
 ------------------------------------------------------------------
 -- Stateless database operations
+local DB_PATH = "cgi-bin/machine.db"
+local DB_BACKUP_PATH = "cgi-bin/machine.sql"
 
 -- TODO: delete / convert to local function
 common.open_database = function(path)
@@ -88,6 +90,10 @@ common.collect_database = function(db, q)
 		element = result:fetch({}, "a")
 	end
 	return collection
+end
+
+common.execute_many_database_queries = function(db, queries)
+	return all(function(q) return db:execute(q) ~= nil end, queries)
 end
 
 -- TODO: delete / convert to local function
@@ -119,7 +125,7 @@ common.day_exists = function(db, id)
 end
 
 common.db_delete_day = function(date)
-	local database = common.open_database("cgi-bin/machine.db")
+	local database = common.open_database(DB_PATH)
 
 	local q = {}
 	table.insert(q, "BEGIN TRANSACTION")
@@ -127,9 +133,6 @@ common.db_delete_day = function(date)
 	table.insert(q, "DELETE FROM day WHERE id = '" .. date .. "'")
 	table.insert(q, "COMMIT")
 	local retval = common.execute_many_database_queries(database, q)
-	if retval then
-		common.database_to_sql(database, "cgi-bin/machine.sql")
-	end
 
 	database:close()
 
@@ -142,7 +145,7 @@ local get_last_rule_instance = function(db, name)
 end
 
 common.db_read_shallow = function(date)
-	local db = common.open_database("cgi-bin/machine.db")
+	local db = common.open_database(DB_PATH)
 
 	local rules = common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
 	each(function(r) r.schedule = common.get_rule_schedule(db, r.name, date) end, rules)
@@ -175,7 +178,7 @@ end
 
 common.db_insert_day = function(day)
 	local retval = false
-	local database = common.open_database("cgi-bin/machine.db")
+	local database = common.open_database(DB_PATH)
 
 	if not assign_rule_schedules(day, database) then
 		database:close()
@@ -197,26 +200,10 @@ common.db_insert_day = function(day)
 
 	if common.execute_many_database_queries(database, s) then
 		retval = true
-		common.database_to_sql(database, "cgi-bin/machine.sql")
-	else
 	end
 
 	database:close()
 	return retval
-end
-
-------------------------------------------------------------------
--- Other
-
--- TODO: separate backup functions
--- TODO: do not call backup functions in database communication functions
-
-common.get_rule_schedule_weekdays = function(rule_schedule)
-	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
-end
-
-common.execute_many_database_queries = function(db, queries)
-	return all(function(q) io.stderr:write(q .. "\n") return db:execute(q) ~= nil end, queries)
 end
 
 local database_to_sql_day = function(day_id, database, sql_script)
@@ -234,11 +221,22 @@ local database_to_sql_day = function(day_id, database, sql_script)
 	end
 end
 
-common.database_to_sql = function (database, sql_path)
+common.db_backup = function()
+	local database = common.open_database(DB_PATH)
 	local sql_script = io.open(sql_path, "wb")
+
 	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
-	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
+	each(function(day) database_to_sql_day(day.id, database, DB_BACKUP_PATH) end, days)
+
 	sql_script:close()
+	database:close()
+end
+
+------------------------------------------------------------------
+-- Other
+
+common.get_rule_schedule_weekdays = function(rule_schedule)
+	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
 end
 
 return common
