@@ -133,6 +133,17 @@ common.db_delete_day = function(day)
 	return retval
 end
 
+common.db_read_shallow = function(day)
+	local db = common.open_database("cgi-bin/machine.db")
+
+	local rules = common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
+	each(function(r) r.schedule = common.get_rule_schedule(db, r.name, day) end, rules)
+
+	db:close()
+
+	return rules
+end
+
 ------------------------------------------------------------------
 -- Other
 
