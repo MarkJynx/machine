@@ -198,14 +198,10 @@ local assign_rule_schedules = function(day, database)
 	return all(function(i) i.rule_schedule = get_rule_schedule(database, i.rule_name, i.day_id) return i.rule_schedule ~= nil end, day.rule_instances)
 end
 
-local rule_instance_to_insert_query = function(rule_instance, day_id, database)
-	local q = {}
-	table.insert(q, "INSERT OR ROLLBACK INTO rule_instance")
-	table.insert(q, "(rule_name, rule_schedule_id, day_id, done, order_priority) VALUES (")
-	table.insert(q, "'" .. database:escape(rule_instance.rule_name) .. "',")
-	table.insert(q, tostring(rule_instance.rule_schedule.id))
-	table.insert(q, string.format(",'%s',%d,%d)", day_id, rule_instance.done, rule_instance.order_priority))
-	return table.concat(q)
+local rule_instance_to_insert_query = function(i, db)
+	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES "
+	local s2 = string.format("('%s',%d,'%s',%d,%d)", db:escape(i.rule_name), i.rule_schedule.id, i.day_id, i.done, i.order_priority)
+	return s1 .. s2
 end
 
 common.db_insert_day = function(day)
@@ -226,7 +222,7 @@ common.db_insert_day = function(day)
 		notes = "'" .. db:escape(day.notes) .. "'"
 	end
 	table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
-	each(function(i) table.insert(s, rule_instance_to_insert_query(i, day.id, db)) end, day.rule_instances or {})
+	each(function(i) table.insert(s, rule_instance_to_insert_query(i, db)) end, day.rule_instances or {})
 	table.insert(s, "COMMIT")
 	local retval = all(function(q) return db:execute(q) ~= nil end, s)
 
