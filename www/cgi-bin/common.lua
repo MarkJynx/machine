@@ -156,16 +156,14 @@ local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last
 		return lt
 	end
 
-	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
+	local schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 	local start_date = max({schedule.start_date, first_day})
 	local stop_date = schedule.stop_date and min({schedule.stop_day, last_day}) or last_day
 
 	local day_count = common.date_diff(stop_date, start_date) + 1
 	local not_done_streak = math.huge
-	for i = 1, day_count do
-		local date = common.date_add(start_date, i - 1)
-		local weekday = common.date_weekday(date)
-		lt[date] = schedule.period <= not_done_streak and rule_schedule_weekdays[weekday]
+	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(day_count)) do
+		lt[date] = schedule.period <= not_done_streak and schedule_weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 	end
 
