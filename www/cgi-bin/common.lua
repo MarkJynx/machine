@@ -99,8 +99,8 @@ end
 local db_get_rule_schedule = function(db, rule_name, date)
 	local q = {}
 	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule_name))
-	table.insert(q, string.format("JULIANDAY(start_date) <= JULIANDAY('%s') AND ", date))
-	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
+	table.insert(q, string.format("start_date <= '%s' AND ", date))
+	table.insert(q, string.format("(end_date IS NULL OR end_date >= '%s')", date))
 	return db_collect_single(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
 end
 
@@ -115,7 +115,7 @@ common.db_delete_day = function(date)
 end
 
 local db_get_last_rule_instance = function(db, name)
-	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. db:escape(name) .. "' AND done = 1 ORDER BY JULIANDAY(day_id) DESC LIMIT 1"
+	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. db:escape(name) .. "' AND done = 1 ORDER BY day_id DESC LIMIT 1"
 	return db_collect_single(db, q)
 end
 
@@ -166,7 +166,7 @@ local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last
 end
 
 local db_read_deep_rule = function(r, db, rule)
-	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY JULIANDAY(%s) ASC"
+	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
 	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "start_date"))
 	rule.instances = db_collect(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances or {})
@@ -233,7 +233,7 @@ common.db_backup = function()
 	local database = db_open(DB_PATH)
 	local sql_script = io.open(DB_BACKUP_PATH, "wb")
 
-	local days = db_collect(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
+	local days = db_collect(database, "SELECT * FROM day ORDER BY id ASC") or {}
 	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
 
 	sql_script:close()
