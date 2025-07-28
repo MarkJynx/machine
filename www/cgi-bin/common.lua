@@ -146,14 +146,14 @@ local db_read_deep_days = function(r, db)
 	end
 end
 
-local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day) -- TODO: refactor, at least the name
-	if not first_day or not last_day then
+local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
+	if not r.day_first or not r.day_last then
 		return lt
 	end
 
 	local schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
-	local start_date = max({schedule.start_date, first_day})
-	local stop_date = schedule.stop_date and min({schedule.stop_day, last_day}) or last_day
+	local start_date = max({schedule.start_date, r.day_first})
+	local stop_date = schedule.stop_date and min({schedule.stop_day, r.day_last}) or r.day_last
 
 	local day_count = common.date_diff(stop_date, start_date) + 1
 	local not_done_streak = math.huge
@@ -170,7 +170,7 @@ local db_read_deep_rule = function(r, db, rule)
 	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "start_date"))
 	rule.instances = db_collect(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances or {})
-	rule.schedule_lt = reduce(function(a, s) return extract_rule_schedule_lt(a, rule.done_lt, s, r.day_first, r.day_last) end, {}, rule.schedules or {})
+	rule.schedule_lt = reduce(function(a, s) return db_read_deep_rule_schedule_lt(a, s, rule.done_lt, r) end, {}, rule.schedules or {})
 end
 
 local db_read_deep_rules = function(r, db)
