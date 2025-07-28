@@ -79,7 +79,7 @@ end
 local db_collect = function(db, q)
 	local result = db:execute(q)
 	if not result then
-		return nil
+		return {}
 	end
 
 	local collection = {}
@@ -93,7 +93,7 @@ end
 
 local db_collect_single = function(db, q)
 	local results = db_collect(db, q)
-	return (results and #results == 1) and results[1] or nil
+	return #results == 1 and results[1] or nil
 end
 
 local db_get_rule_schedule = function(db, rule_name, date)
@@ -122,7 +122,7 @@ end
 common.db_read_shallow = function(date)
 	local db = db_open(DB_PATH)
 
-	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
+	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 	each(function(r) r.schedule = db_get_rule_schedule(db, r.name, date) end, rules)
 	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name) end, rules)
 
@@ -139,7 +139,7 @@ end
 
 local db_read_deep_days = function(r, db)
 	local days = db_collect(db, "SELECT * FROM day ORDER BY id ASC")
-	if days and #days > 0 then
+	if #days > 0 then
 		r.day_first = days[1].id
 		r.day_last = days[#days].id
 		r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
@@ -169,13 +169,13 @@ local db_read_deep_rule = function(r, db, rule)
 	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
 	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "start_date"))
 	rule.instances = db_collect(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
-	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances or {})
-	rule.schedule_lt = reduce(function(a, s) return db_read_deep_rule_schedule_lt(a, s, rule.done_lt, r) end, {}, rule.schedules or {})
+	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances)
+	rule.schedule_lt = reduce(function(a, s) return db_read_deep_rule_schedule_lt(a, s, rule.done_lt, r) end, {}, rule.schedules)
 end
 
 local db_read_deep_rules = function(r, db)
 	r.rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
-	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules or {})
+	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules)
 end
 
 common.db_read_deep = function()
@@ -219,7 +219,7 @@ local database_to_sql_day = function(day_id, database, sql_script) -- TODO: refa
 
 	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day_id .. "' ORDER BY order_priority ASC"
 	local rule_instances = db_collect(database, q)
-	for _, r in ipairs(rule_instances or {}) do
+	for _, r in ipairs(rule_instances) do
 		local rule_schedule = db_get_rule_schedule(database, r.rule_name, day_id) -- TODO: extremely inefficient bit in an extremely inefficient function
 		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
 		-- TODO: dynamic padding
@@ -233,7 +233,7 @@ common.db_backup = function()
 	local database = db_open(DB_PATH)
 	local sql_script = io.open(DB_BACKUP_PATH, "wb")
 
-	local days = db_collect(database, "SELECT * FROM day ORDER BY id ASC") or {}
+	local days = db_collect(database, "SELECT * FROM day ORDER BY id ASC")
 	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
 
 	sql_script:close()
