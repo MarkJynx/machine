@@ -17,7 +17,7 @@ local process_day_rule = function(row, date, rule, day_lt)
 end
 
 local process_day = function(matrix, date, rules, day_lt)
-	local row = reduce(function(a, r) return process_day_rule(a, date, r, day_lt) end, {}, rules or {})
+	local row = reduce(function(a, r) return process_day_rule(a, date, r, day_lt) end, {}, rules)
 	table.insert(matrix, row)
 end
 
