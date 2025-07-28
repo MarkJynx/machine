@@ -209,6 +209,7 @@ end
 -- Other
 
 -- TODO: separate backup functions
+-- TODO: do not call backup functions in database communication functions
 
 common.get_rule_schedule_weekdays = function(rule_schedule)
 	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
