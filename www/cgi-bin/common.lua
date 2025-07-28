@@ -180,11 +180,9 @@ local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last
 end
 
 local db_read_deep_rule = function(r, db, rule)
-	local selector = "WHERE rule_name = '" .. db:escape(rule.name) .. "'"
-	local q1 = "SELECT * FROM rule_schedule " .. selector .. " ORDER BY JULIANDAY(start_date) ASC"
-	local q2 = "SELECT * FROM rule_instance " .. selector .. " AND done = 1 ORDER BY JULIANDAY(day_id) ASC"
-	rule.schedules = collect_database(db, q1)
-	rule.instances = collect_database(db, q2)
+	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY JULIANDAY(%s) ASC"
+	rule.schedules = collect_database(db, string.format(s, "rule_schedule", "", "start_date"))
+	rule.instances = collect_database(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances or {})
 	rule.schedule_lt = reduce(function(a, s) return extract_rule_schedule_lt(a, rule.done_lt, s, r.day_first, r.day_last) end, {}, rule.schedules or {})
 end
