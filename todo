@@ -6,6 +6,8 @@
 * REFACTORIZATION: Robustness (back-end, don't expect any valid output from database).
 * REFACTORIZATION: Robustness (front-end, don't expect any valid output from server).
 * REFACTORIZATION: Profile and optimize (back-end).
+* REFACTORIZATION: Minimize SQL query count.
+* REFACTORIZATION: Proper error messages.
 
 * FEATURE: Notes (front-end).
 * FEATURE: Undo/Redo (front-end).

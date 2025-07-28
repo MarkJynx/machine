@@ -93,7 +93,7 @@ end
 -- TODO: delete / convert to local function
 common.collect_single_record = function(db, q)
 	local results = common.collect_database(db, q)
-	return #results == 1 and results[1] or nil
+	return (results and #results == 1) and results[1] or nil
 end
 
 -- TODO: delete / convert to local function
@@ -118,13 +118,13 @@ common.day_exists = function(db, id)
 	return common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. id .. "'") ~= nil
 end
 
-common.db_delete_day = function(day)
+common.db_delete_day = function(date)
 	local database = common.open_database("cgi-bin/machine.db")
 
 	local q = {}
 	table.insert(q, "BEGIN TRANSACTION")
-	table.insert(q, "DELETE FROM rule_instance WHERE day_id = '" .. day .. "'")
-	table.insert(q, "DELETE FROM day WHERE id = '" .. day .. "'")
+	table.insert(q, "DELETE FROM rule_instance WHERE day_id = '" .. date .. "'")
+	table.insert(q, "DELETE FROM day WHERE id = '" .. date .. "'")
 	table.insert(q, "COMMIT")
 	local retval = common.execute_many_database_queries(database, q)
 
@@ -133,15 +133,21 @@ common.db_delete_day = function(day)
 	return retval
 end
 
-common.db_read_shallow = function(day)
+local get_last_rule_instance = function(db, name)
+	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. db:escape(name) .. "' AND done = 1 ORDER BY JULIANDAY(day_id) DESC LIMIT 1"
+	return common.collect_single_record(db, q)
+end
+
+common.db_read_shallow = function(date)
 	local db = common.open_database("cgi-bin/machine.db")
 
 	local rules = common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
-	each(function(r) r.schedule = common.get_rule_schedule(db, r.name, day) end, rules)
+	each(function(r) r.schedule = common.get_rule_schedule(db, r.name, date) end, rules)
+	each(function(r) r.last_instance = get_last_rule_instance(db, r.name) end, rules)
 
-	local day = common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. day .. "'")
+	local day = common.collect_single_record(db, "SELECT * FROM date WHERE id = '" .. date .. "'")
 	if day then
-		local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day .. "' ORDER BY order_priority ASC"
+		local q = "SELECT * FROM rule_instance WHERE day_id = '" .. date .. "' ORDER BY order_priority ASC"
 		day.rule_instances = common.collect_database(db, query)
 	end
 
