@@ -13,7 +13,7 @@ local main = function()
 	end
 
 	local day = cjson.decode(io.read(content_length))
-	if not day or day.id or assign_rule_schedules(day, database) then
+	if not day or not day.id then
 		common.http_respond(nil)
 	end
 

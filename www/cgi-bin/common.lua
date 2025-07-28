@@ -127,6 +127,9 @@ common.db_delete_day = function(date)
 	table.insert(q, "DELETE FROM day WHERE id = '" .. date .. "'")
 	table.insert(q, "COMMIT")
 	local retval = common.execute_many_database_queries(database, q)
+	if retval then
+		common.database_to_sql(database, "cgi-bin/machine.sql")
+	end
 
 	database:close()
 
@@ -145,10 +148,10 @@ common.db_read_shallow = function(date)
 	each(function(r) r.schedule = common.get_rule_schedule(db, r.name, date) end, rules)
 	each(function(r) r.last_instance = get_last_rule_instance(db, r.name) end, rules)
 
-	local day = common.collect_single_record(db, "SELECT * FROM date WHERE id = '" .. date .. "'")
+	local day = common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. date .. "'")
 	if day then
 		local q = "SELECT * FROM rule_instance WHERE day_id = '" .. date .. "' ORDER BY order_priority ASC"
-		day.rule_instances = common.collect_database(db, query)
+		day.rule_instances = common.collect_database(db, q)
 	end
 
 	db:close()
@@ -174,6 +177,11 @@ common.db_insert_day = function(day)
 	local retval = false
 	local database = common.open_database("cgi-bin/machine.db")
 
+	if not assign_rule_schedules(day, database) then
+		database:close()
+		return false
+	end
+
 	local s = {}
 	table.insert(s, "PRAGMA foreign_keys = ON")
 	table.insert(s, "BEGIN TRANSACTION")
@@ -190,6 +198,7 @@ common.db_insert_day = function(day)
 	if common.execute_many_database_queries(database, s) then
 		retval = true
 		common.database_to_sql(database, "cgi-bin/machine.sql")
+	else
 	end
 
 	database:close()
@@ -206,7 +215,7 @@ common.get_rule_schedule_weekdays = function(rule_schedule)
 end
 
 common.execute_many_database_queries = function(db, queries)
-	return all(function(q) return db:execute(q) ~= nil end, queries)
+	return all(function(q) io.stderr:write(q .. "\n") return db:execute(q) ~= nil end, queries)
 end
 
 local database_to_sql_day = function(day_id, database, sql_script)
