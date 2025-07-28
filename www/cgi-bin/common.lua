@@ -93,10 +93,6 @@ local collect_database = function(db, q)
 	return collection
 end
 
-local execute_many_database_queries = function(db, queries)
-	return all(function(q) return db:execute(q) ~= nil end, queries)
-end
-
 -- TODO: delete / convert to local function
 local collect_single_record = function(db, q)
 	local results = collect_database(db, q)
@@ -120,16 +116,15 @@ local get_rule_schedule = function(db, rule_name, date) -- TODO: make common fun
 end
 
 common.db_delete_day = function(date)
-	local database = open_database(DB_PATH)
+	local db = open_database(DB_PATH)
 
 	local q = {}
 	table.insert(q, "BEGIN TRANSACTION")
 	table.insert(q, "DELETE FROM rule_instance WHERE day_id = '" .. date .. "'")
 	table.insert(q, "DELETE FROM day WHERE id = '" .. date .. "'")
 	table.insert(q, "COMMIT")
-	local retval = execute_many_database_queries(database, q)
-
-	database:close()
+	local retval = all(function(q) return db:execute(q) ~= nil end, q)
+	db:close()
 
 	return retval
 end
@@ -172,7 +167,7 @@ local extract_rule_done_lt = function(instances)
 end
 
 local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day)
-	local rule_schedule_weekdays = get_rule_schedule_weekdays(schedule)
+	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 	local start_date = max({schedule.start_date, first_day})
 	local stop_date = schedule.stop_date and min({schedule.stop_day, last_day}) or last_day
 
@@ -233,11 +228,10 @@ local rule_instance_to_insert_query = function(rule_instance, day_id, database)
 end
 
 common.db_insert_day = function(day)
-	local retval = false
-	local database = open_database(DB_PATH)
+	local db = open_database(DB_PATH)
 
-	if not assign_rule_schedules(day, database) then
-		database:close()
+	if not assign_rule_schedules(day, db) then
+		db:close()
 		return false
 	end
 
@@ -248,17 +242,14 @@ common.db_insert_day = function(day)
 	table.insert(s, "DELETE FROM day WHERE id = '" .. day.id .. "'")
 	local notes = "NULL"
 	if type(day.notes) == "string" then
-		notes = "'" .. database:escape(day.notes) .. "'"
+		notes = "'" .. db:escape(day.notes) .. "'"
 	end
 	table.insert(s, "INSERT OR ROLLBACK INTO day ( id, notes) VALUES ( '" .. day.id .. "', " .. notes .. ')')
-	each(function(i) table.insert(s, rule_instance_to_insert_query(i, day.id, database)) end, day.rule_instances or {})
+	each(function(i) table.insert(s, rule_instance_to_insert_query(i, day.id, db)) end, day.rule_instances or {})
 	table.insert(s, "COMMIT")
+	local retval = all(function(q) return db:execute(q) ~= nil end, s)
 
-	if execute_many_database_queries(database, s) then
-		retval = true
-	end
-
-	database:close()
+	db:close()
 	return retval
 end
 
@@ -291,7 +282,7 @@ end
 ------------------------------------------------------------------
 -- Other
 
-get_rule_schedule_weekdays = function(rule_schedule)
+common.get_rule_schedule_weekdays = function(rule_schedule)
 	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
 end
 
