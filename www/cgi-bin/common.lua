@@ -214,30 +214,27 @@ common.db_insert_day = function(day)
 	return retval
 end
 
-local database_to_sql_day = function(day_id, database, sql_script) -- TODO: refactor, at least the name
-	sql_script:write(string.format("INSERT INTO day (id) VALUES ('%s');\n", day_id))
+local db_backup_rule_instance = function(i, db, backup)
+	local schedule = db_get_rule_schedule(db, i.rule_name, i.day_id) -- TODO: extremely inefficient
+	local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
+	local rule_name = "'" .. i.rule_name .. "'," .. string.rep(" ", 26 - #i.rule_name) -- TODO: dynamic padding
+	s = s .. string.format("%s%2d, '%s', %d, %2d);\n", rule_name, schedule.id, i.day_id, i.done, i.order_priority)
+	backup:write(s)
+end
 
-	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day_id .. "' ORDER BY order_priority ASC"
-	local rule_instances = db_collect(database, q)
-	for _, r in ipairs(rule_instances) do
-		local rule_schedule = db_get_rule_schedule(database, r.rule_name, day_id) -- TODO: extremely inefficient bit in an extremely inefficient function
-		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
-		-- TODO: dynamic padding
-		local rule_name = "'" .. r.rule_name .. "'," .. string.rep(" ", 26 - #r.rule_name)
-		s = s .. string.format("%s%2d, '%s', %d, %2d);\n", rule_name, rule_schedule.id, r.day_id, r.done, r.order_priority)
-		sql_script:write(s)
-	end
+local db_backup_day = function(date, db, backup)
+	backup:write(string.format("INSERT INTO day (id) VALUES ('%s');\n", date)) -- TODO: support day.note
+	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. date .. "' ORDER BY order_priority ASC"
+	each(function(i) db_backup_rule_instance(i, db, backup) end, db_collect(db, q))
 end
 
 common.db_backup = function()
-	local database = db_open(DB_PATH)
-	local sql_script = io.open(DB_BACKUP_PATH, "wb")
-
-	local days = db_collect(database, "SELECT * FROM day ORDER BY id ASC")
-	each(function(day) database_to_sql_day(day.id, database, sql_script) end, days)
-
-	sql_script:close()
-	database:close()
+	local db = db_open(DB_PATH)
+	local backup = io.open(DB_BACKUP_PATH, "wb")
+	local days = db_collect(db, "SELECT * FROM day ORDER BY id ASC")
+	each(function(day) db_backup_day(day.id, db, backup) end, days)
+	backup:close()
+	db:close()
 end
 
 ------------------------------------------------------------------
