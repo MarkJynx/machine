@@ -112,20 +112,16 @@ local get_rule_schedule = function(db, rule_name, date) -- TODO: make common fun
 	table.insert(q, string.format("(end_date IS NULL OR JULIANDAY(end_date) >= JULIANDAY('%s'))", date))
 	q = table.concat(q)
 
-	return collect_single_record(db, q)
+	return collect_single_record(db, q) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
 end
 
 common.db_delete_day = function(date)
 	local db = open_database(DB_PATH)
-
-	local q = {}
-	table.insert(q, "BEGIN TRANSACTION")
-	table.insert(q, "DELETE FROM rule_instance WHERE day_id = '" .. date .. "'")
-	table.insert(q, "DELETE FROM day WHERE id = '" .. date .. "'")
-	table.insert(q, "COMMIT")
-	local retval = all(function(q) return db:execute(q) ~= nil end, q)
+	local queries = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
+	queries[2] = string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", date)
+	queries[3] = string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", date)
+	local retval = all(function(q) return db:execute(q) ~= nil end, queries)
 	db:close()
-
 	return retval
 end
 
