@@ -68,6 +68,7 @@ end
 
 ------------------------------------------------------------------
 -- Stateless database operations
+
 local DB_PATH = "cgi-bin/machine.db"
 local DB_BACKUP_PATH = "cgi-bin/machine.sql"
 
@@ -116,12 +117,6 @@ common.get_rule_schedule = function(db, rule_name, date) -- TODO: make common fu
 	q = table.concat(q)
 
 	return common.collect_single_record(db, q)
-end
-
--- TODO: delete / convert to local function
-common.day_exists = function(db, id)
-	-- TODO: validate anything you get from database
-	return common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. id .. "'") ~= nil
 end
 
 common.db_delete_day = function(date)
