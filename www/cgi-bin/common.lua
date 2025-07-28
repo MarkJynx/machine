@@ -163,10 +163,10 @@ local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last
 	local day_count = common.date_diff(stop_date, start_date) + 1
 	local not_done_streak = math.huge
 	for i = 1, day_count do
-		local current_date = common.date_add(start_date, i - 1)
-		local date_weekday = common.date_weekday(current_date)
-		lt[current_date] = schedule.period <= not_done_streak and rule_schedule_weekdays[date_weekday]
-		not_done_streak = done_lt[current_date] and 1 or not_done_streak + 1
+		local date = common.date_add(start_date, i - 1)
+		local weekday = common.date_weekday(date)
+		lt[date] = schedule.period <= not_done_streak and rule_schedule_weekdays[weekday]
+		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 	end
 
 	return lt
