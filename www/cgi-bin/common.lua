@@ -157,6 +157,67 @@ common.db_read_shallow = function(date)
 	return { rules = rules, day = day }
 end
 
+local db_read_deep_days = function(r, db)
+	local days = common.collect_database(db, "SELECT * FROM day ORDER BY id ASC")
+	if not days then
+		return
+	end
+	r.day_first = days[1].id
+	r.day_last = days[#days].id
+	r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
+end
+
+local extract_rule_done_lt = function(instances)
+	return reduce(function(a, i) if i.done then a[i.day_id] = true end return a end, {}, instances)
+end
+
+local extract_rule_schedule_lt = function(lt, done_lt, schedule, first_day, last_day)
+	local rule_schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
+	local start_date = max({schedule.start_date, first_day})
+	local stop_date = schedule.stop_date and min({schedule.stop_day, last_day}) or last_day
+
+	local day_count = common.date_diff(stop_date, start_date) + 1
+	local not_done_streak = math.huge
+	for i = 1, day_count do
+		local current_date = common.date_add(start_date, i - 1)
+		local date_weekday = common.date_weekday(current_date)
+		lt[current_date] = schedule.period <= not_done_streak and rule_schedule_weekdays[date_weekday]
+		not_done_streak = done_lt[current_date] and 1 or not_done_streak + 1
+	end
+
+	return lt
+end
+
+local extract_rule_schedule_lt_all = function(first_day, last_day, done_lt, schedules)
+	return reduce(function(a, s) return extract_rule_schedule_lt(a, done_lt, s, first_day, last_day) end, {}, schedules)
+end
+
+local db_read_deep_rule = function(r, db, rule)
+	local selector = "WHERE rule_name = '" .. db:escape(rule.name) .. "'"
+	local q1 = "SELECT * FROM rule_schedule " .. selector .. " ORDER BY JULIANDAY(start_date) ASC"
+	local q2 = "SELECT * FROM rule_instance " .. selector .. " AND done = 1 ORDER BY JULIANDAY(day_id) ASC"
+	rule.schedules = common.collect_database(db, q1)
+	rule.instances = common.collect_database(db, q2)
+	rule.done_lt = extract_rule_done_lt(rule.instances or {})
+	rule.schedule_lt = extract_rule_schedule_lt_all(r.day_first, r.day_last, rule.done_lt, rule.schedules or {})
+end
+
+local db_read_deep_rules = function(r, db)
+	r.rules = common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC")
+	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules or {})
+end
+
+common.db_read_deep = function()
+	local r = {}
+	local db = common.open_database(DB_PATH)
+
+	db_read_deep_days(r, db)
+	db_read_deep_rules(r, db)
+
+	db:close()
+	return r
+end
+
 local assign_rule_schedules = function(day, database)
 	return all(function(i) i.rule_schedule = common.get_rule_schedule(database, i.rule_name, i.day_id) return i.rule_schedule ~= nil end, day.rule_instances)
 end
@@ -218,7 +279,7 @@ end
 
 common.db_backup = function()
 	local database = common.open_database(DB_PATH)
-	local sql_script = io.open(sql_path, "wb")
+	local sql_script = io.open(DB_BACKUP_PATH, "wb")
 
 	local days = common.collect_database(database, "SELECT * FROM day ORDER BY JULIANDAY(id) ASC") or {}
 	each(function(day) database_to_sql_day(day.id, database, DB_BACKUP_PATH) end, days)

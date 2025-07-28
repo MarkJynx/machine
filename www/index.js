@@ -54,7 +54,7 @@ async function generate_matrix() {
 	}
 
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = add_days(json.first_day, row_index)
+		let current_date = add_days(json.day_first, row_index)
 		let row = matrix_table.insertRow()
 		let date_cell = row.insertCell()
 		date_cell.innerText = current_date
