@@ -139,9 +139,15 @@ common.db_read_shallow = function(day)
 	local rules = common.collect_database(db, "SELECT * FROM rule ORDER BY order_priority ASC") or {}
 	each(function(r) r.schedule = common.get_rule_schedule(db, r.name, day) end, rules)
 
+	local day = common.collect_single_record(db, "SELECT * FROM day WHERE id = '" .. day .. "'")
+	if day then
+		local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day .. "' ORDER BY order_priority ASC"
+		day.rule_instances = common.collect_database(db, query)
+	end
+
 	db:close()
 
-	return rules
+	return { rules = rules, day = day }
 end
 
 ------------------------------------------------------------------
