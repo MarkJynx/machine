@@ -215,7 +215,7 @@ common.db_insert_day = function(day)
 end
 
 local database_to_sql_day = function(day_id, database, sql_script) -- TODO: refactor, at least the name
-	sql_script:write(string.format('INSERT INTO day (id) VALUES ("%s");\n', day_id))
+	sql_script:write(string.format("INSERT INTO day (id) VALUES ('%s');\n", day_id))
 
 	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. day_id .. "' ORDER BY order_priority ASC"
 	local rule_instances = db_collect(database, q)
@@ -223,8 +223,8 @@ local database_to_sql_day = function(day_id, database, sql_script) -- TODO: refa
 		local rule_schedule = db_get_rule_schedule(database, r.rule_name, day_id) -- TODO: extremely inefficient bit in an extremely inefficient function
 		local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
 		-- TODO: dynamic padding
-		local rule_name = '"' .. r.rule_name .. '",' .. string.rep(" ", 26 - #r.rule_name)
-		s = s .. string.format('%s%2d, "%s", %d, %2d);\n', rule_name, rule_schedule.id, r.day_id, r.done, r.order_priority)
+		local rule_name = "'" .. r.rule_name .. "'," .. string.rep(" ", 26 - #r.rule_name)
+		s = s .. string.format("%s%2d, '%s', %d, %2d);\n", rule_name, rule_schedule.id, r.day_id, r.done, r.order_priority)
 		sql_script:write(s)
 	end
 end
