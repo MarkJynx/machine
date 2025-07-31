@@ -203,14 +203,14 @@ common.db_insert_day = function(day)
 	end
 
 	local s = { "PRAGMA foreign_keys = ON", "BEGIN TRANSACTION" }
-	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", date))
-	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", date))
+	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", day.id))
+	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", day.id))
 	local notes = type(day.notes) == "string" and string.format("'%s'", db:escape(notes)) or "NULL"
-	table.insert(s, string.format("INSERT OR ROLLBACK INTO DAY (id, notes) VALUES ('%s', %s)", day.id, notes))
+	table.insert(s, string.format("INSERT OR ROLLBACK INTO day (id, notes) VALUES ('%s', %s)", day.id, notes))
 	each(function(i) table.insert(s, db_rule_instance_to_insert_query(i, db)) end, day.rule_instances or {})
 	table.insert(s, "COMMIT")
-
 	local retval = all(function(q) return db:execute(q) ~= nil end, s)
+
 	db:close()
 	return retval
 end

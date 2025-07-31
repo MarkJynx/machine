@@ -8,8 +8,16 @@ INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_prio
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Face shave',                 6, '2025-07-29', 1,  7);
 INSERT INTO day (id) VALUES ('2025-07-30');
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Early rise',                 1, '2025-07-30', 1,  1);
-INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Home cleaning',              2, '2025-07-30', 0,  2);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Home cleaning',              2, '2025-07-30', 1,  2);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Hair care',                  5, '2025-07-30', 0,  3);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Face shave',                 6, '2025-07-30', 0,  4);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Dental care (after sleep)',  3, '2025-07-30', 0,  5);
-INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: pull',              9, '2025-07-30', 0,  6);
+INSERT INTO day (id) VALUES ('2025-07-31');
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Early rise',                 1, '2025-07-31', 1,  1);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Hair care',                  5, '2025-07-31', 1,  2);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Dental care (after sleep)',  3, '2025-07-31', 1,  3);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Nail care',                  7, '2025-07-31', 0,  4);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Home cleaning',              2, '2025-07-31', 0,  5);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Shower',                     4, '2025-07-31', 0,  6);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Face shave',                 6, '2025-07-31', 0,  7);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: pull',              9, '2025-07-31', 0,  8);

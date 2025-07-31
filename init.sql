@@ -323,5 +323,5 @@ INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VA
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Face shave",                "2025-07-29", NULL, 1, 127);
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Nail care",                 "2025-07-31", NULL, 7, 127);
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: push",             "2025-07-29", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: pull",             "2025-07-30", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: legs",             "2025-07-31", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: pull",             "2025-07-31", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: legs",             "2025-08-01", NULL, 7, 127);
