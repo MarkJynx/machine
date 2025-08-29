@@ -169,7 +169,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Important",
 	"Wash and moisturize face.",
 	"Clear, healthy face skin.",
-	2,
+	3,
 	7
 );
 
@@ -189,7 +189,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Very important",
 	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
 	"Looks. Freshness. Confidence. Image.",
-	2,
+	3,
 	9
 );
 
@@ -199,7 +199,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Slightly important",
 	"Be productive at work.",
 	"Security. Discipline. Competence.",
-	2,
+	3,
 	10
 );
 
@@ -209,7 +209,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Slightly important",
 	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
 	"Clean, orderly vehicle. Image.",
-	2,
+	3,
 	11
 );
 
@@ -219,7 +219,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Absolutely essential",
 	"Full bodybuilding pushing workout.",
 	"Looks. Confidence. Health. Performance.",
-	1,
+	2,
 	12
 );
 
@@ -229,7 +229,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Absolutely essential",
 	"Full bodybuilding pulling workout.",
 	"Looks. Confidence. Health. Performance.",
-	1,
+	2,
 	13
 );
 
@@ -239,7 +239,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Absolutely essential",
 	"Full bodybuilding leg workout.",
 	"Looks. Confidence. Health. Performance.",
-	1,
+	2,
 	14
 );
 
@@ -249,7 +249,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Extremely important",
 	"At least an hour of zone two or more intense cardio.",
 	"Confidence. Health. Endurance.",
-	2,
+	3,
 	15
 );
 
@@ -259,7 +259,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Important",
 	"Meal-prep for the upcoming days, weeks or even months.",
 	"Facilitating homemade food and diet. Independence. Money. Image. Experimentation. Discovery.",
-	2,
+	3,
 	16
 );
 
@@ -270,7 +270,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Important",
 	"Do laundry.",
 	"Facilitating fresh clothes. Independence. Image.",
-	2,
+	3,
 	17
 );
 
@@ -280,7 +280,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Slightly important",
 	"Shave body. Trim nose hair. Apply products.",
 	"Looks. Sex. Image.",
-	2,
+	3,
 	18
 );
 
@@ -301,7 +301,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Very important",
 	"Eat only homemade food throughout the day.",
 	"Health. Image. Diet. Control.",
-	2,
+	3,
 	20
 );
 
@@ -311,7 +311,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Extremely important",
 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
 	"Achieve bodybuilding goals.",
-	2,
+	3,
 	21
 );
 
