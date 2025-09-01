@@ -57,7 +57,10 @@ async function generate_matrix() {
 		let current_date = add_days(json.day_first, row_index)
 		let row = matrix_table.insertRow()
 		let date_cell = row.insertCell()
-		date_cell.innerText = current_date
+		let link = document.createElement("a");
+		link.setAttribute("href", "?date=" + current_date)
+		link.innerText = current_date
+		date_cell.appendChild(link)
 		date_cell.onclick = function() { navigate_to_day(current_date, 0) }
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			let cell = row.insertCell()
