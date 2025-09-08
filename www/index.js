@@ -65,7 +65,15 @@ async function generate_matrix() {
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			let cell = row.insertCell()
 			let key = String(matrix[row_index][col_index])
-			let values = { "-1": "unscheduled", "0": "not_done_not_due", "1": "done_not_due", "2": "not_done_due", "3": "done_due" }
+			let values = {
+				"-3": "no_record",
+				"-2": "unscheduled_not_done",
+				"-1": "unscheduled_done",
+				"0": "not_done_not_due",
+				"1": "done_not_due",
+				"2": "not_done_due",
+				"3": "done_due"
+			}
 			if (key in values) {
 				cell.className = values[key]
 			}

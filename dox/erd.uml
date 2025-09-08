@@ -54,11 +54,11 @@ entity Day {
     * Percentage <<Generated>>
 }
 
-RuleCategory --o{ Rule
-RuleImportance --o{ Rule
-Rule --o{ RuleInstance
-Day --o{ RuleInstance
-RuleSchedule --o{ RuleInstance
-Rule --o{ RuleSchedule
+RuleCategory ||--o{ Rule
+RuleImportance ||--o{ Rule
+Rule ||--o{ RuleInstance
+Day ||--o{ RuleInstance
+RuleSchedule |o--o{ RuleInstance
+Rule ||--o{ RuleSchedule
 
 @enduml

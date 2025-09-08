@@ -155,7 +155,6 @@ local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
 	local start_date = max({schedule.start_date, r.day_first})
 	local stop_date = schedule.stop_date and min({schedule.stop_day, r.day_last}) or r.day_last
 
-
 	local day_count = common.date_diff(stop_date, start_date) + 1
 	local not_done_streak = math.huge
 	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(1, day_count, 1)) do

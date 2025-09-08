@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS day (
 CREATE TABLE IF NOT EXISTS rule_instance (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	rule_name TEXT NOT NULL,
-	rule_schedule_id INTEGER NOT NULL,
+	rule_schedule_id INTEGER,
 	day_id TEXT NOT NULL,
 	done INTEGER NOT NULL CHECK (done == 0 OR done == 1),
 	order_priority INTEGER NOT NULL CHECK(order_priority > 0),
@@ -214,33 +214,73 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: push",
+	"Workout: push (A)",
 	"Bodybuilding",
 	"Absolutely essential",
-	"Full bodybuilding pushing workout.",
+	"Full bodybuilding pushing workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
 	2,
 	12
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: pull",
+	"Workout: push (B)",
 	"Bodybuilding",
 	"Absolutely essential",
-	"Full bodybuilding pulling workout.",
+	"Full bodybuilding pushing workout (part 2/2).",
 	"Looks. Confidence. Health. Performance.",
 	2,
 	13
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: legs",
+	"Workout: pull (A)",
 	"Bodybuilding",
 	"Absolutely essential",
-	"Full bodybuilding leg workout.",
+	"Full bodybuilding pulling workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
 	2,
 	14
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Workout: pull (B)",
+	"Bodybuilding",
+	"Absolutely essential",
+	"Full bodybuilding pulling workout (part 2/2).",
+	"Looks. Confidence. Health. Performance.",
+	2,
+	15
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Workout: legs (A)",
+	"Bodybuilding",
+	"Absolutely essential",
+	"Full bodybuilding leg workout (part 1/2).",
+	"Looks. Confidence. Health. Performance.",
+	2,
+	16
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Workout: legs (B)",
+	"Bodybuilding",
+	"Absolutely essential",
+	"Full bodybuilding leg workout (part 2/2).",
+	"Looks. Confidence. Health. Performance.",
+	2,
+	17
+);
+
+INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+	"Workout: core",
+	"Bodybuilding",
+	"Absolutely essential",
+	"Full bodybuilding core workout.",
+	"Looks. Confidence. Health. Performance.",
+	2,
+	18
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -250,7 +290,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"At least an hour of zone two or more intense cardio.",
 	"Confidence. Health. Endurance.",
 	3,
-	15
+	19
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -260,7 +300,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Meal-prep for the upcoming days, weeks or even months.",
 	"Facilitating homemade food and diet. Independence. Money. Image. Experimentation. Discovery.",
 	3,
-	16
+	20
 );
 
 -- TODO: perhaps should be merged with fresh clothes; one cannot exist without the other.
@@ -271,7 +311,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Do laundry.",
 	"Facilitating fresh clothes. Independence. Image.",
 	3,
-	17
+	21
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -281,7 +321,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Shave body. Trim nose hair. Apply products.",
 	"Looks. Sex. Image.",
 	3,
-	18
+	22
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -291,7 +331,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Brush teeth and wash mouth before sleep",
 	"Looks. Smell. Health. Money.",
 	2,
-	19
+	23
 );
 
 -- TODO: perhaps should be merged with cooking; one cannot exist without the other.
@@ -302,7 +342,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Eat only homemade food throughout the day.",
 	"Health. Image. Diet. Control.",
 	3,
-	20
+	24
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
@@ -312,7 +352,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
 	"Achieve bodybuilding goals.",
 	3,
-	21
+	25
 );
 
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Early rise",                "2025-08-29", NULL, 1, 127);
