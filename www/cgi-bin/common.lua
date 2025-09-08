@@ -189,6 +189,7 @@ end
 
 local db_rule_instance_to_insert_query = function(i, db)
 	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES "
+	-- TODO: support NULL rule_schedule_id from WebUI
 	local s2 = string.format("('%s',%d,'%s',%d,%d)", db:escape(i.rule_name), i.rule_schedule.id, i.day_id, i.done, i.order_priority)
 	return s1 .. s2
 end
@@ -217,7 +218,12 @@ end
 local db_backup_rule_instance = function(i, db, backup)
 	local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
 	local rule_name = "'" .. i.rule_name .. "'," .. string.rep(" ", 26 - #i.rule_name) -- TODO: dynamic padding
-	s = s .. string.format("%s%4d, '%s', %d, %2d);\n", rule_name, i.rule_schedule_id, i.day_id, i.done, i.order_priority)
+	-- TODO: ternary operator function
+	local rule_schedule_id = "NULL"
+	if i.rule_schedule_id then
+		rule_schedule_id = string.format("%4d", i.rule_schedule_id)
+	end
+	s = s .. string.format("%s%s, '%s', %d, %2d);\n", rule_name, rule_schedule_id, i.day_id, i.done, i.order_priority)
 	backup:write(s)
 end
 
