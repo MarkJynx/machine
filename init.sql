@@ -303,7 +303,6 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	20
 );
 
--- TODO: perhaps should be merged with fresh clothes; one cannot exist without the other.
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Laundry",
 	"Image (external)",
@@ -334,7 +333,6 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	23
 );
 
--- TODO: perhaps should be merged with cooking; one cannot exist without the other.
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Homemade food",
 	"Image (external)",
@@ -345,6 +343,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	24
 );
 
+-- TODO: probably should be merged with homemade food
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 	"Diet",
 	"Bodybuilding",
@@ -362,3 +361,10 @@ INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VA
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Hair care",                 "2025-08-29", NULL, 1, 127);
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Face shave",                "2025-08-29", NULL, 1, 127);
 INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Nail care",                 "2025-08-31", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: legs (A)",         "2025-09-08", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: pull (B)",         "2025-09-09", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: push (B)",         "2025-09-10", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: legs (B)",         "2025-09-11", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: core",             "2025-09-12", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: pull (A)",         "2025-09-13", NULL, 7, 127);
+INSERT INTO rule_scheudle (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: push (A)",         "2025-09-14", NULL, 7, 127);
