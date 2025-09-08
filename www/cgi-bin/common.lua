@@ -215,14 +215,14 @@ common.db_insert_day = function(day)
 end
 
 local db_backup_rule_instance = function(i, db, backup)
-	local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
+	local s = "UPSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
 	local rule_name = "'" .. i.rule_name .. "'," .. string.rep(" ", 26 - #i.rule_name) -- TODO: dynamic padding
 	s = s .. string.format("%s%2d, '%s', %d, %2d);\n", rule_name, i.rule_schedule_id, i.day_id, i.done, i.order_priority)
 	backup:write(s)
 end
 
 local db_backup_day = function(date, db, backup)
-	backup:write(string.format("INSERT INTO day (id) VALUES ('%s');\n", date)) -- TODO: support day.note
+	backup:write(string.format("UPSERT INTO day (id) VALUES ('%s');\n", date)) -- TODO: support day.note
 	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. date .. "' ORDER BY order_priority ASC"
 	each(function(i) db_backup_rule_instance(i, db, backup) end, db_collect(db, q))
 end
