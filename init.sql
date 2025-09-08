@@ -103,7 +103,7 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	"Early rise",
 	"Image (internal)",
 	"Extremely important",
-	"Rise from bed at 08:00 or earlier",
+	"Rise from bed at 09:00 or earlier",
 	"Ability to take a thorough and laid-back approach to morning chores."          || char(10) ||
 	"Ability to relax and focus on oneself before diving into the day."             || char(10) ||
 	"Margin for error in case of unexpected events."                                || char(10) ||
