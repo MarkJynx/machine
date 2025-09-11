@@ -78,9 +78,31 @@ async function generate_matrix() {
 				cell.className = values[key]
 			}
 		}
+
+		let cell = row.insertCell()
+		cell.innerText = rule_array_to_percentage(matrix[row_index])
 	}
 
+	let total_row = matrix_table.insertRow()
+	total_row.insertCell()
+	for (let row_index = 0; row_index < json.rules.length; row_index++) {
+		let col = matrix.map((row) => row[row_index])
+		let cell = total_row.insertCell()
+		cell.innerText = rule_array_to_percentage(col)
+	}
+
+	let total_cell = total_row.insertCell()
+	total_cell.innerText = rule_array_to_percentage(matrix.flat())
+
 	document.body.appendChild(matrix_table)
+}
+
+function rule_array_to_percentage(arr) {
+	// TODO: do not use magic numbers
+	// TODO: configurable formulas
+	let fraction = arr.reduce((a, x) => a + ([3, 1, 0].includes(x) ? 1 : 0), 0)
+	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
+	return total > 0 ? String((fraction / total * 100).toFixed(1)) + "%" : "N/A"
 }
 
 // Day generation
