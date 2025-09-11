@@ -56,12 +56,7 @@ async function generate_matrix() {
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		let current_date = add_days(json.day_first, row_index)
 		let row = matrix_table.insertRow()
-		let date_cell = row.insertCell()
-		let link = document.createElement("a");
-		link.setAttribute("href", "?date=" + current_date)
-		link.innerText = current_date
-		date_cell.appendChild(link)
-		date_cell.onclick = function() { navigate_to_day(current_date, 0) }
+		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			let cell = row.insertCell()
 			let key = String(matrix[row_index][col_index])
@@ -123,7 +118,7 @@ function generate_day_empty(date, rules) {
 	header_cell.colSpan = 3
 	header_cell.innerText = date
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "🌐", function() { window.location.href = "?view=matrix" })
+	make_button_cell(navigation_row, "🌐", function() { document.body.replaceChildren(); generate_matrix() })
 	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
 	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
 	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
@@ -161,7 +156,7 @@ function generate_day_full(date, day, rules) {
 	let navigation_table = document.createElement("table")
 	let navigation_row = navigation_table.insertRow()
 
-	make_button_cell(navigation_row, "🌐", function() { window.location.href = "?view=matrix" })
+	make_button_cell(navigation_row, "🌐", function() { document.body.replaceChildren(); generate_matrix() })
 	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
 	make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
 	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
