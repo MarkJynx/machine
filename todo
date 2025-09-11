@@ -1,4 +1,3 @@
-* REFACTORIZATION: call read_matrix.lua once at startup.
 * FEATURE: matrix: day range filter.
     * URL-only.
     * WebUI.
@@ -12,8 +11,12 @@
 * FEATURE: rule streak.
     * Current.
     * Record.
+* FEATURE: fully customizable percetange formual.
+    * URL-only.
+    * WebUI.
 
 
+* REFACTORIZATION: Call read_matrix.lua once at startup.
 * REFACTORIZATION: Optimize human-readable back-ups through date-directory structure.
 * REFACTORIZATION: Robustness (back-end, don't expect any valid input from client).
 * REFACTORIZATION: Robustness (back-end, don't expect any valid output from database).
@@ -22,7 +25,8 @@
 * REFACTORIZATION: Minimize SQL query count.
 * REFACTORIZATION: Proper error messages.
 
-* FEATURE: visually separate tiers.
+* FEATURE: tier ladder (will require rule equivalency groups to prevent a trailing exercise sabotaging entire tier).
+* FEATURE: schedule groups.
 * FEATURE: Undo/Redo (front-end).
 * REFACTORIZATION: Documentation.
 * REFACTORIZATION: Test suite.
