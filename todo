@@ -8,9 +8,6 @@
     * Invisible (in the matrix) days for notes only, like rave days.
     * Read-only.
     * Read-write.
-* FEATURE: rule streak.
-    * Current.
-    * Record.
 * FEATURE: fully customizable percetange formual.
     * URL-only.
     * WebUI.
