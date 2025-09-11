@@ -55,6 +55,8 @@ async function generate_matrix() {
 	let last_header_cell = header_row.insertCell()
 	last_header_cell.innerText = "%"
 
+	let day_done_fully = [] // TODO: this is cheating, calculate from source material with functional programming
+
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		let current_date = add_days(json.day_first, row_index)
 		let row = matrix_table.insertRow()
@@ -78,6 +80,7 @@ async function generate_matrix() {
 
 		let cell = row.insertCell()
 		cell.innerText = rule_array_to_percentage(matrix[row_index])
+		day_done_fully.push(cell.innerText == "100%" ? 1 : 0)
 	}
 
 	let current_streak_row = matrix_table.insertRow()
@@ -90,7 +93,8 @@ async function generate_matrix() {
 		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
 		cell.innerText = String(current_streak)
 	}
-	let current_streak_cell = null // TODO!!!
+	let current_streak_cell = current_streak_row.insertCell()
+	current_streak_cell.innerText = String(day_done_fully.reduce((a, x) => x == 1 ? a + 1 : 0, 0))
 
 	let longest_streak_row = matrix_table.insertRow()
 	let longest_streak_first_cell = longest_streak_row.insertCell()
@@ -106,7 +110,13 @@ async function generate_matrix() {
 		}
 		cell.innerText = String(longest_streak)
 	}
-	let longest_streak_cell = null // TODO
+	let current_day_streaks = day_done_fully.reduce((a, x) => { a.push(x == 1 ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
+	let longest_day_streak = Math.max(...current_day_streaks)
+	let longest_streak_cell = longest_streak_row.insertCell()
+	if (current_day_streaks.length > 0 && current_day_streaks[current_day_streaks.length - 1] == longest_day_streak) {
+		longest_streak_cell.fontWeight = "bold"
+	}
+	longest_streak_cell.innerText = String(longest_day_streak)
 
 	let total_row = matrix_table.insertRow()
 	let total_row_first_cell = total_row.insertCell()
