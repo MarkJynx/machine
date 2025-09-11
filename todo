@@ -11,7 +11,7 @@
 * FEATURE: fully customizable percetange formual.
     * URL-only.
     * WebUI.
-
+* FEATURE: ability to add unschedule rule.
 
 * REFACTORIZATION: Call read_matrix.lua once at startup.
 * REFACTORIZATION: Optimize human-readable back-ups through date-directory structure.
