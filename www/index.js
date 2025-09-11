@@ -52,6 +52,8 @@ async function generate_matrix() {
 		let header_cell = header_row.insertCell()
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
+	let last_header_cell = header_row.insertCell()
+	last_header_cell.innerText = "%"
 
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		let current_date = add_days(json.day_first, row_index)
@@ -78,16 +80,42 @@ async function generate_matrix() {
 		cell.innerText = rule_array_to_percentage(matrix[row_index])
 	}
 
-	let total_row = matrix_table.insertRow()
-	total_row.insertCell()
+	let current_streak_row = matrix_table.insertRow()
+	let current_streak_first_cell = current_streak_row.insertCell()
+	current_streak_first_cell.innerText = "Current\nStreak"
 	for (let row_index = 0; row_index < json.rules.length; row_index++) {
-		let col = matrix.map((row) => row[row_index])
+		let col = matrix.map((row) => row[row_index]) // TODO: optimize, calculate all columns stats in one gow
+		let cell = current_streak_row.insertCell()
+		// TODO: do not use magic numbers
+		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
+		cell.innerText = String(current_streak)
+	}
+	let current_streak_cell = null // TODO!!!
+
+	let longest_streak_row = matrix_table.insertRow()
+	let longest_streak_first_cell = longest_streak_row.insertCell()
+	longest_streak_first_cell.innerText = "Longest\nStreak"
+	for (let row_index = 0; row_index < json.rules.length; row_index++) {
+		let col = matrix.map((row) => row[row_index]) // TODO: optimize, calculate all columns stats in one gow
+		let cell = longest_streak_row.insertCell()
+		// TODO: do not use magic numbers
+		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
+		cell.innerText = String(Math.max(...current_streaks))
+	}
+	let longest_streak_cell = null // TODO
+	// TODO
+
+	let total_row = matrix_table.insertRow()
+	let total_row_first_cell = total_row.insertCell()
+	total_row_first_cell.innerText = "%"
+	for (let row_index = 0; row_index < json.rules.length; row_index++) {
+		let col = matrix.map((row) => row[row_index]) // TODO: optimize, calculate all columns stats in one gow
 		let cell = total_row.insertCell()
 		cell.innerText = rule_array_to_percentage(col)
 	}
 
 	let total_cell = total_row.insertCell()
-	total_cell.innerText = rule_array_to_percentage(matrix.flat())
+	total_cell.innerText = rule_array_to_percentage(matrix.flat()) // TODO: optimize
 
 	document.body.appendChild(matrix_table)
 }
@@ -95,7 +123,7 @@ async function generate_matrix() {
 function rule_array_to_percentage(arr) {
 	// TODO: do not use magic numbers
 	// TODO: configurable formulas
-	let fraction = arr.reduce((a, x) => a + ([3, 1, 0].includes(x) ? 1 : 0), 0)
+	let fraction = arr.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
 	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
 	return total > 0 ? String(Math.round(fraction / total * 100)) + "%" : "N/A"
 }
@@ -147,7 +175,7 @@ function generate_day_full(date, day, rules) {
 
 		cell = row.insertCell()
 		let selection = document.createElement("select")
-		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) })
+		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) }) // TODO: forEach
 		cell.appendChild(selection)
 	}
 
@@ -203,7 +231,7 @@ async function delete_day(date) {
 async function save_day(date) {
 	let json = {"id": date, "notes": null, "rule_instances": []}
 	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.className == "rule_row") // TODO: check if exists
-	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length, date)); return a}, [])
+	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length, date)); return a}, []) // TODO: map
 
 	let deletion = await fetch("cgi-bin/update_day.lua", {
 	  method: "POST",
