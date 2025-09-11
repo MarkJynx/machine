@@ -100,10 +100,13 @@ async function generate_matrix() {
 		let cell = longest_streak_row.insertCell()
 		// TODO: do not use magic numbers
 		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
-		cell.innerText = String(Math.max(...current_streaks))
+		let longest_streak = Math.max(...current_streaks)
+		if (current_streaks[current_streaks.length - 1] == longest_streak) {
+			cell.style.fontWeight = "bold"
+		}
+		cell.innerText = String(longest_streak)
 	}
 	let longest_streak_cell = null // TODO
-	// TODO
 
 	let total_row = matrix_table.insertRow()
 	let total_row_first_cell = total_row.insertCell()
