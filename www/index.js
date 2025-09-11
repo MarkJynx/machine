@@ -97,7 +97,7 @@ function rule_array_to_percentage(arr) {
 	// TODO: configurable formulas
 	let fraction = arr.reduce((a, x) => a + ([3, 1, 0].includes(x) ? 1 : 0), 0)
 	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
-	return total > 0 ? String((fraction / total * 100).toFixed(1)) + "%" : "N/A"
+	return total > 0 ? String(Math.round(fraction / total * 100)) + "%" : "N/A"
 }
 
 // Day generation
