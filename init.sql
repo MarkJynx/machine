@@ -273,15 +273,15 @@ INSERT INTO rule (name, rule_category_name, rule_importance_label, description, 
 	17
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: core",
-	"Bodybuilding",
-	"Absolutely essential",
-	"Full bodybuilding core workout.",
-	"Looks. Confidence. Health. Performance.",
-	2,
-	18
-);
+-- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- 	"Workout: core",
+-- 	"Bodybuilding",
+-- 	"Absolutely essential",
+-- 	"Full bodybuilding core workout.",
+-- 	"Looks. Confidence. Health. Performance.",
+-- 	2,
+-- 	18
+-- );
 
 -- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
 -- 	"Workout: cardio",
