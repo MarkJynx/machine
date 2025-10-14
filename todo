@@ -1,17 +1,22 @@
+* FEATURE: matrix: week view.
+    * Back-end.
+    * Front-end: URL-only.
+    * Front-end: WebUI.
 * FEATURE: matrix: day range filter.
-    * URL-only.
-    * WebUI.
+    * Front-end: URL-only.
+    * Front-end: WebUI.
 * FEATURE: matrix: rule filter.
-    * URL-only.
-    * WebUI.
+    * Front-end: URL-only.
+    * Front-end: WebUI.
 * FEATURE: day notes.
-    * Invisible (in the matrix) days for notes only, like rave days.
-    * Read-only.
-    * Read-write.
+    * Back-end: support in back-ups.
+    * Front-end: read-only.
+    * Front-end: read-write.
 * FEATURE: fully customizable percetange formual.
-    * URL-only.
-    * WebUI.
-* FEATURE: ability to add unschedule rule.
+    * Back-end.
+    * Front-end: URL-only.
+    * Front-end: WebUI.
+* FEATURE: ability to add unscheduled rule.
 
 * REFACTORIZATION: Call read_matrix.lua once at startup.
 * REFACTORIZATION: Optimize human-readable back-ups through date-directory structure.
@@ -22,7 +27,7 @@
 * REFACTORIZATION: Minimize SQL query count.
 * REFACTORIZATION: Proper error messages.
 
-* FEATURE: tier ladder (will require rule equivalency groups to prevent a trailing exercise sabotaging entire tier).
+
 * FEATURE: schedule groups.
 * FEATURE: Undo/Redo (front-end).
 * REFACTORIZATION: Documentation.
