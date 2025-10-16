@@ -14,7 +14,7 @@ common.date_diff = function(d1, d2)
 end
 
 common.date_weekday = function(d)
-	return os.date("%w", os.time(date_table(d))) + 1
+	return (os.date("%w", os.time(date_table(d))) + 7 - 1) % 7 + 1
 end
 
 common.date_add = function(date, days)

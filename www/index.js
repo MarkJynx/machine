@@ -2,7 +2,8 @@ async function main() {
 	// TODO: handle errors, validate with JSON schema
 	let date = get_url_date_string(window.location.search) || get_local_date_string()
 	if (url_params_is_matrix(window.location.search)) {
-		generate_matrix()
+//		generate_matrix()
+		generate_week_matrix()
 	} else {
 		let day = await post_date_request("read_day", date)
 		let rules = await post_date_request("read_rules", date)
@@ -39,6 +40,48 @@ async function post_date_request(endpoint, date) {
 }
 
 // Matrix generation
+
+async function generate_week_matrix() {
+	let response = await fetch("cgi-bin/read_matrix.lua")
+	let json = await response.json()
+	let matrix = json.week_matrix
+
+	let matrix_table = document.createElement("table")
+	let header_row = matrix_table.insertRow()
+	let empty_cell = header_row.insertCell()
+	for (let i = 0; i < json.rules.length; i++) {
+		let header_cell = header_row.insertCell()
+		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
+	}
+	let last_header_cell = header_row.insertCell()
+	last_header_cell.innerText = "%"
+
+	for (let row_index = 0; row_index < matrix.length; row_index++) {
+		let current_date = add_days(json.day_first, row_index) // todo: find week monday
+		let row = matrix_table.insertRow()
+		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
+		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
+			let cell = row.insertCell()
+			let key = String(matrix[row_index][col_index])
+			let values = {
+				"-3": "no_record",
+				"-2": "unscheduled_not_done",
+				"-1": "unscheduled_done",
+				"0": "not_done_not_due",
+				"1": "done_not_due",
+				"2": "not_done_due",
+				"3": "done_due"
+			}
+			if (key in values) {
+				cell.className = values[key]
+			}
+		}
+
+		let cell = row.insertCell()
+	}
+
+	document.body.appendChild(matrix_table)
+}
 
 async function generate_matrix() {
 	let response = await fetch("cgi-bin/read_matrix.lua")

@@ -42,7 +42,7 @@ local process_week_rule = function(row, rule_row, date, rule)
 	-- TODO: handle multiple applicable schedules
 	local schedule = reduce(function(a, s) if a then return a end if date_range_in_schedule(date, 7, s) then return s end end, nil, rule.schedules)
 	local grey_count = reduce(function(a, cell) if cell < 0 then return a + 1 end return a end, 0, rule_row)
-	local done_count = reduce(function(a, cell) if cell > 0 then return a + 1 end return a end, 0, rule_row)
+	local done_count = reduce(function(a, cell) if cell == 1 or cell == 3 then return a + 1 end return a end, 0, rule_row)
 	local yr_count = reduce(function(a, cell) if cell == 0 or cell == 1 or cell == 3 then return a + 1 end return a end, 0, rule_row)
 	if grey_count >= 4 then
 		table.insert(row, -1)
@@ -64,7 +64,7 @@ local process_week = function(matrix, day_matrix, date, rules, day_first)
 		return
 	end
 
-	local first_week_day = common.date_add(date, -7)
+	local first_week_day = common.date_add(date, -6)
 	if common.date_diff(first_week_day, day_first) < 0 then
 		return
 	end
@@ -75,7 +75,7 @@ local process_week = function(matrix, day_matrix, date, rules, day_first)
 		local rule_row = {}  -- TODO: make a one-liner
 		local day_base_index = common.date_diff(date, day_first)
 		for day_index = 1, 7 do
-			table.insert(rule_row, day_matrix[day_base_index + day_index + 1][rule_index])
+			table.insert(rule_row, day_matrix[day_base_index + day_index][rule_index])
 		end
 		process_week_rule(row, rule_row, date, rule)
 	end
