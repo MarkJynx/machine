@@ -1,10 +1,13 @@
 * FEATURE: matrix: week view.
-    * Back-end.
     * Front-end: URL-only.
     * Front-end: WebUI.
 * FEATURE: matrix: day range filter.
     * Front-end: URL-only.
     * Front-end: WebUI.
+
+--------------------------------------------
+
+
 * FEATURE: matrix: rule filter.
     * Front-end: URL-only.
     * Front-end: WebUI.
