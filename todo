@@ -26,6 +26,8 @@
 * REFACTORIZATION: Profile and optimize (back-end).
 * REFACTORIZATION: Minimize SQL query count.
 * REFACTORIZATION: Proper error messages.
+* FIX: properly support overlapping schedules (different weekdays).
+* FIX: properly treat multiple schedules in weekly matrix.
 
 
 * FEATURE: schedule groups.
