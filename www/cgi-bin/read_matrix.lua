@@ -50,7 +50,7 @@ local process_week_rule = function(row, rule_row, date, rule)
 		table.insert(row, 1) -- done, not mandatory
 	elseif (schedule.period == 7 and done_count > 0) or (schedule.period ~= 7 and yr_count == 6) then
 		table.insert(row, 3) -- done, mandatory
-	elseif yr_count >= 4 then
+	elseif schedule.period ~= 7 and yr_count >= 4 then
 		table.insert(row, 0) -- yellow
 	else
 		table.insert(row, 2) -- red
