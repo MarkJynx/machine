@@ -7,7 +7,6 @@
 
 --------------------------------------------
 
-
 * FEATURE: matrix: rule filter.
     * Front-end: URL-only.
     * Front-end: WebUI.
@@ -31,7 +30,6 @@
 * REFACTORIZATION: Proper error messages.
 * FIX: properly support overlapping schedules (different weekdays).
 * FIX: properly treat multiple schedules in weekly matrix.
-
 
 * FEATURE: schedule groups.
 * FEATURE: Undo/Redo (front-end).
