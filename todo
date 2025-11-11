@@ -1,5 +1,19 @@
+Highest priority right now: finishing week matrix implementation:
+1. Date filters (JS).
+2. Date filters (URL).
+3. Date filters (WebUI).
+4. Week matrix linking to day filtered matrix.
+5. Week percentages.
+6. Week rule longest streak.
+7. Week rule current streak.
+8. Week rule percentage.
+9. Week total percentage.
+10. Refactor everything.
+11. Full WebUI navigation.
+
+--------------------------------------------
+
 * FEATURE: matrix: week view.
-    * Front-end: URL-only.
     * Front-end: WebUI.
 * FEATURE: matrix: day range filter.
     * Front-end: URL-only.
