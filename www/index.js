@@ -13,17 +13,19 @@ async function main() {
 }
 
 function url_params_is_weekmatrix(url) {
-	// TODO: refactor common code with url_params_is_matrix()
+	// TODO: merge into parse_url_params()
 	const args = new URLSearchParams(url)
 	return args.size == 1 && args.has("view") && args.get("view") && args.get("view") == "weekmatrix"
 }
 
 function url_params_is_matrix(url) {
+	// TODO: merge into parse_url_params()
 	const args = new URLSearchParams(url)
 	return args.size == 1 && args.has("view") && args.get("view") && args.get("view") == "matrix"
 }
 
 function get_url_date_string(url) {
+	// TODO: merge into parse_url_params()
 	const args = new URLSearchParams(url)
 	if (args.size == 1 && args.has("date") && args.get("date") && args.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 		return args.get("date")

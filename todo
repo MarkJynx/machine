@@ -28,7 +28,7 @@ Highest priority right now: finishing week matrix implementation:
     * Back-end: support in back-ups.
     * Front-end: read-only.
     * Front-end: read-write.
-* FEATURE: fully customizable percetange formual.
+* FEATURE: fully customizable percetange formula.
     * Back-end.
     * Front-end: URL-only.
     * Front-end: WebUI.
@@ -58,3 +58,4 @@ Highest priority right now: finishing week matrix implementation:
 * FEATURE: Statistics (day, daily, aggregate).
 * REFACTORIZATION: Typed (compiled?) back-end language.
 * REFACTORIZATION: Typed front-end language.
+* REFACTORIZATION: Move as much as practically possible to back-end for future commercialization.
