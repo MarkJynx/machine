@@ -30,6 +30,7 @@
 * REFACTORIZATION: Proper error messages.
 * FIX: properly support overlapping schedules (different weekdays).
 * FIX: properly treat multiple schedules in weekly matrix.
+* FIX: bug when creating days in between filled days.
 
 * FEATURE: schedule groups.
 * FEATURE: Undo/Redo (front-end).
