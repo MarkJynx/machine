@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS rule_category (
 ) STRICT, WITHOUT ROWID;
 
 -- TODO: ensure no gaps between order_priority entries
--- TODO: consider sub-rules
 CREATE TABLE IF NOT EXISTS rule (
 	name TEXT PRIMARY KEY, -- noun
 	rule_category_name TEXT NOT NULL,
@@ -37,9 +36,6 @@ CREATE TABLE IF NOT EXISTS rule_importance (
 	value INTEGER NOT NULL UNIQUE CHECK(value > 0)
 ) STRICT, WITHOUT ROWID;
 
--- TODO: ensure no gaps between id entries?
--- TODO: generated columns
--- TODO: consider vacations
 CREATE TABLE IF NOT EXISTS day (
 	id TEXT PRIMARY KEY CHECK(id IS date(id, "+0 days")),
 	notes TEXT
