@@ -3,13 +3,11 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS rule_category (
 	name TEXT PRIMARY KEY,
 	description TEXT NOT NULL UNIQUE,
-	motivation TEXT NOT NULL UNIQUE, -- always focus on the positives only
-	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF) -- TODO: use enumeration table
+	motivation TEXT NOT NULL UNIQUE -- always focus on the positives only
 ) STRICT, WITHOUT ROWID;
 
 -- TODO: ensure no gaps between order_priority entries
 -- TODO: consider sub-rules
--- TODO: add color when needed
 CREATE TABLE IF NOT EXISTS rule (
 	name TEXT PRIMARY KEY, -- noun
 	rule_category_name TEXT NOT NULL,
@@ -74,29 +72,26 @@ INSERT INTO rule_importance (label, value) VALUES ("Very important",        4);
 INSERT INTO rule_importance (label, value) VALUES ("Important",             2);
 INSERT INTO rule_importance (label, value) VALUES ("Slightly important",    1);
 
-INSERT INTO rule_category (name, description, motivation, color) VALUES (
+INSERT INTO rule_category (name, description, motivation) VALUES (
 	"Image (internal)",
 	"One's immediate appearance and behavior",
 	"Feeling well about one's appearance."                        || char(10) ||
 	"Feeling well about how others perceive one's appearance."    || char(10) ||
 	"Feeling well about one's behavior."                          || char(10) ||
-	"Feeling well about how others perceive one's behavior.",
-	0x0000FF
+	"Feeling well about how others perceive one's behavior."
 );
 
-INSERT INTO rule_category (name, description, motivation, color) VALUES (
+INSERT INTO rule_category (name, description, motivation) VALUES (
 	"Image (external)",
 	"One's immediate surroundings",
 	"Feeling well about one's surroundings."                      || char(10) ||
-	"Feeling well about how others perceive one's surroundings.",
-	0x000080
+	"Feeling well about how others perceive one's surroundings."
 );
 
-INSERT INTO rule_category (name, description, motivation, color) VALUES (
+INSERT INTO rule_category (name, description, motivation) VALUES (
 	"Bodybuilding",
 	"Building a better body",
-	"Looks. Confidence. Health. Performance. Endurance.",
-	0xFF0000
+	"Looks. Confidence. Health. Performance. Endurance."
 );
 
 INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
