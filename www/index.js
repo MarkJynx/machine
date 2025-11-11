@@ -1,14 +1,21 @@
 async function main() {
 	// TODO: handle errors, validate with JSON schema
 	let date = get_url_date_string(window.location.search) || get_local_date_string()
-	if (url_params_is_matrix(window.location.search)) {
-//		generate_matrix()
+	if (url_params_is_weekmatrix(window.location.search)) {
 		generate_week_matrix()
+	} else if (url_params_is_matrix(window.location.search)) {
+		generate_matrix()
 	} else {
 		let day = await post_date_request("read_day", date)
 		let rules = await post_date_request("read_rules", date)
 		generate_day(date, day, rules)
 	}
+}
+
+function url_params_is_weekmatrix(url) {
+	// TODO: refactor common code with url_params_is_matrix()
+	const args = new URLSearchParams(url)
+	return args.size == 1 && args.has("view") && args.get("view") && args.get("view") == "weekmatrix"
 }
 
 function url_params_is_matrix(url) {
@@ -29,6 +36,12 @@ function get_local_date_string() {
 	return new Date(new Date() - tzoffset).toISOString().substring(0, 10)
 }
 
+function date_to_weekday(date) {
+  const d = new Date(date);
+  const g = d.getDay();
+  return g === 0 ? 7 : g;
+}
+
 async function post_date_request(endpoint, date) {
 	let response = await fetch("cgi-bin/" + endpoint + ".lua", {
 		method: "POST",
@@ -42,6 +55,7 @@ async function post_date_request(endpoint, date) {
 // Matrix generation
 
 async function generate_week_matrix() {
+	// TODO: refactor and merge common code with generate_matrix()
 	let response = await fetch("cgi-bin/read_matrix.lua")
 	let json = await response.json()
 	let matrix = json.week_matrix
@@ -56,8 +70,9 @@ async function generate_week_matrix() {
 	let last_header_cell = header_row.insertCell()
 	last_header_cell.innerText = "%"
 
+	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = add_days(json.day_first, row_index) // todo: find week monday
+		let current_date = add_days(first_monday, row_index * 7)
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
@@ -102,8 +117,9 @@ async function generate_matrix() {
 
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		let current_date = add_days(json.day_first, row_index)
+		let weekday = date_to_weekday(current_date)
 		let row = matrix_table.insertRow()
-		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
+		make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			let cell = row.insertCell()
 			let key = String(matrix[row_index][col_index])
