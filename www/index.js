@@ -37,9 +37,9 @@ function get_local_date_string() {
 }
 
 function date_to_weekday(date) {
-  const d = new Date(date);
-  const g = d.getDay();
-  return g === 0 ? 7 : g;
+	const d = new Date(date)
+	const g = d.getDay()
+	return g === 0 ? 7 : g
 }
 
 async function post_date_request(endpoint, date) {
@@ -67,8 +67,6 @@ async function generate_week_matrix() {
 		let header_cell = header_row.insertCell()
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
-	let last_header_cell = header_row.insertCell()
-	last_header_cell.innerText = "%"
 
 	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
@@ -76,23 +74,8 @@ async function generate_week_matrix() {
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			let cell = row.insertCell()
-			let key = String(matrix[row_index][col_index])
-			let values = {
-				"-3": "no_record",
-				"-2": "unscheduled_not_done",
-				"-1": "unscheduled_done",
-				"0": "not_done_not_due",
-				"1": "done_not_due",
-				"2": "not_done_due",
-				"3": "done_due"
-			}
-			if (key in values) {
-				cell.className = values[key]
-			}
+			insert_matrix_cell(row, matrix[row_index][col_index])
 		}
-
-		let cell = row.insertCell()
 	}
 
 	document.body.appendChild(matrix_table)
@@ -121,20 +104,7 @@ async function generate_matrix() {
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			let cell = row.insertCell()
-			let key = String(matrix[row_index][col_index])
-			let values = {
-				"-3": "no_record",
-				"-2": "unscheduled_not_done",
-				"-1": "unscheduled_done",
-				"0": "not_done_not_due",
-				"1": "done_not_due",
-				"2": "not_done_due",
-				"3": "done_due"
-			}
-			if (key in values) {
-				cell.className = values[key]
-			}
+			insert_matrix_cell(row, matrix[row_index][col_index])
 		}
 
 		let cell = row.insertCell()
@@ -190,6 +160,23 @@ async function generate_matrix() {
 	total_cell.innerText = rule_array_to_percentage(matrix.flat()) // TODO: optimize
 
 	document.body.appendChild(matrix_table)
+}
+
+function insert_matrix_cell(row, c) {
+	let cell = row.insertCell()
+	let key = String(c)
+	let values = {
+		"-3": "no_record",
+		"-2": "unscheduled_not_done",
+		"-1": "unscheduled_done",
+		"0": "not_done_not_due",
+		"1": "done_not_due",
+		"2": "not_done_due",
+		"3": "done_due"
+	}
+	if (key in values) {
+		cell.className = values[key]
+	}
 }
 
 function rule_array_to_percentage(arr) {
