@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS rule_category (
 	description TEXT NOT NULL UNIQUE,
 	motivation TEXT NOT NULL UNIQUE, -- always focus on the positives only
 	color INTEGER NOT NULL UNIQUE CHECK(color >= 0 AND color <= 0xFFFFFF) -- TODO: use enumeration table
-) WITHOUT ROWID;
+) STRICT, WITHOUT ROWID;
 
 -- TODO: ensure no gaps between order_priority entries
 -- TODO: consider sub-rules
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS rule (
 	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
 	FOREIGN KEY (rule_category_name) REFERENCES rule_category (name),
 	FOREIGN KEY (rule_importance_label) REFERENCES rule_importance (label)
-) WITHOUT ROWID;
+) STRICT, WITHOUT ROWID;
 
 -- TODO: check against time overlaps for the same rule_name
 CREATE TABLE IF NOT EXISTS rule_schedule (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS rule_schedule (
 CREATE TABLE IF NOT EXISTS rule_importance (
 	label TEXT PRIMARY KEY,
 	value INTEGER NOT NULL UNIQUE CHECK(value > 0)
-) WITHOUT ROWID;
+) STRICT, WITHOUT ROWID;
 
 -- TODO: ensure no gaps between id entries?
 -- TODO: generated columns
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS rule_importance (
 CREATE TABLE IF NOT EXISTS day (
 	id TEXT PRIMARY KEY CHECK(id IS date(id, "+0 days")),
 	notes TEXT
-) WITHOUT ROWID;
+) STRICT, WITHOUT ROWID;
 
 -- TODO: ensure no gaps and uniqueness between order_priority entries for a day
 -- TODO: ensure falls into a rule_schedule (FK?)
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS rule_instance (
 	FOREIGN KEY (rule_name) REFERENCES rule (name),
 	FOREIGN KEY (rule_schedule_id) REFERENCES rule_schedule (id),
 	FOREIGN KEY (day_id) REFERENCES day (id)
-);
+) STRICT;
 
 ---------------------------------------------------------------------------------------------------
 
