@@ -1,16 +1,15 @@
-           OLD                   NEW           CHANGE
-TIER I                  TIER I
- 1. Early rise     (1).  1. Early rise    (1). None.
- 2. Home cleaning. (1).  2. Home cleaning (1). None.
- 3. Dental care    (1).  3. Dental care   (1). None.
- 4. Face shave     (1).  4. Face shave    (2). Period increased from 1 to 2.
- 5. Hair care      (1).  5. Hair care     (1). None.
- 6. Shower         (2).  6. Shower        (4). Period increased from 2 to 4.
- 7. Nail care      (7).  7. Nail care     (7). None.
-TIER II                 
- 8. Push day A  (7).     8. Push day A    (7). Moved from Tier II to Tier I.
- 9. Pull day A  (7).     9. Pull day A    (7). Moved from Tier II to Tier I.
-10. Leg day A   (7).    10. Leg day A     (7). Moved from Tier II to Tier I.
-11. Push day B  (7).
-12. Pull day B  (7).
-13. Leg day B   (7).
+           OLD                     NEW                      CHANGE
+- 1. Early rise     (1). - 1. Early rise    (1). None.
+- 2. Home cleaning. (1). - 2. Home cleaning (1). None.
+- 3. Dental care    (1). - 3. Dental care   (1). None.
+- 4. Face shave     (1). - 4. Face shave    (2). Period increased from 1 to 2.
+- 5. Hair care      (1). - 5. Hair care     (1). None.
+- 6. Shower         (2). - 6. Shower        (4). Period increased from 2 to 4.
+- 7. Nail care      (7). - 7. Nail care     (7). None.
+= 8. Push day A     (7). - 8. Push day A    (7). Moved from Tier II to Tier I.
+= 9. Pull day A     (7). - 9. Pull day A    (7). Moved from Tier II to Tier I.
+=10. Leg day A      (7). -10. Leg day A     (7). Moved from Tier II to Tier I.
+=11. Push day B     (7). =11. Push day B.   (7). None.
+=12. Pull day B     (7). =12. Pull day B.   (7). None.
+=13. Leg day B      (7). =13. Pull day B.   (7). None.
+                         =14. Dental care 2 (1). Introduced to Tier II.
