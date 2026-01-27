@@ -122,7 +122,7 @@ end
 common.db_read_shallow = function(date)
 	local db = db_open(DB_PATH)
 
-	local rules = db_collect(db, "SELECT * FROM rule ORDER BY tier, order_priority ASC")
+	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 	each(function(r) r.schedule = db_get_rule_schedule(db, r.name, date) end, rules)
 	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name) end, rules)
 
@@ -182,7 +182,7 @@ local db_read_deep_rule = function(r, db, rule)
 end
 
 local db_read_deep_rules = function(r, db)
-	r.rules = db_collect(db, "SELECT * FROM rule ORDER BY tier, order_priority ASC")
+	r.rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules)
 end
 

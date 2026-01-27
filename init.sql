@@ -10,19 +10,17 @@ CREATE TABLE IF NOT EXISTS rule_category (
 CREATE TABLE IF NOT EXISTS rule (
 	name TEXT PRIMARY KEY, -- noun
 	rule_category_name TEXT NOT NULL,
-	rule_importance_label TEXT NOT NULL,
 	description TEXT NOT NULL UNIQUE, -- verb
 	motivation TEXT NOT NULL, -- always focus on the positives only
-	tier INTEGER NOT NULL CHECK(tier > 0),
 	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
 	FOREIGN KEY (rule_category_name) REFERENCES rule_category (name),
-	FOREIGN KEY (rule_importance_label) REFERENCES rule_importance (label)
 ) STRICT, WITHOUT ROWID;
 
 -- TODO: check against time overlaps for the same rule_name
 CREATE TABLE IF NOT EXISTS rule_schedule (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	rule_name TEXT NOT NULL,
+	rule_tier INTEGER NOT NULL CHECK(rule_tier > 0),
 	start_date TEXT NOT NULL CHECK(start_date IS date(start_date, "+0 days")), -- ISO-8601, YYYY-MM-DD
 	end_date TEXT CHECK(end_date IS date(end_date, "+0 days")), -- ISO-8601, YYYY-MM-DD
 	period INTEGER NOT NULL CHECK(period >= 1 AND period <= 7), -- anything less frequent is not worthy to be a rule
@@ -30,11 +28,6 @@ CREATE TABLE IF NOT EXISTS rule_schedule (
 	notes TEXT,
 	FOREIGN KEY (rule_name) REFERENCES rule (name)
 );
-
-CREATE TABLE IF NOT EXISTS rule_importance (
-	label TEXT PRIMARY KEY,
-	value INTEGER NOT NULL UNIQUE CHECK(value > 0)
-) STRICT, WITHOUT ROWID;
 
 CREATE TABLE IF NOT EXISTS day (
 	id TEXT PRIMARY KEY CHECK(id IS date(id, "+0 days")),
@@ -61,13 +54,6 @@ CREATE TABLE IF NOT EXISTS rule_instance (
 
 -- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
 
--- Five value Likert scale enumeration in regards to importance
-INSERT INTO rule_importance (label, value) VALUES ("Absolutely essential", 16);
-INSERT INTO rule_importance (label, value) VALUES ("Extremely important",   8);
-INSERT INTO rule_importance (label, value) VALUES ("Very important",        4);
-INSERT INTO rule_importance (label, value) VALUES ("Important",             2);
-INSERT INTO rule_importance (label, value) VALUES ("Slightly important",    1);
-
 INSERT INTO rule_category (name, description, motivation) VALUES (
 	"Image (internal)",
 	"One's immediate appearance and behavior",
@@ -90,271 +76,220 @@ INSERT INTO rule_category (name, description, motivation) VALUES (
 	"Looks. Confidence. Health. Performance. Endurance."
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Early rise",
 	"Image (internal)",
-	"Extremely important",
 	"Rise from bed at 09:00 or earlier",
 	"Ability to take a thorough and laid-back approach to morning chores."          || char(10) ||
 	"Ability to relax and focus on oneself before diving into the day."             || char(10) ||
 	"Margin for error in case of unexpected events."                                || char(10) ||
 	"More useful time available during the day."                                    || char(10) ||
 	"Good external image and work ethic.",
-	1,
 	1
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Nail care",
 	"Image (internal)",
-	"Important",
 	"Check and clip and file fingernails and toenails.",
 	"Looks. Style. Discipline & order.",
-	1,
 	2
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Home cleaning",
 	"Image (external)",
-	"Very important",
 	"Clean home until results or effort spent is satisfactory.",
 	"Mood. Productivity. Image.",
-	1,
 	3
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Shower",
 	"Image (internal)",
-	"Extremely important",
 	"Shower",
 	"Feeling fresh and clean.",
-	1,
 	4
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Hair care",
 	"Image (internal)",
-	"Very important",
 	"Wash hair. Visit barber if deemed necessary. Apply products if deemed necessary.",
 	"Looks. Style. Discipline & order.",
-	1,
 	5
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Face shave",
 	"Image (internal)",
-	"Very important",
 	"Cleanly shave facial hair.",
 	"Looks. Style. Discipline & order.",
-	1,
 	6
 );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
 -- 	"Face care",
 -- 	"Image (internal)",
--- 	"Important",
 -- 	"Wash and moisturize face.",
 -- 	"Clear, healthy face skin.",
--- 	3,
 -- 	7
 -- );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Dental care (after sleep)",
 	"Image (internal)",
-	"Important",
 	"Brush teeth and wash mouth after sleep",
 	"Looks. Smell. Health. Money.",
-	1,
 	8
 );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
 -- 	"Fresh clothes",
 -- 	"Image (internal)",
--- 	"Very important",
 -- 	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
 -- 	"Looks. Freshness. Confidence. Image.",
--- 	3,
 -- 	9
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
 -- 	"Productivity",
 -- 	"Image (external)",
--- 	"Slightly important",
 -- 	"Be productive at work.",
 -- 	"Security. Discipline. Competence.",
--- 	3,
 -- 	10
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
 -- 	"Car care",
 -- 	"Image (external)",
--- 	"Slightly important",
 -- 	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
 -- 	"Clean, orderly vehicle. Image.",
--- 	3,
 -- 	11
 -- );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Workout: push (A)",
 	"Bodybuilding",
-	"Absolutely essential",
 	"Full bodybuilding pushing workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
-	2,
 	12
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: push (B)",
-	"Bodybuilding",
-	"Absolutely essential",
-	"Full bodybuilding pushing workout (part 2/2).",
-	"Looks. Confidence. Health. Performance.",
-	2,
-	13
-);
+-- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
+-- 	"Workout: push (B)",
+-- 	"Bodybuilding",
+-- 	"Full bodybuilding pushing workout (part 2/2).",
+-- 	"Looks. Confidence. Health. Performance.",
+-- 	13
+-- );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Workout: pull (A)",
 	"Bodybuilding",
-	"Absolutely essential",
 	"Full bodybuilding pulling workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
-	2,
 	14
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: pull (B)",
-	"Bodybuilding",
-	"Absolutely essential",
-	"Full bodybuilding pulling workout (part 2/2).",
-	"Looks. Confidence. Health. Performance.",
-	2,
-	15
-);
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- 	"Workout: pull (B)",
+-- 	"Bodybuilding",
+-- 	"Full bodybuilding pulling workout (part 2/2).",
+-- 	"Looks. Confidence. Health. Performance.",
+-- 	15
+-- );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Workout: legs (A)",
 	"Bodybuilding",
-	"Absolutely essential",
 	"Full bodybuilding leg workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
-	2,
 	16
 );
 
-INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
-	"Workout: legs (B)",
-	"Bodybuilding",
-	"Absolutely essential",
-	"Full bodybuilding leg workout (part 2/2).",
-	"Looks. Confidence. Health. Performance.",
-	2,
-	17
-);
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- 	"Workout: legs (B)",
+-- 	"Bodybuilding",
+-- 	"Full bodybuilding leg workout (part 2/2).",
+-- 	"Looks. Confidence. Health. Performance.",
+-- 	17
+-- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Workout: core",
 -- 	"Bodybuilding",
--- 	"Absolutely essential",
 -- 	"Full bodybuilding core workout.",
 -- 	"Looks. Confidence. Health. Performance.",
--- 	2,
 -- 	18
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Workout: cardio",
 -- 	"Bodybuilding",
--- 	"Extremely important",
 -- 	"At least an hour of zone two or more intense cardio.",
 -- 	"Confidence. Health. Endurance.",
--- 	3,
 -- 	19
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Cooking",
 -- 	"Image (external)",
--- 	"Important",
 -- 	"Meal-prep for the upcoming days, weeks or even months.",
 -- 	"Facilitating homemade food and diet. Independence. Money. Image. Experimentation. Discovery.",
--- 	3,
 -- 	20
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Laundry",
 -- 	"Image (external)",
--- 	"Important",
 -- 	"Do laundry.",
 -- 	"Facilitating fresh clothes. Independence. Image.",
--- 	3,
 -- 	21
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Body care",
 -- 	"Image (internal)",
--- 	"Slightly important",
 -- 	"Shave body. Trim nose hair. Apply products.",
 -- 	"Looks. Sex. Image.",
--- 	3,
 -- 	22
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Dental care (before sleep)",
 -- 	"Image (internal)",
--- 	"Important",
 -- 	"Brush teeth and wash mouth before sleep",
 -- 	"Looks. Smell. Health. Money.",
--- 	2,
 -- 	23
 -- );
 
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Homemade food",
 -- 	"Image (external)",
--- 	"Very important",
 -- 	"Eat only homemade food throughout the day.",
 -- 	"Health. Image. Diet. Control.",
--- 	3,
 -- 	24
 -- );
 
 -- TODO: probably should be merged with homemade food
--- INSERT INTO rule (name, rule_category_name, rule_importance_label, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Diet",
 -- 	"Bodybuilding",
--- 	"Extremely important",
 -- 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
 -- 	"Achieve bodybuilding goals.",
--- 	3,
 -- 	25
 -- );
 
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Early rise",                "2025-08-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Home cleaning",             "2025-08-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Dental care (after sleep)", "2025-08-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Shower",                    "2025-08-29", NULL, 2, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Hair care",                 "2025-08-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Face shave",                "2025-08-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Nail care",                 "2025-08-31", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: legs (A)",         "2025-09-08", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: pull (B)",         "2025-09-09", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: push (B)",         "2025-09-10", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: legs (B)",         "2025-09-11", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: pull (A)",         "2025-09-12", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, start_date, end_date, period, weekdays) VALUES ("Workout: push (A)",         "2025-09-13", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Early rise",                1, "2026-01-27", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Home cleaning",             1, "2026-01-27", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Dental care (after sleep)", 1, "2026-01-27", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Shower",                    1, "2026-01-27", NULL, 2, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Hair care",                 1, "2026-01-27", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Face shave",                1, "2026-01-27", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Nail care",                 1, "2026-01-26", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: push (A)",         1, "2026-01-27", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: pull (A)",         1, "2026-01-28", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: legs (A)",         1, "2026-01-29", NULL, 7, 127);
+
+-- Upcoming Tier II

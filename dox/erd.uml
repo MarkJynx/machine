@@ -14,7 +14,6 @@ entity RuleCategory {
 entity Rule {
     * Name <<PK>>
     * RuleCategoryName <<FK>>
-    * RuleImportanceLabel <<FK>>
     * Description
     * Motivation
     * OrderPriority
@@ -30,11 +29,6 @@ entity RuleSchedule {
     * Period
     * Weekdays
     * Notes
-}
-
-entity RuleImportance {
-    * Label <<PK>>
-    * Value
 }
 
 entity RuleInstance {
