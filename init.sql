@@ -281,13 +281,13 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 -- 	25
 -- );
 
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Early rise",                1, "2026-01-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Home cleaning",             1, "2026-01-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Dental care (after sleep)", 1, "2026-01-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Shower",                    1, "2026-01-29", NULL, 4, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Hair care",                 1, "2026-01-29", NULL, 1, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Face shave",                1, "2026-01-29", NULL, 2, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Nail care",                 1, "2026-01-26", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: push (A)",         1, "2026-01-31", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: pull (A)",         1, "2026-01-31", NULL, 7, 127);
-INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: legs (A)",         1, "2026-02-01", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Early rise",                1, "2026-02-02", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Home cleaning",             1, "2026-02-02", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Dental care (after sleep)", 1, "2026-02-02", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Shower",                    1, "2026-02-02", NULL, 4, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Hair care",                 1, "2026-02-02", NULL, 1, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Face shave",                1, "2026-02-02", NULL, 2, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Nail care",                 1, "2026-02-02", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: push (A)",         1, "2026-02-02", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: pull (A)",         1, "2026-02-03", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: legs (A)",         1, "2026-02-04", NULL, 7, 127);
