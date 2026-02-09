@@ -43,17 +43,15 @@ local process_week_rule = function(row, rule_row, date, rule)
 	local schedule = reduce(function(a, s) if a then return a end if date_range_in_schedule(date, 7, s) then return s end end, nil, rule.schedules)
 	local grey_count = reduce(function(a, cell) if cell < 0 then return a + 1 end return a end, 0, rule_row)
 	local done_count = reduce(function(a, cell) if cell == 1 or cell == 3 then return a + 1 end return a end, 0, rule_row)
-	local yr_count = reduce(function(a, cell) if cell == 0 or cell == 1 or cell == 3 then return a + 1 end return a end, 0, rule_row)
-	if grey_count >= 4 then
-		table.insert(row, -1)
-	elseif yr_count >= 7 then
-		table.insert(row, 1) -- done, not mandatory
-	elseif (schedule.period == 7 and done_count > 0) or (schedule.period ~= 7 and yr_count == 6) then
-		table.insert(row, 3) -- done, mandatory
-	elseif schedule.period ~= 7 and yr_count >= 4 then
-		table.insert(row, 0) -- yellow
+	local red_count = reduce(function(a, cell) if cell == 2 then return a + 1 end return a end, 0, rule_row)
+	if red_count <= 0 then
+		table.insert(row, 1) -- deep green, perfection, done but not mandatory
+	elseif (schedule.period == 7 and done_count >= 1) or (schedule.period ~= 7 and red_count <= 1) then
+		table.insert(row, 3) -- green, okay, done and mandatory, as it should be
+	elseif grey_count >= 2 then
+		table.insert(row, -1) -- grey, this was a vacation week
 	else
-		table.insert(row, 2) -- red
+		table.insert(row, 2) -- red, failure
 	end
 	return row
 end
