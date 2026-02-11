@@ -176,13 +176,13 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 	12
 );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
--- 	"Workout: push (B)",
--- 	"Bodybuilding",
--- 	"Full bodybuilding pushing workout (part 2/2).",
--- 	"Looks. Confidence. Health. Performance.",
--- 	13
--- );
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+	"Workout: push (B)",
+	"Bodybuilding",
+	"Full bodybuilding pushing workout (part 2/2).",
+	"Looks. Confidence. Health. Performance.",
+	13
+);
 
 INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Workout: pull (A)",
@@ -192,13 +192,13 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 	14
 );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
--- 	"Workout: pull (B)",
--- 	"Bodybuilding",
--- 	"Full bodybuilding pulling workout (part 2/2).",
--- 	"Looks. Confidence. Health. Performance.",
--- 	15
--- );
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+	"Workout: pull (B)",
+	"Bodybuilding",
+	"Full bodybuilding pulling workout (part 2/2).",
+	"Looks. Confidence. Health. Performance.",
+	15
+);
 
 INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 	"Workout: legs (A)",
@@ -208,13 +208,13 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 	16
 );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
--- 	"Workout: legs (B)",
--- 	"Bodybuilding",
--- 	"Full bodybuilding leg workout (part 2/2).",
--- 	"Looks. Confidence. Health. Performance.",
--- 	17
--- );
+INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+	"Workout: legs (B)",
+	"Bodybuilding",
+	"Full bodybuilding leg workout (part 2/2).",
+	"Looks. Confidence. Health. Performance.",
+	17
+);
 
 -- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
 -- 	"Workout: core",
@@ -291,3 +291,6 @@ INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, w
 INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: push (A)",         1, "2026-02-03", NULL, 7, 127);
 INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: pull (A)",         1, "2026-02-04", NULL, 7, 127);
 INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: legs (A)",         1, "2026-02-05", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: push (B)",         2, "2026-02-11", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: pull (B)",         2, "2026-02-12", NULL, 7, 127);
+INSERT INTO rule_schedule (rule_name, rule_tier, start_date, end_date, period, weekdays) VALUES ("Workout: legs (B)",         2, "2026-02-13", NULL, 7, 127);
