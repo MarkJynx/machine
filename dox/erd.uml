@@ -14,10 +14,8 @@ entity RuleCategory {
 entity Rule {
     * Name <<PK>>
     * RuleCategoryName <<FK>>
-    * RuleImportanceLabel <<FK>>
     * Description
     * Motivation
-    * Tier
     * OrderPriority
     * Color
 }
@@ -25,16 +23,12 @@ entity Rule {
 entity RuleSchedule {
     * ID <<PK>>
     * RuleName <<FK>
+    * RuleTier
     * StartDate
     * StopDate
     * Period
     * Weekdays
     * Notes
-}
-
-entity RuleImportance {
-    * Label <<PK>>
-    * Value
 }
 
 entity RuleInstance {
@@ -50,8 +44,6 @@ entity RuleInstance {
 entity Day {
     * ID <<PK>>
     * Notes
-    * Points <<Generated>>
-    * Percentage <<Generated>>
 }
 
 RuleCategory ||--o{ Rule

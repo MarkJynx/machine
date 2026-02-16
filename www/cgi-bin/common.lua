@@ -14,7 +14,7 @@ common.date_diff = function(d1, d2)
 end
 
 common.date_weekday = function(d)
-	return os.date("%w", os.time(date_table(d))) + 1
+	return (os.date("%w", os.time(date_table(d))) + 7 - 1) % 7 + 1
 end
 
 common.date_add = function(date, days)
@@ -122,7 +122,7 @@ end
 common.db_read_shallow = function(date)
 	local db = db_open(DB_PATH)
 
-	local rules = db_collect(db, "SELECT * FROM rule ORDER BY tier, order_priority ASC")
+	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 	each(function(r) r.schedule = db_get_rule_schedule(db, r.name, date) end, rules)
 	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name) end, rules)
 
@@ -155,8 +155,16 @@ local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
 	local start_date = max({schedule.start_date, r.day_first})
 	local stop_date = schedule.stop_date and min({schedule.stop_day, r.day_last}) or r.day_last
 
-	local day_count = common.date_diff(stop_date, start_date) + 1
 	local not_done_streak = math.huge
+	local day_count_before = min({schedule.period, common.date_diff(start_date, r.day_first)})
+	for _, date in map(function(i) return common.date_add(start_date, -i) end, range(1, day_count_before, 1)) do
+		if done_lt[date] then
+			not_done_streak = common.date_diff(start_date, date)
+			break
+		end
+	end
+
+	local day_count = common.date_diff(stop_date, start_date) + 1
 	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(1, day_count, 1)) do
 		lt[date] = schedule.period <= not_done_streak and schedule_weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
@@ -174,7 +182,7 @@ local db_read_deep_rule = function(r, db, rule)
 end
 
 local db_read_deep_rules = function(r, db)
-	r.rules = db_collect(db, "SELECT * FROM rule ORDER BY tier, order_priority ASC")
+	r.rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
 	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules)
 end
 
