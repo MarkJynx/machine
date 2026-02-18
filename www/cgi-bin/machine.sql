@@ -123,7 +123,7 @@ INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_prio
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Hair care',                    5, '2026-02-18', 1,  3);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Face shave',                   6, '2026-02-18', 1,  4);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Dental care (after sleep)',    3, '2026-02-18', 1,  5);
-INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: push (A)',            8, '2026-02-18', 1,  6);
+INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: push (A)',            8, '2026-02-18', 0,  6);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: push (B)',           11, '2026-02-18', 0,  7);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: pull (A)',            9, '2026-02-18', 0,  8);
 INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ('Workout: legs (A)',           10, '2026-02-18', 0,  9);
