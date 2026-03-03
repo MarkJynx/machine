@@ -11,7 +11,7 @@ async function main() {
 }
 
 function parse_url_params(url) {
-	let results = {"view": "day"}
+	let results = {"view": "day", "date": get_local_date_string()}
 	const args = new URLSearchParams(url)
 
 	if (args.has("view") && (args.get("view") == "matrix" || args.get("view") == "weekmatrix")) {
@@ -20,8 +20,6 @@ function parse_url_params(url) {
 
 	if (args.size == 1 && args.has("date") && args.get("date") && args.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 		results.date = args.get("date")
-	} else {
-		results.date = get_local_date_string()
 	}
 
 	return results
