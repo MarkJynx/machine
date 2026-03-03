@@ -20,7 +20,7 @@ function parse_url_params(url) {
 		if (args.has(value) && args.get(value) && args.get(value).match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 			results[value] = args.get(value)
 		}
-	});
+	})
 
 	return results
 }
@@ -54,6 +54,8 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	let matrix = week_view ? json.week_matrix : json.matrix
 	let labels = week_view ? json.week_matrix_labels : json.matrix_labels
 
+	generate_matrix_rule_filter(json.rules)
+
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
 
@@ -61,6 +63,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	header_row.insertCell() // empty cell
 	json.rules.forEach(function(value, index) {
 		let header_cell = header_row.insertCell()
+		header_cell.className = "rule" + String(index)
 		header_cell.innerHTML = json.rules[index].name.split(" ").join("<br>")
 	})
 
@@ -69,7 +72,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		let row = matrix_table.insertRow()
 		let week_href = "?view=matrix&start_date=" + labels[i] + "&stop_date=" + add_days(labels[i], 6)
 		make_button_cell(row, labels[i], week_view ? week_href :  "?date=" + labels[i])
-		matrix[i].forEach(function(value, index) { insert_matrix_cell(row, value) })
+		matrix[i].forEach(function(value, index) { insert_matrix_cell(row, index, value) })
 	}
 
 	document.body.appendChild(matrix_table)
@@ -79,10 +82,27 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	document.body.appendChild(navigation_table)
 }
 
-function insert_matrix_cell(row, c) {
+function generate_matrix_rule_filter(rules) {
+	let rule_filter_table = document.createElement("table")
+	let header_row = rule_filter_table.insertRow()
+	let checkbox_row = rule_filter_table.insertRow()
+	rules.forEach(function(rule, index) {
+		header_row.insertCell().innerHTML = rule.name.split(" ").join("<br>")
+		let checkbox = document.createElement("input")
+		checkbox.type = "checkbox"
+		checkbox.checked = true
+		checkbox.id = "rule_filter_" + index
+		checkbox.onclick = function(e) { Array.from(document.getElementsByClassName("rule" + index)).forEach(function(c) { c.hidden = !e.target.checked })}
+		checkbox_row.insertCell().appendChild(checkbox)
+	})
+	document.body.appendChild(rule_filter_table)
+}
+
+function insert_matrix_cell(row, rule_index, c) {
+	let rule_class = "rule" + String(rule_index)
 	let cell = row.insertCell()
 	let values = { "-2": "no_day", "-1": "no_instance", "0": "done0due0", "1": "done1due0", "2": "done0due1", "3": "done1due1" }
-	cell.className = values[String(c)]
+	cell.className = values[String(c)] + " " + rule_class
 }
 
 // Day generation

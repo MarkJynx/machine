@@ -1,6 +1,5 @@
 1. FEATURE: percentages and streaks (day matrix).
 2. FEATURE: percentages and streaks (week matrix).
-3. FEATURE: rule filter.
 4. FEATURE: day notes.
 5. BUGFIX: fix create-in-the-middle bug.
 6. FEATURE: add-task selection could be dynamic.
