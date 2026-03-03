@@ -1,5 +1,6 @@
 1. Put schedule back into rule: UML.
 --
+1. Bug: display non-existent as grey in day overview matrix.
 2. Put schedule back into rule: Lua.
 3. Put schedule back into rule: SQL.
 3. Display tiers: day overview.
