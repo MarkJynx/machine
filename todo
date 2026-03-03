@@ -1,3 +1,18 @@
+1. Put schedule back into rule: UML.
+2. Put schedule back into rule: Lua.
+3. Put schedule back into rule: SQL.
+3. Display tiers: day overview.
+4. Display tiers: day matrix overview.
+5. Display tiers: week matrix overview.
+6. Generate tags: day overview.
+7. Generate tags: day matrix overview.
+8. Generate tags: week matrix overview.
+9. Hide: day overview.
+10. Hide: day matrix overview.
+11. Hide: week matrix overview.
+
+--------------------------------------------
+
 Highest priority right now: finishing week matrix implementation:
 1. Date filters (JS).
 2. Date filters (URL).
