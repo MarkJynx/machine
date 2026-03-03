@@ -3,19 +3,19 @@
 3. Massive simplification: remove rule_category table.
 4. Massive simplification: remove start_date field in rule_schedule table.
 5. Massive simplification: remove stop_date field in rule_schedule table.
+6. Massive simplification: move rule_schedule into rule.
 --
-1. Massive simplification: move rule_schedule into rule.
-2. Refactorization: use enums
-3. Display tiers: day overview.
-4. Display tiers: day matrix overview.
-5. Display tiers: week matrix overview.
-6. Generate tags: day overview.
-7. Generate tags: day matrix overview.
-8. Generate tags: week matrix overview.
-9. Hide: day overview.
-10. Hide: day matrix overview.
-11. Hide: week matrix overview.
-12. To hell with performance. Button pressed should redirect so that F5 would work.
+1. Display tiers: day overview.
+2. Display tiers: day matrix overview.
+3. Display tiers: week matrix overview.
+4. Generate tags: day overview.
+5. Generate tags: day matrix overview.
+6. Generate tags: week matrix overview.
+7. Hide: day overview.
+8. Hide: day matrix overview.
+9. Hide: week matrix overview.
+10. Refactorization: use enums
+11. To hell with performance. Button pressed should redirect so that F5 would work.
 
 --------------------------------------------
 
