@@ -56,9 +56,6 @@ async function post_date_request(endpoint, date) {
 
 // Matrix generation
 
-async function generate_week_matrix() {
-}
-
 async function generate_matrix(week) {
 	let response = await fetch("cgi-bin/read_matrix.lua")
 	let json = await response.json()
