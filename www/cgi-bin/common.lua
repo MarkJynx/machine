@@ -228,7 +228,7 @@ end
 -- Other
 
 common.get_rule_weekdays = function(rule)
-	return totable(map(function(i) return rule.weekdays & (2 ^ (i - 1)) end, range(7)))
+	return totable(map(function(i) return (rule.weekdays & (2 ^ (i - 1))) > 0 end, range(7)))
 end
 
 return common

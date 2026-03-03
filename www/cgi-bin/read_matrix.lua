@@ -12,7 +12,7 @@ local process_day_rule = function(row, date, rule, day_lt)
 		table.insert(row, rule.done_lt[date] and -1 or -2)
 	else
 		local done = rule.done_lt[date] and 1 or 0
-		local mandatory = rule.schedule_lt[date] and 2 or 0
+		local mandatory = rule.done_lt[date] == false and 2 or (rule.schedule_lt[date] and 2 or 0)
 		table.insert(row, done + mandatory)
 	end
 	return row
