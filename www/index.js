@@ -101,8 +101,6 @@ async function generate_matrix() {
 		header_cell.className = "rule" + String(i)
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
-	let last_header_cell = header_row.insertCell()
-	last_header_cell.innerText = "%"
 
 	let day_done_fully = [] // TODO: this is cheating, calculate from source material with functional programming
 
@@ -114,68 +112,7 @@ async function generate_matrix() {
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
 		}
-
-		let cell = row.insertCell()
-// XXX: PERCENTAGES-STREAKS
-//		cell.innerText = rule_array_to_percentage(matrix[row_index])
-//		day_done_fully.push(cell.innerText == "100%" ? 1 : 0)
 	}
-
-	let current_streak_row = matrix_table.insertRow()
-	let current_streak_first_cell = current_streak_row.insertCell()
-	current_streak_first_cell.innerText = "Current\nStreak"
-	for (let col_index = 0; col_index < json.rules.length; col_index++) {
-		let col = matrix.map((row) => row[col_index]) // TODO: optimize, calculate all columns stats in one gow
-		let cell = current_streak_row.insertCell()
-		cell.className = "rule" + String(col_index)
-// XXX: PERCENTAGES-STREAKS
-//		// TODO: do not use magic numbers
-//		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
-//		cell.innerText = String(current_streak)
-	}
-	let current_streak_cell = current_streak_row.insertCell()
-// XXX: PERCENTAGES-STREAKS
-//	current_streak_cell.innerText = String(day_done_fully.reduce((a, x) => x == 1 ? a + 1 : 0, 0))
-
-	let longest_streak_row = matrix_table.insertRow()
-	let longest_streak_first_cell = longest_streak_row.insertCell()
-	longest_streak_first_cell.innerText = "Longest\nStreak"
-	for (let col_index = 0; col_index < json.rules.length; col_index++) {
-		let col = matrix.map((row) => row[col_index]) // TODO: optimize, calculate all columns stats in one gow
-		let cell = longest_streak_row.insertCell()
-		cell.className = "rule" + String(col_index)
-// XXX: PERCENTAGES-STREAKS
-//		// TODO: do not use magic numbers
-//		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
-//		let longest_streak = Math.max(...current_streaks)
-//		if (current_streaks[current_streaks.length - 1] == longest_streak) {
-//			cell.style.fontWeight = "bold"
-//		}
-//		cell.innerText = String(longest_streak)
-	}
-	let longest_streak_cell = longest_streak_row.insertCell()
-// XXX: PERCENTAGES-STREAKS
-//	let current_day_streaks = day_done_fully.reduce((a, x) => { a.push(x == 1 ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
-//	let longest_day_streak = Math.max(...current_day_streaks)
-//	if (current_day_streaks.length > 0 && current_day_streaks[current_day_streaks.length - 1] == longest_day_streak) {
-//		longest_streak_cell.fontWeight = "bold"
-//	}
-//	longest_streak_cell.innerText = String(longest_day_streak)
-
-	let total_row = matrix_table.insertRow()
-	let total_row_first_cell = total_row.insertCell()
-	total_row_first_cell.innerText = "%"
-	for (let col_index = 0; col_index < json.rules.length; col_index++) {
-		let col = matrix.map((row) => row[col_index]) // TODO: optimize, calculate all columns stats in one gow
-		let cell = total_row.insertCell()
-		cell.className = "rule" + String(col_index)
-// XXX: PERCENTAGES-STREAKS
-//		cell.innerText = rule_array_to_percentage(col)
-	}
-
-	let total_cell = total_row.insertCell()
-// XXX: PERCENTAGES-STREAKS
-//	total_cell.innerText = rule_array_to_percentage(matrix.flat()) // TODO: optimize
 
 	document.body.appendChild(matrix_table)
 }
