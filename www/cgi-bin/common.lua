@@ -168,6 +168,9 @@ local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
 	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(1, day_count, 1)) do
 		lt[date] = schedule.period <= not_done_streak and schedule_weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
+		if lt[date] and done_lt[date] == nil then
+			lt[date] = nil
+		end
 	end
 
 	return lt
@@ -176,8 +179,8 @@ end
 local db_read_deep_rule = function(r, db, rule)
 	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
 	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "start_date"))
-	rule.instances = db_collect(db, string.format(s, "rule_instance", "AND done = 1", "day_id"))
-	rule.done_lt = reduce(function(a, i) a[i.day_id] = true return a end, {}, rule.instances)
+	rule.instances = db_collect(db, string.format(s, "rule_instance", "", "day_id"))
+	rule.done_lt = reduce(function(a, i) a[i.day_id] = (i.done == 1) return a end, {}, rule.instances)
 	rule.schedule_lt = reduce(function(a, s) return db_read_deep_rule_schedule_lt(a, s, rule.done_lt, r) end, {}, rule.schedules)
 end
 
