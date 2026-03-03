@@ -2,10 +2,10 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS rule (
 	name TEXT PRIMARY KEY, -- noun
-	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0)
-	tier INTEGER NOT NULL CHECK(rule_tier > 0),
+	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
+	tier INTEGER NOT NULL CHECK(tier > 0),
 	period INTEGER NOT NULL CHECK(period >= 1 AND period <= 7), -- anything less frequent is not worthy to be a rule
-	weekdays INTEGER NOT NULL CHECK(weekdays >= 0 AND weekdays <= 127), -- 7-bit integer, LSB is Monday, MSB is Sunday; NULL means all weekdays
+	weekdays INTEGER NOT NULL CHECK(weekdays >= 0 AND weekdays <= 127) -- 7-bit integer, LSB is Monday, MSB is Sunday; NULL means all weekdays
 ) STRICT, WITHOUT ROWID;
 
 CREATE TABLE IF NOT EXISTS day (
