@@ -1,4 +1,5 @@
 1. Put schedule back into rule: UML.
+--
 2. Put schedule back into rule: Lua.
 3. Put schedule back into rule: SQL.
 3. Display tiers: day overview.
