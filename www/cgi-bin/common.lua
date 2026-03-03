@@ -96,12 +96,6 @@ local db_collect_single = function(db, q)
 	return #results == 1 and results[1] or nil
 end
 
-local db_get_rule_schedule = function(db, rule_name, date)
-	local q = {}
-	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s'", rule_name))
-	return db_collect_single(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
-end
-
 common.db_delete_day = function(date)
 	local db = db_open(DB_PATH)
 	local queries = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
@@ -121,7 +115,6 @@ common.db_read_shallow = function(date)
 	local db = db_open(DB_PATH)
 
 	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
-	each(function(r) r.schedule = db_get_rule_schedule(db, r.name, date) end, rules)
 	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name) end, rules)
 
 	local day = db_collect_single(db, "SELECT * FROM day WHERE id = '" .. date .. "'")
@@ -144,20 +137,19 @@ local db_read_deep_days = function(r, db)
 	end
 end
 
-local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
+local db_read_deep_rule_schedule_lt = function(lt, rule, done_lt, r)
 	if not r.day_first or not r.day_last then
 		return lt
 	end
 
-
-	local schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
+	local weekdays = common.get_rule_weekdays(rule)
 	local start_date = r.day_first
 	local stop_date = r.day_last
 
 	local not_done_streak = math.huge
 	local day_count = common.date_diff(stop_date, start_date) + 1
 	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(1, day_count, 1)) do
-		lt[date] = schedule.period <= not_done_streak and schedule_weekdays[common.date_weekday(date)]
+		lt[date] = rule.period <= not_done_streak and weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 		if lt[date] and done_lt[date] == nil then
 			lt[date] = nil
@@ -169,10 +161,9 @@ end
 
 local db_read_deep_rule = function(r, db, rule)
 	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
-	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "ROWID"))
 	rule.instances = db_collect(db, string.format(s, "rule_instance", "", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = (i.done == 1) return a end, {}, rule.instances)
-	rule.schedule_lt = reduce(function(a, s) return db_read_deep_rule_schedule_lt(a, s, rule.done_lt, r) end, {}, rule.schedules)
+	rule.schedule_lt = db_read_deep_rule_schedule_lt({}, rule, rule.done_lt, r)
 end
 
 local db_read_deep_rules = function(r, db)
@@ -190,19 +181,13 @@ common.db_read_deep = function()
 end
 
 local db_rule_instance_to_insert_query = function(i, db)
-	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES "
-	-- TODO: support NULL rule_schedule_id from WebUI
-	local s2 = string.format("('%s',%d,'%s',%d,%d)", db:escape(i.rule_name), i.rule_schedule.id, i.day_id, i.done, i.order_priority)
+	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, day_id, done, order_priority) VALUES "
+	local s2 = string.format("('%s','%s',%d,%d)", db:escape(i.rule_name), i.day_id, i.done, i.order_priority)
 	return s1 .. s2
 end
 
 common.db_insert_day = function(day)
 	local db = db_open(DB_PATH)
-
-	if any(function(i) i.rule_schedule = db_get_rule_schedule(db, i.rule_name, i.day_id) return i.rule_schedule == nil end, day.rule_instances) then
-		db:close()
-		return false
-	end
 
 	local s = { "PRAGMA foreign_keys = ON", "BEGIN TRANSACTION" }
 	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", day.id))
@@ -218,14 +203,9 @@ common.db_insert_day = function(day)
 end
 
 local db_backup_rule_instance = function(i, db, backup)
-	local s = "INSERT INTO rule_instance (rule_name, rule_schedule_id, day_id, done, order_priority) VALUES ("
+	local s = "INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ("
 	local rule_name = "'" .. i.rule_name .. "'," .. string.rep(" ", 26 - #i.rule_name) -- TODO: dynamic padding
-	-- TODO: ternary operator function
-	local rule_schedule_id = "NULL"
-	if i.rule_schedule_id then
-		rule_schedule_id = string.format("%4d", i.rule_schedule_id)
-	end
-	s = s .. string.format("%s%s, '%s', %d, %2d);\n", rule_name, rule_schedule_id, i.day_id, i.done, i.order_priority)
+	s = s .. string.format("%s, '%s', %d, %2d);\n", rule_name, i.day_id, i.done, i.order_priority)
 	backup:write(s)
 end
 
@@ -247,8 +227,8 @@ end
 ------------------------------------------------------------------
 -- Other
 
-common.get_rule_schedule_weekdays = function(rule_schedule)
-	return totable(map(function(i) return rule_schedule.weekdays & (2 ^ (i - 1)) end, range(7)))
+common.get_rule_weekdays = function(rule)
+	return totable(map(function(i) return rule.weekdays & (2 ^ (i - 1)) end, range(7)))
 end
 
 return common

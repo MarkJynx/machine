@@ -6,16 +6,12 @@ local cjson = require("cjson.safe")
 
 
 local rule_applies = function(rule, date)
-	if not rule.schedule then
+	local weekdays = common.get_rule_weekdays(rule)
+	if not weekdays[common.date_weekday(date)] then
 		return false
 	end
 
-	local schedule_weekdays = common.get_rule_schedule_weekdays(rule.schedule)
-	if not schedule_weekdays[common.date_weekday(date)] then
-		return false
-	end
-
-	if rule.last_instance and common.date_diff(date, rule.last_instance.day_id) < rule.schedule.period then
+	if rule.last_instance and common.date_diff(date, rule.last_instance.day_id) < rule.period then
 		return false
 	end
 
