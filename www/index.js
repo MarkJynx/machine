@@ -66,7 +66,7 @@ async function generate_matrix(week) {
 
 	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = add_days(first_monday, row_index * 7)
+		let current_date = week ? add_days(first_monday, row_index * 7) : add_days(json.day_first, row_index)
 		let weekday = date_to_weekday(current_date)
 		let row = matrix_table.insertRow()
 		if (week) {
