@@ -1,10 +1,7 @@
-1. REFACTOR: Merge shallow and deep read.
-2. BUGFIX:   Fix create-in-the-middle bug.
-3. FEATURE:  Tiers.
-4. REFACTOR: Enumerations.
-5. REFACTOR: Make refresh work.
-6. FEATURE:  Date ranges.
-7. FEATURE:  Percentages and streaks.
+1. BUGFIX: fix create-in-the-middle bug.
+2. BUGFIX: make refresh work.
+3. FEATURE: date ranges.
+4. FEATURE: percentages and streaks.
 
 --------------------------------------------
 
