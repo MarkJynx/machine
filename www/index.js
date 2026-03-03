@@ -30,12 +30,6 @@ function get_local_date_string() {
 	return new Date(new Date() - tzoffset).toISOString().substring(0, 10) // TODO: do not use magic numbers
 }
 
-function date_to_weekday(date) {
-	const d = new Date(date)
-	const g = d.getDay()
-	return g === 0 ? 7 : g
-}
-
 async function post_date_request(endpoint, date) {
 	let response = await fetch("cgi-bin/" + endpoint + ".lua", {
 		method: "POST",
@@ -65,7 +59,6 @@ async function generate_matrix(week) {
 
 	let day_done_fully = [] // TODO: this is cheating, calculate from source material with functional programming
 
-	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		let row = matrix_table.insertRow()
 		if (week) {
