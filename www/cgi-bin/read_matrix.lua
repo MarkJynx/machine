@@ -23,12 +23,12 @@ local process_day = function(matrix, date, rules, day_lt)
 	table.insert(matrix, row)
 end
 
-local process_week_rule = function(row, rule_row, date, rule)
+local process_week_rule = function(row, rule_row, rule)
 	local grey_count = reduce(function(a, cell) if cell < 0 then return a + 1 end return a end, 0, rule_row)
 	local done_count = reduce(function(a, cell) if cell == 1 or cell == 3 then return a + 1 end return a end, 0, rule_row)
 	local red_count = reduce(function(a, cell) if cell == 2 then return a + 1 end return a end, 0, rule_row)
 	local bad_count = red_count + grey_count
-	if grey_count >= 7 then
+	if grey_count >= 7 or (done_count <= 0 and red_count <= 0) then
 		table.insert(row, -1) -- grey, this was a vacation week
 	elseif bad_count <= 0 then
 		table.insert(row, 1) -- deep green, perfection, done but not mandatory
@@ -57,11 +57,11 @@ local process_week = function(matrix, day_matrix, date, rules, day_first)
 	local row = {}
 	for rule_index, rule in ipairs(rules) do
 		local rule_row = {}  -- TODO: make a one-liner
-		local day_base_index = common.date_diff(date, day_first)
+		local day_base_index = math.tointeger(common.date_diff(date, day_first))
 		for day_index = 1, 7 do
 			table.insert(rule_row, day_matrix[day_base_index + day_index][rule_index])
 		end
-		process_week_rule(row, rule_row, date, rule)
+		process_week_rule(row, rule_row, rule)
 	end
 
 	table.insert(matrix, row)
