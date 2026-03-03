@@ -1,8 +1,12 @@
 1. Put schedule back into rule: UML.
 2. Bug: display non-existent as grey in day overview matrix.
+3. Massive simplification: remove rule_category table.
 --
-2. Put schedule back into rule: Lua.
-3. Put schedule back into rule: SQL.
+1. Massive simplification: remove start_date field in rule_schedule table.
+2. Massive simplification: move rule_schedule into rule.
+---
+1. Put schedule back into rule: Lua.
+2. Put schedule back into rule: SQL.
 3. Display tiers: day overview.
 4. Display tiers: day matrix overview.
 5. Display tiers: week matrix overview.

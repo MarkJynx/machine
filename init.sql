@@ -1,19 +1,11 @@
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE IF NOT EXISTS rule_category (
-	name TEXT PRIMARY KEY,
-	description TEXT NOT NULL UNIQUE,
-	motivation TEXT NOT NULL UNIQUE -- always focus on the positives only
-) STRICT, WITHOUT ROWID;
-
 -- TODO: ensure no gaps between order_priority entries
 CREATE TABLE IF NOT EXISTS rule (
 	name TEXT PRIMARY KEY, -- noun
-	rule_category_name TEXT NOT NULL,
 	description TEXT NOT NULL UNIQUE, -- verb
 	motivation TEXT NOT NULL, -- always focus on the positives only
-	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0),
-	FOREIGN KEY (rule_category_name) REFERENCES rule_category (name)
+	order_priority INTEGER NOT NULL UNIQUE CHECK(order_priority > 0)
 ) STRICT, WITHOUT ROWID;
 
 -- TODO: check against time overlaps for the same rule_name
@@ -54,31 +46,8 @@ CREATE TABLE IF NOT EXISTS rule_instance (
 
 -- TODO: make a precaution (REPLACE?) so one could run this script repetitively without errors
 
-INSERT INTO rule_category (name, description, motivation) VALUES (
-	"Image (internal)",
-	"One's immediate appearance and behavior",
-	"Feeling well about one's appearance."                        || char(10) ||
-	"Feeling well about how others perceive one's appearance."    || char(10) ||
-	"Feeling well about one's behavior."                          || char(10) ||
-	"Feeling well about how others perceive one's behavior."
-);
-
-INSERT INTO rule_category (name, description, motivation) VALUES (
-	"Image (external)",
-	"One's immediate surroundings",
-	"Feeling well about one's surroundings."                      || char(10) ||
-	"Feeling well about how others perceive one's surroundings."
-);
-
-INSERT INTO rule_category (name, description, motivation) VALUES (
-	"Bodybuilding",
-	"Building a better body",
-	"Looks. Confidence. Health. Performance. Endurance."
-);
-
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Early rise",
-	"Image (internal)",
 	"Rise from bed at 09:00 or earlier",
 	"Ability to take a thorough and laid-back approach to morning chores."          || char(10) ||
 	"Ability to relax and focus on oneself before diving into the day."             || char(10) ||
@@ -88,151 +57,133 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 	1
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Nail care",
-	"Image (internal)",
 	"Check and clip and file fingernails and toenails.",
 	"Looks. Style. Discipline & order.",
 	2
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Home cleaning",
-	"Image (external)",
 	"Clean home until results or effort spent is satisfactory.",
 	"Mood. Productivity. Image.",
 	3
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Shower",
-	"Image (internal)",
 	"Shower",
 	"Feeling fresh and clean.",
 	4
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Hair care",
-	"Image (internal)",
 	"Wash hair. Visit barber if deemed necessary. Apply products if deemed necessary.",
 	"Looks. Style. Discipline & order.",
 	5
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Face shave",
-	"Image (internal)",
 	"Cleanly shave facial hair.",
 	"Looks. Style. Discipline & order.",
 	6
 );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, tier, order_priority) VALUES (
 -- 	"Face care",
--- 	"Image (internal)",
 -- 	"Wash and moisturize face.",
 -- 	"Clear, healthy face skin.",
 -- 	7
 -- );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Dental care (after sleep)",
-	"Image (internal)",
 	"Brush teeth and wash mouth after sleep",
 	"Looks. Smell. Health. Money.",
 	8
 );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, tier, order_priority) VALUES (
 -- 	"Fresh clothes",
--- 	"Image (internal)",
 -- 	"Dress up with a full set of fresh, clean, ironed clothes and wear perfume.",
 -- 	"Looks. Freshness. Confidence. Image.",
 -- 	9
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, tier, order_priority) VALUES (
 -- 	"Productivity",
--- 	"Image (external)",
 -- 	"Be productive at work.",
 -- 	"Security. Discipline. Competence.",
 -- 	10
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, tier, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, tier, order_priority) VALUES (
 -- 	"Car care",
--- 	"Image (external)",
 -- 	"Wash car. Fuel car. Charge car battery. Take car to car shop.",
 -- 	"Clean, orderly vehicle. Image.",
 -- 	11
 -- );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Workout: push (A)",
-	"Bodybuilding",
 	"Full bodybuilding pushing workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
 	12
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Workout: push (B)",
-	"Bodybuilding",
 	"Full bodybuilding pushing workout (part 2/2).",
 	"Looks. Confidence. Health. Performance.",
 	13
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Workout: pull (A)",
-	"Bodybuilding",
 	"Full bodybuilding pulling workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
 	14
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Workout: pull (B)",
-	"Bodybuilding",
 	"Full bodybuilding pulling workout (part 2/2).",
 	"Looks. Confidence. Health. Performance.",
 	15
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Workout: legs (A)",
-	"Bodybuilding",
 	"Full bodybuilding leg workout (part 1/2).",
 	"Looks. Confidence. Health. Performance.",
 	16
 );
 
-INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 	"Workout: legs (B)",
-	"Bodybuilding",
 	"Full bodybuilding leg workout (part 2/2).",
 	"Looks. Confidence. Health. Performance.",
 	17
 );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Workout: core",
--- 	"Bodybuilding",
 -- 	"Full bodybuilding core workout.",
 -- 	"Looks. Confidence. Health. Performance.",
 -- 	18
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Workout: cardio",
--- 	"Bodybuilding",
 -- 	"At least an hour of zone two or more intense cardio.",
 -- 	"Confidence. Health. Endurance.",
 -- 	19
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Cooking",
 -- 	"Image (external)",
 -- 	"Meal-prep for the upcoming days, weeks or even months.",
@@ -240,7 +191,7 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 -- 	20
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Laundry",
 -- 	"Image (external)",
 -- 	"Do laundry.",
@@ -248,34 +199,30 @@ INSERT INTO rule (name, rule_category_name, description, motivation, order_prior
 -- 	21
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Body care",
--- 	"Image (internal)",
 -- 	"Shave body. Trim nose hair. Apply products.",
 -- 	"Looks. Sex. Image.",
 -- 	22
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Dental care (before sleep)",
--- 	"Image (internal)",
 -- 	"Brush teeth and wash mouth before sleep",
 -- 	"Looks. Smell. Health. Money.",
 -- 	23
 -- );
 
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Homemade food",
--- 	"Image (external)",
 -- 	"Eat only homemade food throughout the day.",
 -- 	"Health. Image. Diet. Control.",
 -- 	24
 -- );
 
 -- TODO: probably should be merged with homemade food
--- INSERT INTO rule (name, rule_category_name, description, motivation, order_priority) VALUES (
+-- INSERT INTO rule (name, description, motivation, order_priority) VALUES (
 -- 	"Diet",
--- 	"Bodybuilding",
 -- 	"Maintain diet appropriate for current bodybuilding goals. Track bodyweight.",
 -- 	"Achieve bodybuilding goals.",
 -- 	25
