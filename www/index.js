@@ -61,8 +61,6 @@ async function generate_matrix(week) {
 	let json = await response.json()
 	let matrix = week ? json.week_matrix : json.matrix
 
-	generate_matrix_rule_filter(json.rules)
-
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
 	let empty_cell = header_row.insertCell()
@@ -90,37 +88,6 @@ async function generate_matrix(week) {
 	}
 
 	document.body.appendChild(matrix_table)
-}
-
-function generate_matrix_rule_filter(rules) {
-	let rule_filter_table = document.createElement("table")
-	let header_row = rule_filter_table.insertRow()
-	for (let i = 0; i < rules.length; i++) {
-		let header_cell = header_row.insertCell()
-		header_cell.innerHTML = rules[i].name.split(" ").join("<br>")
-	}
-	let checkbox_row = rule_filter_table.insertRow()
-	for (let i = 0; i < rules.length; i++) {
-		let checkbox_cell = checkbox_row.insertCell()
-		let checkbox = document.createElement("input")
-		checkbox.type = "checkbox"
-		checkbox.checked = true
-		checkbox_cell.appendChild(checkbox)
-		checkbox.id = "rule_filter_" + String(i)
-		checkbox.onclick = filter_rule
-		// TODO: recalculate percentages
-	}
-	document.body.appendChild(rule_filter_table)
-}
-
-function filter_rule(e) {
-	let my_id = e.target.id
-	let index_str = my_id.substring(12) // TODO: do not use magic numbers
-	let target_class_name = "rule" + index_str
-	elems = document.getElementsByClassName(target_class_name)
-	for (let i = 0; i < elems.length; i++) {
-		elems[i].hidden = !e.target.checked
-	}
 }
 
 function insert_matrix_cell(row, rule_index, c) {
