@@ -2,9 +2,9 @@ async function main() {
 	// TODO: handle errors, validate with JSON schema
 	let date = get_url_date_string(window.location.search) || get_local_date_string()
 	if (url_params_is_weekmatrix(window.location.search)) {
-		generate_week_matrix()
+		generate_matrix(true)
 	} else if (url_params_is_matrix(window.location.search)) {
-		generate_matrix()
+		generate_matrix(false)
 	} else {
 		let day = await post_date_request("read_day", date)
 		let rules = await post_date_request("read_rules", date)
@@ -57,39 +57,12 @@ async function post_date_request(endpoint, date) {
 // Matrix generation
 
 async function generate_week_matrix() {
-	// TODO: refactor and merge common code with generate_matrix()
-	let response = await fetch("cgi-bin/read_matrix.lua")
-	let json = await response.json()
-	let matrix = json.week_matrix
-
-	generate_matrix_rule_filter(json.rules)
-
-	let matrix_table = document.createElement("table")
-	let header_row = matrix_table.insertRow()
-	let empty_cell = header_row.insertCell()
-	for (let i = 0; i < json.rules.length; i++) {
-		let header_cell = header_row.insertCell()
-		header_cell.className = "rule" + String(i)
-		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
-	}
-
-	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
-	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = add_days(first_monday, row_index * 7)
-		let row = matrix_table.insertRow()
-		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
-		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
-		}
-	}
-
-	document.body.appendChild(matrix_table)
 }
 
-async function generate_matrix() {
+async function generate_matrix(week) {
 	let response = await fetch("cgi-bin/read_matrix.lua")
 	let json = await response.json()
-	let matrix = json.matrix
+	let matrix = week ? json.week_matrix : json.matrix
 
 	generate_matrix_rule_filter(json.rules)
 
@@ -104,11 +77,16 @@ async function generate_matrix() {
 
 	let day_done_fully = [] // TODO: this is cheating, calculate from source material with functional programming
 
+	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = add_days(json.day_first, row_index)
+		let current_date = add_days(first_monday, row_index * 7)
 		let weekday = date_to_weekday(current_date)
 		let row = matrix_table.insertRow()
-		make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
+		if (week) {
+			make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
+		} else {
+			make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
+		}
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
 		}
@@ -192,7 +170,7 @@ function generate_day_empty(date, rules) {
 	header_cell.colSpan = 3
 	header_cell.innerText = date
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "🌐", function() { document.body.replaceChildren(); generate_matrix() })
+	make_button_cell(navigation_row, "🌐", function() { document.body.replaceChildren(); generate_matrix(false) })
 	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
 	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
 	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
@@ -230,7 +208,7 @@ function generate_day_full(date, day, rules) {
 	let navigation_table = document.createElement("table")
 	let navigation_row = navigation_table.insertRow()
 
-	make_button_cell(navigation_row, "🌐", function() { document.body.replaceChildren(); generate_matrix() })
+	make_button_cell(navigation_row, "🌐", function() { document.body.replaceChildren(); generate_matrix(false) })
 	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
 	make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
 	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
