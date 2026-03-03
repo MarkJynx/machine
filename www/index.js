@@ -69,7 +69,7 @@ async function generate_week_matrix() {
 	let empty_cell = header_row.insertCell()
 	for (let i = 0; i < json.rules.length; i++) {
 		let header_cell = header_row.insertCell()
-		header_cell.className = "rule" + String(json.rules[i].order_priority) // TODO: use something else
+		header_cell.className = "rule" + String(i) // TODO: use something else
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
 
@@ -79,7 +79,7 @@ async function generate_week_matrix() {
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			insert_matrix_cell(row, json.rules[col_index], matrix[row_index][col_index])
+			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
 		}
 	}
 
@@ -98,7 +98,7 @@ async function generate_matrix() {
 	let empty_cell = header_row.insertCell()
 	for (let i = 0; i < json.rules.length; i++) {
 		let header_cell = header_row.insertCell()
-		header_cell.className = "rule" + String(json.rules[i].order_priority)
+		header_cell.className = "rule" + String(i)
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
 	let last_header_cell = header_row.insertCell()
@@ -112,7 +112,7 @@ async function generate_matrix() {
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			insert_matrix_cell(row, json.rules[col_index], matrix[row_index][col_index])
+			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
 		}
 
 		let cell = row.insertCell()
@@ -184,7 +184,7 @@ function generate_matrix_rule_filter(rules) {
 		checkbox.type = "checkbox"
 		checkbox.checked = true
 		checkbox_cell.appendChild(checkbox)
-		checkbox.id = "rule_filter_" + String(rules[i].order_priority) // TODO: use something else
+		checkbox.id = "rule_filter_" + String(i) // TODO: use something else
 		checkbox.onclick = filter_rule
 		// TODO: recalculate percentages
 	}
@@ -193,16 +193,16 @@ function generate_matrix_rule_filter(rules) {
 
 function filter_rule(e) {
 	let my_id = e.target.id
-	let order_priority_str = my_id.substring(12) // TODO: do not use magic numbers
-	let target_class_name = "rule" + order_priority_str
+	let index_str = my_id.substring(12) // TODO: do not use magic numbers
+	let target_class_name = "rule" + index_str
 	elems = document.getElementsByClassName(target_class_name)
 	for (let i = 0; i < elems.length; i++) {
 		elems[i].hidden = !e.target.checked
 	}
 }
 
-function insert_matrix_cell(row, rule, c) {
-	let rule_class = "rule" + String(rule.order_priority)
+function insert_matrix_cell(row, rule_index, c) {
+	let rule_class = "rule" + String(rule_index)
 	let cell = row.insertCell()
 	let key = String(c)
 	let values = {
