@@ -35,7 +35,7 @@ function get_url_date_string(url) {
 
 function get_local_date_string() {
 	let tzoffset = (new Date()).getTimezoneOffset() * 60000 // offset in milliseconds
-	return new Date(new Date() - tzoffset).toISOString().substring(0, 10)
+	return new Date(new Date() - tzoffset).toISOString().substring(0, 10) // TODO: do not use magic numbers
 }
 
 function date_to_weekday(date) {
@@ -62,11 +62,14 @@ async function generate_week_matrix() {
 	let json = await response.json()
 	let matrix = json.week_matrix
 
+	generate_matrix_rule_filter(json.rules)
+
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
 	let empty_cell = header_row.insertCell()
 	for (let i = 0; i < json.rules.length; i++) {
 		let header_cell = header_row.insertCell()
+		header_cell.className = "rule" + String(json.rules[i].order_priority) // TODO: use something else
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
 
@@ -76,7 +79,7 @@ async function generate_week_matrix() {
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			insert_matrix_cell(row, matrix[row_index][col_index])
+			insert_matrix_cell(row, json.rules[col_index], matrix[row_index][col_index])
 		}
 	}
 
@@ -88,11 +91,14 @@ async function generate_matrix() {
 	let json = await response.json()
 	let matrix = json.matrix
 
+	generate_matrix_rule_filter(json.rules)
+
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
 	let empty_cell = header_row.insertCell()
 	for (let i = 0; i < json.rules.length; i++) {
 		let header_cell = header_row.insertCell()
+		header_cell.className = "rule" + String(json.rules[i].order_priority)
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
 	let last_header_cell = header_row.insertCell()
@@ -106,7 +112,7 @@ async function generate_matrix() {
 		let row = matrix_table.insertRow()
 		make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			insert_matrix_cell(row, matrix[row_index][col_index])
+			insert_matrix_cell(row, json.rules[col_index], matrix[row_index][col_index])
 		}
 
 		let cell = row.insertCell()
@@ -164,7 +170,39 @@ async function generate_matrix() {
 	document.body.appendChild(matrix_table)
 }
 
-function insert_matrix_cell(row, c) {
+function generate_matrix_rule_filter(rules) {
+	let rule_filter_table = document.createElement("table")
+	let header_row = rule_filter_table.insertRow()
+	for (let i = 0; i < rules.length; i++) {
+		let header_cell = header_row.insertCell()
+		header_cell.innerHTML = rules[i].name.split(" ").join("<br>")
+	}
+	let checkbox_row = rule_filter_table.insertRow()
+	for (let i = 0; i < rules.length; i++) {
+		let checkbox_cell = checkbox_row.insertCell()
+		let checkbox = document.createElement("input")
+		checkbox.type = "checkbox"
+		checkbox.checked = true
+		checkbox_cell.appendChild(checkbox)
+		checkbox.id = "rule_filter_" + String(rules[i].order_priority) // TODO: use something else
+		checkbox.onclick = filter_rule
+		// TODO: recalculate percentages
+	}
+	document.body.appendChild(rule_filter_table)
+}
+
+function filter_rule(e) {
+	let my_id = e.target.id
+	let order_priority_str = my_id.substring(12) // TODO: do not use magic numbers
+	let target_class_name = "rule" + order_priority_str
+	elems = document.getElementsByClassName(target_class_name)
+	for (let i = 0; i < elems.length; i++) {
+		elems[i].hidden = !e.target.checked
+	}
+}
+
+function insert_matrix_cell(row, rule, c) {
+	let rule_class = "rule" + String(rule.order_priority)
 	let cell = row.insertCell()
 	let key = String(c)
 	let values = {
@@ -177,7 +215,7 @@ function insert_matrix_cell(row, c) {
 		"3": "done_due"
 	}
 	if (key in values) {
-		cell.className = values[key]
+		cell.className = values[key] + " " + rule_class
 	}
 }
 
@@ -276,7 +314,7 @@ async function navigate_to_day(date, offset) {
 function add_days(date, days) {
 	let result = new Date(date)
 	result.setDate(result.getDate() + days)
-	return result.toISOString().substring(0, 10)
+	return result.toISOString().substring(0, 10)  // TODO: do not use magic numbers
 }
 
 async function create_day(date, rules) {
