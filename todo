@@ -1,22 +1,8 @@
-1. Put schedule back into rule: UML.
-2. Bug: display non-existent as grey in day overview matrix.
-3. Massive simplification: remove rule_category table.
-4. Massive simplification: remove start_date field in rule_schedule table.
-5. Massive simplification: remove stop_date field in rule_schedule table.
-6. Massive simplification: move rule_schedule into rule.
---
-1. Display tiers: day overview.
-2. Display tiers: day matrix overview.
-3. Display tiers: week matrix overview.
-4. Generate tags: day overview.
-5. Generate tags: day matrix overview.
-6. Generate tags: week matrix overview.
-7. Hide: day overview.
-8. Hide: day matrix overview.
-9. Hide: week matrix overview.
-10. Refactorization: use enums
-11. To hell with performance. Button pressed should redirect so that F5 would work.
-12. Fix create-day-in-the-middle bug.
+1. REFACTOR: Merge shallow and deep read.
+2. BUGFIX:   Fix create-in-the-middle bug.
+3. FEATURE:  Tiers.
+4. REFACTOR: Enumerations.
+5. REFACTOR: Make refresh work.
 
 --------------------------------------------
 
