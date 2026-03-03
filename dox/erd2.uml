@@ -4,29 +4,14 @@ skinparam linetype ortho
 hide circle
 hide empty members
 
-entity RuleCategory {
-    * Name <<PK>>
-    * Description
-    * Motivation
-}
-
 entity Rule {
     * Name <<PK>>
-    * RuleCategoryName <<FK>>
     * RuleTier
     * Description
     * Motivation
     * OrderPriority
-}
-
-entity RuleSchedule {
-    * ID <<PK>>
-    * RuleName <<FK>
-    * StartDate
-    * StopDate
     * Period
     * Weekdays
-    * Notes
 }
 
 entity RuleInstance {
@@ -44,10 +29,7 @@ entity Day {
     * Notes
 }
 
-RuleCategory ||--o{ Rule
 Rule ||--o{ RuleInstance
 Day ||--o{ RuleInstance
-RuleSchedule |o--o{ RuleInstance
-Rule ||--o{ RuleSchedule
 
 @enduml
