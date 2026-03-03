@@ -52,6 +52,7 @@ async function generate_matrix(week) {
 	let response = await fetch("cgi-bin/read_matrix.lua")
 	let json = await response.json()
 	let matrix = week ? json.week_matrix : json.matrix
+	let labels = week ? json.week_matrix_labels : json.matrix_labels
 
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
@@ -66,13 +67,11 @@ async function generate_matrix(week) {
 
 	let first_monday = add_days(json.day_first, (7 - date_to_weekday(json.day_first) + 1) % 7)
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		let current_date = week ? add_days(first_monday, row_index * 7) : add_days(json.day_first, row_index)
-		let weekday = date_to_weekday(current_date)
 		let row = matrix_table.insertRow()
 		if (week) {
-			make_button_cell(row, current_date, function() { navigate_to_day(current_date, 0) })
+			make_button_cell(row, labels[row_index], function() { navigate_to_day(labels[row_index], 0) })
 		} else {
-			make_button_cell(row, current_date + " [" + String(weekday) + "]", function() { navigate_to_day(current_date, 0) })
+			make_button_cell(row, labels[row_index], function() { navigate_to_day(labels[row_index], 0) })
 		}
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			insert_matrix_cell(row, col_index, matrix[row_index][col_index])

@@ -18,9 +18,10 @@ local process_day_rule = function(row, date, rule, day_lt)
 	return row
 end
 
-local process_day = function(matrix, date, rules, day_lt)
+local process_day = function(labels, matrix, date, rules, day_lt)
 	local row = reduce(function(a, r) return process_day_rule(a, date, r, day_lt) end, {}, rules)
 	table.insert(matrix, row)
+	table.insert(labels, date)
 end
 
 local process_week_rule = function(row, rule_row, rule)
@@ -42,7 +43,7 @@ local process_week_rule = function(row, rule_row, rule)
 	return row
 end
 
-local process_week = function(matrix, day_matrix, date, rules, day_first)
+local process_week = function(labels, matrix, day_matrix, date, rules, day_first)
 	-- TODO: make last week day configurable, not hard-coded to 7
 	if common.date_weekday(date) ~= 7 then
 		return
@@ -53,6 +54,7 @@ local process_week = function(matrix, day_matrix, date, rules, day_first)
 		return
 	end
 	date = first_week_day
+	table.insert(labels, date)
 
 	local row = {}
 	for rule_index, rule in ipairs(rules) do
@@ -70,14 +72,16 @@ end
 local main = function()
 	common.http_enforce_method("GET")
 	local json = common.db_read_deep()
+	json.matrix_labels = {}
 	json.matrix = {}
+	json.week_matrix_labels = {}
 	json.week_matrix = {}
 
 	if json.day_first and json.day_last then
 		local day_count = common.date_diff(json.day_last, json.day_first) + 1
 		each(function(i)
-			process_day(json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_lt)
-			process_week(json.week_matrix, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_first)
+			process_day(json.matrix_labels, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_lt)
+			process_week(json.week_matrix_labels, json.week_matrix, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_first)
 		end, range(day_count))
 	end
 	local response = cjson.encode(json)
