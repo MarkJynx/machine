@@ -108,14 +108,6 @@ function insert_matrix_cell(row, rule_index, c) {
 	}
 }
 
-function rule_array_to_percentage(arr) {
-	// TODO: do not use magic numbers
-	// TODO: configurable formulas
-	let fraction = arr.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
-	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
-	return total > 0 ? String(Math.round(fraction / total * 100)) + "%" : "N/A"
-}
-
 // Day generation
 
 function generate_day(date, day, rules) {
