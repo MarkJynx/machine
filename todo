@@ -2,6 +2,7 @@
 2. Bug: display non-existent as grey in day overview matrix.
 3. Massive simplification: remove rule_category table.
 4. Massive simplification: remove start_date field in rule_schedule table.
+5. Massive simplification: remove stop_date field in rule_schedule table.
 --
 1. Massive simplification: move rule_schedule into rule.
 2. Refactorization: use enums
@@ -14,6 +15,7 @@
 9. Hide: day overview.
 10. Hide: day matrix overview.
 11. Hide: week matrix overview.
+12. To hell with performance. Button pressed should redirect so that F5 would work.
 
 --------------------------------------------
 

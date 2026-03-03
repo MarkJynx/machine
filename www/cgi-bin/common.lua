@@ -98,8 +98,7 @@ end
 
 local db_get_rule_schedule = function(db, rule_name, date)
 	local q = {}
-	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule_name))
-	table.insert(q, string.format("(end_date IS NULL OR end_date >= '%s')", date))
+	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s'", rule_name))
 	return db_collect_single(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
 end
 
@@ -153,7 +152,7 @@ local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
 
 	local schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
 	local start_date = r.day_first
-	local stop_date = schedule.stop_date and min({schedule.stop_day, r.day_last}) or r.day_last
+	local stop_date = r.day_last
 
 	local not_done_streak = math.huge
 	local day_count = common.date_diff(stop_date, start_date) + 1

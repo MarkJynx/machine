@@ -24,12 +24,7 @@ local process_day = function(matrix, date, rules, day_lt)
 end
 
 local date_in_schedule = function(date, schedule)
-	local end_ok = true
-	if schedule.stop_date then
-		end_ok = common.date_diff(schedule.stop_date, date) >= 0
-	end
-	-- TODO: weekday_ok?
-	return end_ok
+	return true
 end
 
 local date_range_in_schedule = function(date, count, schedule)
