@@ -99,7 +99,6 @@ end
 local db_get_rule_schedule = function(db, rule_name, date)
 	local q = {}
 	table.insert(q, string.format("SELECT * FROM rule_schedule WHERE rule_name = '%s' AND ", rule_name))
-	table.insert(q, string.format("start_date <= '%s' AND ", date))
 	table.insert(q, string.format("(end_date IS NULL OR end_date >= '%s')", date))
 	return db_collect_single(db, table.concat(q)) -- TODO: this may fail, there can be multiple rules in same date span but with different weekdays
 end
@@ -151,19 +150,12 @@ local db_read_deep_rule_schedule_lt = function(lt, schedule, done_lt, r)
 		return lt
 	end
 
+
 	local schedule_weekdays = common.get_rule_schedule_weekdays(schedule)
-	local start_date = max({schedule.start_date, r.day_first})
+	local start_date = r.day_first
 	local stop_date = schedule.stop_date and min({schedule.stop_day, r.day_last}) or r.day_last
 
 	local not_done_streak = math.huge
-	local day_count_before = min({schedule.period, common.date_diff(start_date, r.day_first)})
-	for _, date in map(function(i) return common.date_add(start_date, -i) end, range(1, day_count_before, 1)) do
-		if done_lt[date] then
-			not_done_streak = common.date_diff(start_date, date)
-			break
-		end
-	end
-
 	local day_count = common.date_diff(stop_date, start_date) + 1
 	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(1, day_count, 1)) do
 		lt[date] = schedule.period <= not_done_streak and schedule_weekdays[common.date_weekday(date)]
@@ -178,7 +170,7 @@ end
 
 local db_read_deep_rule = function(r, db, rule)
 	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
-	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "start_date"))
+	rule.schedules = db_collect(db, string.format(s, "rule_schedule", "", "ROWID"))
 	rule.instances = db_collect(db, string.format(s, "rule_instance", "", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = (i.done == 1) return a end, {}, rule.instances)
 	rule.schedule_lt = reduce(function(a, s) return db_read_deep_rule_schedule_lt(a, s, rule.done_lt, r) end, {}, rule.schedules)
