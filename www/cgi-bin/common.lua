@@ -205,7 +205,7 @@ end
 local db_backup_rule_instance = function(i, db, backup)
 	local s = "INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ("
 	local rule_name = "'" .. i.rule_name .. "'," .. string.rep(" ", 26 - #i.rule_name) -- TODO: dynamic padding
-	s = s .. string.format("%s, '%s', %d, %2d);\n", rule_name, i.day_id, i.done, i.order_priority)
+	s = s .. string.format("%s'%s', %d, %2d);\n", rule_name, i.day_id, i.done, i.order_priority)
 	backup:write(s)
 end
 

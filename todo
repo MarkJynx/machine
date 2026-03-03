@@ -16,6 +16,7 @@
 9. Hide: week matrix overview.
 10. Refactorization: use enums
 11. To hell with performance. Button pressed should redirect so that F5 would work.
+12. Fix create-day-in-the-middle bug.
 
 --------------------------------------------
 
