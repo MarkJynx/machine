@@ -61,11 +61,7 @@ async function generate_matrix(week) {
 
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		let row = matrix_table.insertRow()
-		if (week) {
-			make_button_cell(row, labels[row_index], function() { navigate_to_day(labels[row_index], 0) })
-		} else {
-			make_button_cell(row, labels[row_index], function() { navigate_to_day(labels[row_index], 0) })
-		}
+		make_button_cell(row, labels[row_index], function() { navigate_to_day(labels[row_index], 0) })
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
 		}
