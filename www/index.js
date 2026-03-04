@@ -1,5 +1,4 @@
 async function main() {
-	// TODO: handle errors, validate with JSON schema
 	let args = parse_url_params(window.location.search)
 	if (args.view != "day") {
 		generate_matrix(args.view == "weekmatrix", args.start_date, args.stop_date)
