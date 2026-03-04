@@ -61,11 +61,8 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	let empty_cell = header_row.insertCell()
 	for (let i = 0; i < json.rules.length; i++) {
 		let header_cell = header_row.insertCell()
-		header_cell.className = "rule" + String(i)
 		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
 	}
-
-	let day_done_fully = [] // TODO: this is cheating, calculate from source material with functional programming
 
 	for (let row_index = 0; row_index < matrix.length; row_index++) {
 		if (!week_view && start_date != null && labels[row_index] < start_date) {
@@ -96,7 +93,6 @@ function insert_matrix_cell(row, rule_index, c) {
 	let cell = row.insertCell()
 	let key = String(c)
 	let values = { "-2": "no_day", "-1": "no_instance", "0": "done0due0", "1": "done1due0", "2": "done0due1", "3": "done1due1" }
-	cell.className = values[key] + " " + rule_class
 }
 
 // Day generation
