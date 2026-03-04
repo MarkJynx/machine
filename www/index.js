@@ -131,11 +131,11 @@ function generate_day_empty(date, rules) {
 	header_cell.colSpan = 5
 	header_cell.innerText = date
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) })
-	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) })
-	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
+	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) }) /// FIXME: make a link
 	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
-	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
+	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) }) /// FIXME: make a link
 	document.body.appendChild(navigation_table)
 }
 
@@ -169,11 +169,11 @@ function generate_day_full(date, day, rules) {
 
 	let navigation_table = document.createElement("table")
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) })
-	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) })
-	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) })
+	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) }) /// FIXME: make a link
 	make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
-	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) })
+	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) }) /// FIXME: make a link
 	make_button_cell(navigation_row, "💾", function() { save_day(date) })
 	document.body.appendChild(navigation_table)
 }
