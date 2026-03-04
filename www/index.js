@@ -89,11 +89,9 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 }
 
 function insert_matrix_cell(row, rule_index, c) {
-	let rule_class = "rule" + String(rule_index)
 	let cell = row.insertCell()
-	let key = String(c)
 	let values = { "-2": "no_day", "-1": "no_instance", "0": "done0due0", "1": "done1due0", "2": "done0due1", "3": "done1due1" }
-	cell.className = values[key]
+	cell.className = values[String(c)]
 }
 
 // Day generation
