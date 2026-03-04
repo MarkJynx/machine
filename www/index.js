@@ -58,26 +58,21 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
-	let empty_cell = header_row.insertCell()
-	for (let i = 0; i < json.rules.length; i++) {
+
+	// Header
+	header_row.insertCell() // empty cell
+	json.rules.forEach(function(value, index) {
 		let header_cell = header_row.insertCell()
-		header_cell.innerHTML = json.rules[i].name.split(" ").join("<br>")
-	}
+		header_cell.innerHTML = json.rules[index].name.split(" ").join("<br>")
+	});
 
-	for (let row_index = 0; row_index < matrix.length; row_index++) {
-		if (!week_view && start_date != null && labels[row_index] < start_date) {
-			continue
-		}
-
+	// Body
+	for (let row_index = (start_date ? labels.indexOf(start_date) : 0); row_index < (stop_date ? labels.indexOf(stop_date) + 1 : matrix.length); row_index++) {
 		let row = matrix_table.insertRow()
 		let week_href = "?view=matrix&start_date=" + labels[row_index] + "&stop_date=" + add_days(labels[row_index], 6)
 		make_button_cell(row, labels[row_index], week_view ? week_href :  "?date=" + labels[row_index])
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
-		}
-
-		if (!week_view && stop_date != null && labels[row_index] >= stop_date) {
-			break
 		}
 	}
 
