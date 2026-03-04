@@ -64,16 +64,14 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	json.rules.forEach(function(value, index) {
 		let header_cell = header_row.insertCell()
 		header_cell.innerHTML = json.rules[index].name.split(" ").join("<br>")
-	});
+	})
 
 	// Body
 	for (let i = (start_date ? labels.indexOf(start_date) : 0); i < (stop_date ? labels.indexOf(stop_date) + 1 : matrix.length); i++) {
 		let row = matrix_table.insertRow()
 		let week_href = "?view=matrix&start_date=" + labels[i] + "&stop_date=" + add_days(labels[i], 6)
 		make_button_cell(row, labels[i], week_view ? week_href :  "?date=" + labels[i])
-		for (let j = 0; j < matrix[i].length; j++) {
-			insert_matrix_cell(row, matrix[i][j])
-		}
+		matrix[i].forEach(function(value, index) { insert_matrix_cell(row, value) })
 	}
 
 	document.body.appendChild(matrix_table)
