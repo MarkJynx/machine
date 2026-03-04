@@ -18,17 +18,11 @@ function parse_url_params(url) {
 		results.view = args.get("view")
 	}
 
-	if (args.has("date") && args.get("date") && args.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
-		results.date = args.get("date")
-	}
-
-	if (args.has("start_date") && args.get("start_date") && args.get("start_date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
-		results.start_date = args.get("start_date")
-	}
-
-	if (args.has("stop_date") && args.get("stop_date") && args.get("stop_date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
-		results.stop_date = args.get("stop_date")
-	}
+	["date", "start_date", "stop_date"].forEach(function(value, index) {
+		if (args.has(value) && args.get(value) && args.get(value).match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+			results[value] = args.get(value)
+		}
+	});
 
 	return results
 }
