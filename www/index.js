@@ -81,9 +81,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	document.body.appendChild(matrix_table)
 
 	let navigation_table = document.createElement("table")
-	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", "?view=weekmatrix")
-	make_button_cell(navigation_row, "1", "?view=matrix")
+	insert_navigation_row(navigation_table, null)
 	document.body.appendChild(navigation_table)
 }
 
@@ -122,13 +120,20 @@ function generate_day_empty(date, rules) {
 	let header_cell = header_row.insertCell()
 	header_cell.colSpan = 5
 	header_cell.innerText = date
+	let navigation_row = insert_navigation_row(navigation_table, date)
+	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
+	document.body.appendChild(navigation_table)
+}
+
+function insert_navigation_row(navigation_table, date) {
 	let navigation_row = navigation_table.insertRow()
 	make_button_cell(navigation_row, "7", "?view=weekmatrix")
 	make_button_cell(navigation_row, "1", "?view=matrix")
-	make_button_cell(navigation_row, "←", "?date=" + add_days(date, -1))
-	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
-	make_button_cell(navigation_row, "→", "?date=" + add_days(date, 1))
-	document.body.appendChild(navigation_table)
+	if (date != null) {
+		make_button_cell(navigation_row, "←", "?date=" + add_days(date, -1))
+		make_button_cell(navigation_row, "→", "?date=" + add_days(date, 1))
+	}
+	return navigation_row
 }
 
 function generate_day_full(date, day, rules) {
@@ -160,12 +165,8 @@ function generate_day_full(date, day, rules) {
 	document.body.appendChild(task_table)
 
 	let navigation_table = document.createElement("table")
-	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", "?view=weekmatrix")
-	make_button_cell(navigation_row, "1", "?view=matrix")
-	make_button_cell(navigation_row, "←", "?date=" + add_days(date, -1))
+	let navigation_row = insert_navigation_row(navigation_table, date)
 	make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
-	make_button_cell(navigation_row, "→", "?date=" + add_days(date, 1))
 	make_button_cell(navigation_row, "💾", function() { save_day(date) })
 	document.body.appendChild(navigation_table)
 }
