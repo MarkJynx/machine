@@ -18,15 +18,15 @@ function parse_url_params(url) {
 		results.view = args.get("view")
 	}
 
-	if (args.size == 1 && args.has("date") && args.get("date") && args.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+	if (args.has("date") && args.get("date") && args.get("date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 		results.date = args.get("date")
 	}
 
-	if (args.size == 1 && args.has("start_date") && args.get("start_date") && args.get("start_date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+	if (args.has("start_date") && args.get("start_date") && args.get("start_date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 		results.start_date = args.get("start_date")
 	}
 
-	if (args.size == 1 && args.has("stop_date") && args.get("stop_date") && args.get("stop_date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+	if (args.has("stop_date") && args.get("stop_date") && args.get("stop_date").match(/^\d{4}-\d{2}-\d{2}$/) != null) {
 		results.stop_date = args.get("stop_date")
 	}
 
@@ -73,10 +73,8 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		}
 
 		let row = matrix_table.insertRow()
-		let fn = week_view
-		       ? function() { document.body.replaceChildren(); generate_matrix(false, labels[row_index], add_days(labels[row_index], 6)); }
-		       : function() { navigate_to_day(labels[row_index], 0) }
-		make_button_cell(row, labels[row_index], fn)
+		let week_href = "?view=matrix&start_date=" + labels[row_index] + "&stop_date=" + add_days(labels[row_index], 6)
+		make_button_cell(row, labels[row_index], week_view ? week_href :  "?date=" + labels[row_index])
 		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
 			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
 		}
@@ -90,8 +88,8 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 
 	let navigation_table = document.createElement("table")
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) })
-	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) })
+	make_button_cell(navigation_row, "7", "?view=weekmatrix")
+	make_button_cell(navigation_row, "1", "?view=matrix")
 	document.body.appendChild(navigation_table)
 }
 
@@ -131,11 +129,11 @@ function generate_day_empty(date, rules) {
 	header_cell.colSpan = 5
 	header_cell.innerText = date
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) }) /// FIXME: make a link
-	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) }) /// FIXME: make a link
-	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "7", "?view=weekmatrix")
+	make_button_cell(navigation_row, "1", "?view=matrix")
+	make_button_cell(navigation_row, "←", "?date=" + add_days(date, -1))
 	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
-	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "→", "?date=" + add_days(date, 1))
 	document.body.appendChild(navigation_table)
 }
 
@@ -169,11 +167,11 @@ function generate_day_full(date, day, rules) {
 
 	let navigation_table = document.createElement("table")
 	let navigation_row = navigation_table.insertRow()
-	make_button_cell(navigation_row, "7", function() { document.body.replaceChildren(); generate_matrix(true) }) /// FIXME: make a link
-	make_button_cell(navigation_row, "1", function() { document.body.replaceChildren(); generate_matrix(false) }) /// FIXME: make a link
-	make_button_cell(navigation_row, "←", function() { navigate_to_day(date, -1) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "7", "?view=weekmatrix")
+	make_button_cell(navigation_row, "1", "?view=matrix")
+	make_button_cell(navigation_row, "←", "?date=" + add_days(date, -1))
 	make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
-	make_button_cell(navigation_row, "→", function() { navigate_to_day(date, 1) }) /// FIXME: make a link
+	make_button_cell(navigation_row, "→", "?date=" + add_days(date, 1))
 	make_button_cell(navigation_row, "💾", function() { save_day(date) })
 	document.body.appendChild(navigation_table)
 }
@@ -183,19 +181,11 @@ function make_button_cell(row, txt, fn) {
 	let button = document.createElement("input")
 	button.type = "button"
 	button.value = txt
-	button.onclick = fn
+	button.onclick = typeof(fn) == "string" ? function() { window.location.href = fn } : fn
 	cell.appendChild(button)
 }
 
 // Navigation row callbacks
-
-async function navigate_to_day(date, offset) {
-	document.body.innerHTML = ""
-	let new_date = add_days(date, offset)
-	let new_day = await post_date_request("read_day", new_date)
-	let new_rules = await post_date_request("read_rules", new_date)
-	generate_day(new_date, new_day, new_rules)
-}
 
 function add_days(date, days) {
 	let result = new Date(date)
