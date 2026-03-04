@@ -93,8 +93,8 @@ function generate_day(date, day, rules) {
 	let task_table = document.createElement("table")
 	task_table.id = "task_table"
 
-	let header_row = task_table.insertRow()
-	let header_cell = header_row.insertCell()
+	let header_cell = task_table.insertRow().insertCell()
+	header_cell.colSpan = 5
 	header_cell.innerText = date
 
 	if (day) {
