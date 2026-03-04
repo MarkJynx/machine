@@ -165,7 +165,7 @@ function update_day_totals(rules, matrix) {
 
 	document.getElementById("streak_row_total").innerText = current_perfect_row_streak + " / " + longest_perfect_row_streak
 	document.getElementById("streak_row_total").style.fontWeight = (current_perfect_row_streak == longest_perfect_row_streak) ? "bold" : "normal"
-	document.getElementById("total_row_total").innerText = perfect_row_total > 0 ? String(Math.round(perfect_row_count / perfect_row_total * 100)) + "%" : "N/A"
+	document.getElementById("total_row_total").innerHTML = perfect_row_total > 0 ? perfect_row_count + " / " + perfect_row_total + "<br>" + String(Math.round(perfect_row_count / perfect_row_total * 100)) + "%" : "N/A"
 }
 
 function insert_matrix_cell(row, rule_index, c) {
