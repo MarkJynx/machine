@@ -3,9 +3,8 @@ async function main() {
 	if (args.view != "day") {
 		generate_matrix(args.view == "weekmatrix", args.start_date, args.stop_date)
 	} else {
-		let day = await post_date_request("read_day", args.date)
-		let rules = await post_date_request("read_rules", args.date)
-		generate_day(args.date, day, rules)
+		let json = await post_date_request("read_day", args.date)
+		generate_day(args.date, json.day, json.rules)
 	}
 }
 
@@ -96,7 +95,6 @@ function generate_day(date, day, rules) {
 
 	let header_row = task_table.insertRow()
 	let header_cell = header_row.insertCell()
-	header_cell.colSpan = 5
 	header_cell.innerText = date
 
 	if (day) {
@@ -117,8 +115,9 @@ function generate_day(date, day, rules) {
 			cell.appendChild(selection)
 		}
 
-		document.body.appendChild(task_table)
 	}
+
+	document.body.appendChild(task_table)
 
 	let navigation_table = document.createElement("table")
 	let navigation_row = insert_navigation_row(navigation_table, date)
