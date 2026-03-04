@@ -98,22 +98,18 @@ function generate_day(date, day, rules) {
 	header_cell.innerText = date
 
 	if (day) {
-		if (Array.isArray(day.rule_instances)) {
-			day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
-		}
+		day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
 
-		if (Array.isArray(rules)) {
-			let row = task_table.insertRow()
-			let cell = row.insertCell()
-			make_button_cell(row, "↑", move_up)
-			make_button_cell(row, "↓", move_down)
-			make_button_cell(row, "+", insert_task)
+		let row = task_table.insertRow()
+		row.insertCell()
+		make_button_cell(row, "↑", move_up)
+		make_button_cell(row, "↓", move_down)
+		make_button_cell(row, "+", insert_task)
 
-			cell = row.insertCell()
-			let selection = document.createElement("select")
-			rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) }) // TODO: forEach
-			cell.appendChild(selection)
-		}
+		let selection_cell = row.insertCell()
+		let selection = document.createElement("select")
+		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) }) // TODO: forEach
+		selection_cell.appendChild(selection)
 
 	}
 
