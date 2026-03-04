@@ -67,12 +67,12 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	});
 
 	// Body
-	for (let row_index = (start_date ? labels.indexOf(start_date) : 0); row_index < (stop_date ? labels.indexOf(stop_date) + 1 : matrix.length); row_index++) {
+	for (let i = (start_date ? labels.indexOf(start_date) : 0); i < (stop_date ? labels.indexOf(stop_date) + 1 : matrix.length); i++) {
 		let row = matrix_table.insertRow()
-		let week_href = "?view=matrix&start_date=" + labels[row_index] + "&stop_date=" + add_days(labels[row_index], 6)
-		make_button_cell(row, labels[row_index], week_view ? week_href :  "?date=" + labels[row_index])
-		for (let col_index = 0; col_index < matrix[row_index].length; col_index++) {
-			insert_matrix_cell(row, col_index, matrix[row_index][col_index])
+		let week_href = "?view=matrix&start_date=" + labels[i] + "&stop_date=" + add_days(labels[i], 6)
+		make_button_cell(row, labels[i], week_view ? week_href :  "?date=" + labels[i])
+		for (let j = 0; j < matrix[i].length; j++) {
+			insert_matrix_cell(row, matrix[i][j])
 		}
 	}
 
@@ -83,7 +83,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	document.body.appendChild(navigation_table)
 }
 
-function insert_matrix_cell(row, rule_index, c) {
+function insert_matrix_cell(row, c) {
 	let cell = row.insertCell()
 	let values = { "-2": "no_day", "-1": "no_instance", "0": "done0due0", "1": "done1due0", "2": "done0due1", "3": "done1due1" }
 	cell.className = values[String(c)]
