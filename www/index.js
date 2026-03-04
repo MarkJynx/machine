@@ -42,6 +42,12 @@ async function post_date_request(endpoint, date) {
 	return await response.json()
 }
 
+function add_days(date, days) {
+	let result = new Date(date)
+	result.setDate(result.getDate() + days)
+	return result.toISOString().substring(0, 10)  // TODO: do not use magic numbers
+}
+
 // Matrix generation
 
 async function generate_matrix(week_view, start_date=null, stop_date=null) {
@@ -97,21 +103,44 @@ function insert_matrix_cell(row, rule_index, c) {
 
 function generate_day(date, day, rules) {
 	document.body.replaceChildren()
-	if (day == null) {
-		generate_day_empty(date, rules)
-	} else {
-		generate_day_full(date, day, rules)
-	}
-}
 
-function generate_day_empty(date, rules) {
-	let navigation_table = document.createElement("table")
-	let header_row = navigation_table.insertRow()
+	let task_table = document.createElement("table")
+	task_table.id = "task_table"
+
+	let header_row = task_table.insertRow()
 	let header_cell = header_row.insertCell()
 	header_cell.colSpan = 5
 	header_cell.innerText = date
+
+	if (day) {
+		if (Array.isArray(day.rule_instances)) {
+			day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
+		}
+
+		if (Array.isArray(rules)) {
+			let row = task_table.insertRow()
+			let cell = row.insertCell()
+			make_button_cell(row, "↑", move_up)
+			make_button_cell(row, "↓", move_down)
+			make_button_cell(row, "+", insert_task)
+
+			cell = row.insertCell()
+			let selection = document.createElement("select")
+			rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) }) // TODO: forEach
+			cell.appendChild(selection)
+		}
+
+		document.body.appendChild(task_table)
+	}
+
+	let navigation_table = document.createElement("table")
 	let navigation_row = insert_navigation_row(navigation_table, date)
-	make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
+	if (day) {
+		make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
+		make_button_cell(navigation_row, "💾", function() { save_day(date) })
+	} else {
+		make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
+	}
 	document.body.appendChild(navigation_table)
 }
 
@@ -126,41 +155,6 @@ function insert_navigation_row(navigation_table, date) {
 	return navigation_row
 }
 
-function generate_day_full(date, day, rules) {
-	let task_table = document.createElement("table")
-	task_table.id = "task_table"
-
-	let header_row = task_table.insertRow()
-	let header_cell = header_row.insertCell()
-	header_cell.colSpan = 5
-	header_cell.innerText = date
-
-	if (Array.isArray(day.rule_instances)) {
-		day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
-	}
-
-	if (Array.isArray(rules)) {
-		let row = task_table.insertRow()
-		let cell = row.insertCell()
-		make_button_cell(row, "↑", move_up)
-		make_button_cell(row, "↓", move_down)
-		make_button_cell(row, "+", insert_task)
-
-		cell = row.insertCell()
-		let selection = document.createElement("select")
-		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) }) // TODO: forEach
-		cell.appendChild(selection)
-	}
-
-	document.body.appendChild(task_table)
-
-	let navigation_table = document.createElement("table")
-	let navigation_row = insert_navigation_row(navigation_table, date)
-	make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
-	make_button_cell(navigation_row, "💾", function() { save_day(date) })
-	document.body.appendChild(navigation_table)
-}
-
 function make_button_cell(row, txt, fn) {
 	let cell = row.insertCell()
 	let button = document.createElement("input")
@@ -171,12 +165,6 @@ function make_button_cell(row, txt, fn) {
 }
 
 // Navigation row callbacks
-
-function add_days(date, days) {
-	let result = new Date(date)
-	result.setDate(result.getDate() + days)
-	return result.toISOString().substring(0, 10)  // TODO: do not use magic numbers
-}
 
 async function create_day(date, rules) {
 	let day = await post_date_request("create_day", date)
