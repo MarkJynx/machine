@@ -63,7 +63,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	header_row.insertCell() // empty cell
 	json.rules.forEach(function(value, index) {
 		let header_cell = header_row.insertCell()
-		header_cell.className = "rule" + String(index)
+		header_cell.className = "rule" + index
 		header_cell.innerHTML = json.rules[index].name.split(" ").join("<br>")
 	})
 
@@ -75,11 +75,35 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		matrix[i].forEach(function(value, index) { insert_matrix_cell(row, index, value) })
 	}
 
+	let streak_row = matrix_table.insertRow()
+	let total_row = matrix_table.insertRow()
+	streak_row.insertCell().innerText = "Streak"
+	total_row.insertCell().innerText = "%"
+	json.rules.forEach(function(rule, index) {
+		let col = matrix.map((row) => row[index]) // TODO: optimize, calculate all columns stats in one gow
+		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
+		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
+		let longest_streak = Math.max(...current_streaks)
+		let streak_cell = streak_row.insertCell()
+		streak_cell.className = "rule" + index
+		streak_cell.innerText = current_streak + " / " + longest_streak
+		streak_cell.style.fontWeight = (current_streak == longest_streak) ? "bold" : "normal"
+		total_row.insertCell().innerText = rule_array_to_percentage(col)
+	})
+
 	document.body.appendChild(matrix_table)
 
 	let navigation_table = document.createElement("table")
 	insert_navigation_row(navigation_table, null)
 	document.body.appendChild(navigation_table)
+}
+
+function rule_array_to_percentage(arr) {
+	// TODO: do not use magic numbers
+	// TODO: configurable formulas
+	let fraction = arr.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
+	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
+	return total > 0 ? String(Math.round(fraction / total * 100)) + "%" : "N/A"
 }
 
 function generate_matrix_rule_filter(rules) {
@@ -99,7 +123,7 @@ function generate_matrix_rule_filter(rules) {
 }
 
 function insert_matrix_cell(row, rule_index, c) {
-	let rule_class = "rule" + String(rule_index)
+	let rule_class = "rule" + rule_index
 	let cell = row.insertCell()
 	let values = { "-2": "no_day", "-1": "no_instance", "0": "done0due0", "1": "done1due0", "2": "done0due1", "3": "done1due1" }
 	cell.className = values[String(c)] + " " + rule_class
