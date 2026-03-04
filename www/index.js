@@ -54,7 +54,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	let matrix = week_view ? json.week_matrix : json.matrix
 	let labels = week_view ? json.week_matrix_labels : json.matrix_labels
 
-	generate_matrix_rule_filter(json.rules)
+	generate_matrix_rule_filter(json.rules, matrix)
 
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
@@ -66,6 +66,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		header_cell.className = "rule" + index
 		header_cell.innerHTML = json.rules[index].name.split(" ").join("<br>")
 	})
+	header_row.insertCell().innerText = "%"
 
 	// Body
 	for (let i = (start_date ? labels.indexOf(start_date) : 0); i < (stop_date ? labels.indexOf(stop_date) + 1 : matrix.length); i++) {
@@ -73,6 +74,9 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		let week_href = "?view=matrix&start_date=" + labels[i] + "&stop_date=" + add_days(labels[i], 6)
 		make_button_cell(row, labels[i], week_view ? week_href :  "?date=" + labels[i])
 		matrix[i].forEach(function(value, index) { insert_matrix_cell(row, index, value) })
+		let row_total_cell = row.insertCell()
+		row_total_cell.className = "row_total"
+		row_total_cell.id = "row_total" + i
 	}
 
 	let streak_row = matrix_table.insertRow()
@@ -80,7 +84,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	streak_row.insertCell().innerText = "Streak"
 	total_row.insertCell().innerText = "%"
 	json.rules.forEach(function(rule, index) {
-		let col = matrix.map((row) => row[index]) // TODO: optimize, calculate all columns stats in one gow
+		let col = matrix.map((row) => row[index]) // TODO: optimize, calculate all columns stats in one row
 		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
 		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
 		let longest_streak = Math.max(...current_streaks)
@@ -88,10 +92,15 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		streak_cell.className = "rule" + index
 		streak_cell.innerText = current_streak + " / " + longest_streak
 		streak_cell.style.fontWeight = (current_streak == longest_streak) ? "bold" : "normal"
-		total_row.insertCell().innerText = rule_array_to_percentage(col)
+		let total_cell = total_row.insertCell()
+		total_cell.className = "rule" + index
+		total_cell.innerText = rule_array_to_percentage(col)
 	})
+	streak_row.insertCell().id = "streak_row_total"
+	total_row.insertCell().id = "total_row_total"
 
 	document.body.appendChild(matrix_table)
+	update_day_totals(json.rules, matrix)
 
 	let navigation_table = document.createElement("table")
 	insert_navigation_row(navigation_table, null)
@@ -99,14 +108,13 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 }
 
 function rule_array_to_percentage(arr) {
-	// TODO: do not use magic numbers
-	// TODO: configurable formulas
+	// TODO: do not use magic numbers, configurable formulas
 	let fraction = arr.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
 	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
 	return total > 0 ? String(Math.round(fraction / total * 100)) + "%" : "N/A"
 }
 
-function generate_matrix_rule_filter(rules) {
+function generate_matrix_rule_filter(rules, matrix) {
 	let rule_filter_table = document.createElement("table")
 	let header_row = rule_filter_table.insertRow()
 	let checkbox_row = rule_filter_table.insertRow()
@@ -116,10 +124,48 @@ function generate_matrix_rule_filter(rules) {
 		checkbox.type = "checkbox"
 		checkbox.checked = true
 		checkbox.id = "rule_filter_" + index
-		checkbox.onclick = function(e) { Array.from(document.getElementsByClassName("rule" + index)).forEach(function(c) { c.hidden = !e.target.checked })}
+		checkbox.onclick = function(e) {
+			Array.from(document.getElementsByClassName("rule" + index)).forEach(function(c) {
+				c.hidden = !e.target.checked
+			})
+			rules[index].hidden = !e.target.checked
+			update_day_totals(rules, matrix)
+		}
 		checkbox_row.insertCell().appendChild(checkbox)
 	})
 	document.body.appendChild(rule_filter_table)
+}
+
+function update_day_totals(rules, matrix) {
+	let perfect_row_count = 0
+	let perfect_row_total = 0
+	let current_perfect_row_streak = 0
+	let longest_perfect_row_streak = 0
+	Array.from(document.getElementsByClassName("row_total")).forEach(function(cell, index) {
+		let row_index = parseInt(cell.id.substring(9)) // TODO: do not use magic numbers
+		let count = 0
+		let total = 0
+		rules.forEach(function(rule, index) {
+			if (!rule.hidden) {
+				total += [0, 1, 2, 3].includes(matrix[row_index][index])
+				count += [0, 1, 3].includes(matrix[row_index][index])
+			}
+		})
+		cell.innerText = total > 0 ? String(Math.round(count / total * 100)) + "%" : "N/A"
+
+		if (count == total) {
+			perfect_row_count += 1
+			current_perfect_row_streak += 1
+			longest_perfect_row_streak = Math.max(longest_perfect_row_streak, current_perfect_row_streak)
+		} else {
+			current_perfect_row_streak = 0
+		}
+		perfect_row_total += 1
+	})
+
+	document.getElementById("streak_row_total").innerText = current_perfect_row_streak + " / " + longest_perfect_row_streak
+	document.getElementById("streak_row_total").style.fontWeight = (current_perfect_row_streak == longest_perfect_row_streak) ? "bold" : "normal"
+	document.getElementById("total_row_total").innerText = perfect_row_total > 0 ? String(Math.round(perfect_row_count / perfect_row_total * 100)) + "%" : "N/A"
 }
 
 function insert_matrix_cell(row, rule_index, c) {
