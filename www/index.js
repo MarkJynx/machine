@@ -102,8 +102,8 @@ function generate_day(date, day, rules) {
 
 		let row = task_table.insertRow()
 		row.insertCell()
-		make_button_cell(row, "↑", move_up)
-		make_button_cell(row, "↓", move_down)
+		make_button_cell(row, "↑", function(e) { move_elem(e, 1)} )
+		make_button_cell(row, "↓", function(e) { move_elem(e, 0)} )
 		make_button_cell(row, "+", insert_task)
 
 		let selection_cell = row.insertCell()
@@ -189,8 +189,8 @@ function make_rule_instance_row(name, done) {
 	row.className = "rule_row"
 
 	make_button_cell(row, "⨯", delete_me)
-	make_button_cell(row, "↑", move_up)
-	make_button_cell(row, "↓", move_down)
+	make_button_cell(row, "↑", function(e) { move_elem(e, 1)})
+	make_button_cell(row, "↓", function(e) { move_elem(e, 0)})
 
 	let cell = row.insertCell()
 	let checkbox = document.createElement("input")
@@ -208,21 +208,11 @@ function delete_me(e) {
 	e.target.parentNode.parentNode.remove()
 }
 
-function move_up(e) {
+function move_elem(e, up) {
 	let row = e.target.parentNode.parentNode
-	let previous = row.previousElementSibling
-	let tbody = row.parentNode
-	if (previous) {
-		tbody.insertBefore(row, previous)
-	}
-}
-
-function move_down(e) {
-	let row = e.target.parentNode.parentNode
-	let next = row.nextElementSibling
-	let tbody = row.parentNode
-	if (next) {
-		tbody.insertBefore(next, row)
+	let other = up ? row.previousElementSibling : row.nextElementSibling
+	if (other) {
+		row.parentNode.insertBefore(up ? row : other, up ? other : row)
 	}
 }
 
