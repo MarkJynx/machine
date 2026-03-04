@@ -188,24 +188,18 @@ function make_rule_instance_row(name, done) {
 	let row = document.createElement("tr")
 	row.className = "rule_row"
 
-	make_button_cell(row, "⨯", delete_me)
+	make_button_cell(row, "⨯", function(e) { e.target.parentNode.parentNode.remove() })
 	make_button_cell(row, "↑", function(e) { move_elem(e, 1)})
 	make_button_cell(row, "↓", function(e) { move_elem(e, 0)})
 
-	let cell = row.insertCell()
 	let checkbox = document.createElement("input")
 	checkbox.type = "checkbox"
 	checkbox.checked = Boolean(done)
-	cell.appendChild(checkbox)
+	row.insertCell().appendChild(checkbox)
 
-	cell = row.insertCell()
-	cell.innerText = name
+	row.insertCell().innerText = name
 
 	return row
-}
-
-function delete_me(e) {
-	e.target.parentNode.parentNode.remove()
 }
 
 function move_elem(e, up) {
