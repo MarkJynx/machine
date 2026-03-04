@@ -7,9 +7,9 @@ local cjson = require("cjson.safe")
 
 local process_day_rule = function(row, date, rule, day_lt)
 	if not day_lt[date] then
-		table.insert(row, -3)
+		table.insert(row, -2)
 	elseif rule.schedule_lt[date] == nil then
-		table.insert(row, rule.done_lt[date] and -1 or -2)
+		table.insert(row, -1)
 	else
 		local done = rule.done_lt[date] and 1 or 0
 		local mandatory = rule.done_lt[date] == false and 2 or (rule.schedule_lt[date] and 2 or 0)

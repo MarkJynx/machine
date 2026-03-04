@@ -89,18 +89,8 @@ function insert_matrix_cell(row, rule_index, c) {
 	let rule_class = "rule" + String(rule_index)
 	let cell = row.insertCell()
 	let key = String(c)
-	let values = {
-		"-3": "no_record",
-		"-2": "unscheduled_not_done",
-		"-1": "unscheduled_done",
-		"0": "not_done_not_due",
-		"1": "done_not_due",
-		"2": "not_done_due",
-		"3": "done_due"
-	}
-	if (key in values) {
-		cell.className = values[key] + " " + rule_class
-	}
+	let values = { "-2": "no_day", "-1": "no_instance", "0": "done0due0", "1": "done1due0", "2": "done0due1", "3": "done1due1" }
+	cell.className = values[key] + " " + rule_class
 }
 
 // Day generation
