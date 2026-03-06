@@ -254,9 +254,9 @@ async function save_day(date) {
 	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length, date)); return a}, []) // TODO: map
 
 	let deletion = await fetch("cgi-bin/update_day.lua", {
-	  method: "POST",
-	  headers: { "Content-Type": "application/json" },
-	  body: JSON.stringify(json)
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(json)
 	})
 	let deletionData = await deletion.json()
 }
@@ -264,12 +264,7 @@ async function save_day(date) {
 function rule_row_to_dict(row, index, date) {
 	let name = row.cells[4].innerText // TODO: validate against rules; check if exists
 	let done = row.cells[3].firstChild.checked // TODO: check if exists
-	return {
-		"day_id": date,
-		"rule_name": name,
-		"done": Number(done),
-		"order_priority": index + 1
-	}
+	return { "day_id": date, "rule_name": name, "done": Number(done), "order_priority": index + 1 }
 }
 
 // Task rows
@@ -305,12 +300,10 @@ function move_elem(e, up) {
 function insert_task(e) {
 	let creation_row = e.target.parentNode.parentNode
 	let rule_name = creation_row.cells[4].firstChild.value // TODO: check if exists
-	if (!rule_name_is_unique(rule_name)) {
-		return
+	if (rule_name_is_unique(rule_name)) {
+		let tbody = creation_row.parentNode
+		tbody.insertBefore(make_rule_instance_row(rule_name, 0), creation_row)
 	}
-
-	let tbody = creation_row.parentNode
-	tbody.insertBefore(make_rule_instance_row(rule_name, 0), creation_row)
 }
 
 function rule_name_is_unique(name) {
