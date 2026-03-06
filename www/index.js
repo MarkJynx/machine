@@ -69,7 +69,9 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	header_row.insertCell().innerText = "%"
 
 	// Body
-	for (let i = (start_date ? labels.indexOf(start_date) : 0); i < (stop_date ? labels.indexOf(stop_date) + 1 : matrix.length); i++) {
+	let start_index = start_date ? labels.indexOf(start_date) : 0
+	let stop_index = stop_date ? labels.indexOf(stop_date) + 1 : labels.length
+	for (let i = start_index; i < stop_index; i++) {
 		let row = matrix_table.insertRow()
 		let week_href = "?view=matrix&start_date=" + labels[i] + "&stop_date=" + add_days(labels[i], 6)
 		make_button_cell(row, labels[i], week_view ? week_href :  "?date=" + labels[i])
@@ -84,10 +86,9 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	streak_row.insertCell().innerText = "Streak"
 	total_row.insertCell().innerText = "%"
 	json.rules.forEach(function(rule, index) {
-		let col_full = matrix.map((row) => row[index])
-		let col = col_full.slice(start_date ? labels.indexOf(start_date) : 0, stop_date ? labels.indexOf(stop_date) + 1 : matrix.length)
-		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
+		let col = matrix.map((row) => row[index]).slice(start_index, stop_index)  // TODO: handle length of zero
 		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
+		let current_streak = current_streaks[current_streaks.length - 1]
 		let longest_streak = Math.max(...current_streaks)
 		let streak_cell = streak_row.insertCell()
 		streak_cell.className = "rule" + index
