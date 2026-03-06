@@ -106,16 +106,16 @@ common.db_delete_day = function(date)
 	return retval
 end
 
-local db_get_last_rule_instance = function(db, name)
-	local q = "SELECT * FROM rule_instance WHERE rule_name = '" .. db:escape(name) .. "' AND done = 1 ORDER BY day_id DESC LIMIT 1"
-	return db_collect_single(db, q)
+local db_get_last_rule_instance = function(db, rule_name, date)
+	local q = "SELECT * FROM rule_instance WHERE rule_name = '%s' AND day_id <= '%s' AND done = 1 ORDER BY day_id DESC LIMIT 1"
+	return db_collect_single(db, q:format(rule_name, date))
 end
 
 common.db_read_shallow = function(date)
 	local db = db_open(DB_PATH)
 
 	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
-	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name) end, rules)
+	each(function(r) r.last_instance = db_get_last_rule_instance(db, r.name, date) end, rules)
 
 	local day = db_collect_single(db, "SELECT * FROM day WHERE id = '" .. date .. "'")
 	if day then

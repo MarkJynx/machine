@@ -1,11 +1,18 @@
-1. FEATURE: day notes.
-2. BUGFIX: fix create-in-the-middle bug.
-3. FEATURE: dynamic add-task selection.
-4. FEATURE: WebUI: start_date and stop_date fields with submit that does a GET
+FEATURE: day notes.
+FEATURE: dynamic add-task selection.
+FEATURE: WebUI: start_date and stop_date fields with submit that does a GET
 
 --------------------------------------------
 
+* FEATURE: statistics (day, daily, aggregate).
 * FEATURE: fully customizable percetange formula.
+* FEATURE: schedules.
+* FEATURE: tiers.
+* FEATURE: undo/redo (front-end).
+* FEATURE: achievements.
+* FEATURE: CRUD rule_schedule.
+* FEATURE: other CRUD tables (remove init.sql).
+* FEATURE: JSON export/import
 
 * REFACTORIZATION: Call read_matrix.lua once at startup.
 * REFACTORIZATION: Optimize human-readable back-ups through date-directory structure.
@@ -16,17 +23,10 @@
 * REFACTORIZATION: Minimize SQL query count.
 * REFACTORIZATION: Proper error messages.
 
-* FEATURE: schedules.
-* FEATURE: tiers.
-* FEATURE: Undo/Redo (front-end).
 * REFACTORIZATION: Documentation.
 * REFACTORIZATION: Test suite.
 * REFACTORIZATION: Philosophy.
-* FEATURE: Achievements.
 * REFACTORIZATION: CSS. Mobile integration.
-* FEATURE: CRUD rule_schedule.
-* FEATURE: Other CRUD tables (remove init.sql).
-* FEATURE: Statistics (day, daily, aggregate).
 * REFACTORIZATION: Typed (compiled?) back-end language.
 * REFACTORIZATION: Typed front-end language.
 * REFACTORIZATION: Move as much as practically possible to back-end for future commercialization.

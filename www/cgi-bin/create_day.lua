@@ -11,8 +11,6 @@ local rule_applies = function(rule, date)
 		return false
 	end
 
-	-- TODO: fix, when creating a day in the middle rule.last_instance is not enough and we have to check last instance
-	--       where instance.day_id <= date
 	if rule.last_instance and common.date_diff(date, rule.last_instance.day_id) < rule.period then
 		return false
 	end
