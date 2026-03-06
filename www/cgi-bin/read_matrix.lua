@@ -79,14 +79,14 @@ end
 local main = function()
 	common.http_enforce_method("GET")
 	local json = common.db_read_deep()
-	json.matrix_labels, json.matrix, json.week_matrix_labels, json.week_matrix = {}, {}, {}, {}
+	json.matrix_labels, json.matrix, json.week_matrix_labels, json.week_matrix = {}, {}, {}, {} -- TODO: reduce each individually
 
 	if json.day_first and json.day_last then
 		local day_count = common.date_diff(json.day_last, json.day_first) + 1
 		each(function(i)
 			process_day(json.matrix_labels, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_lt)
 			process_week(json.week_matrix_labels, json.week_matrix, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_first)
-		end, range(day_count))
+		end, range(day_count)) -- TODO: replace each() with multiple map(?, range) calls
 	end
 	local response = cjson.encode(json)
 	common.http_respond(response)
