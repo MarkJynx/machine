@@ -1,7 +1,6 @@
 require("fun")()
 local common = {}
 
-
 ------------------------------------------------------------------
 -- Date string utilities
 

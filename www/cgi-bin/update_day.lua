@@ -3,14 +3,13 @@
 local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
-
 common.http_enforce_method("POST")
 local content_length = common.http_extract_content_length()
-if content_length <= 0 then
+if content_length <= 0 then -- TODO: replace with abort function
 	common.http_respond(nil)
 end
 local day = cjson.decode(io.read(content_length))
-if not day or not day.id then
+if not day or not day.id then -- TODO: replace with abort function
 	common.http_respond(nil)
 end
 common.db_insert_day(day)

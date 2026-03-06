@@ -4,7 +4,6 @@ require("fun")()
 local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
-
 local rule_applies = function(rule, date)
 	local weekdays = common.get_rule_weekdays(rule)
 	if not weekdays[common.date_weekday(date)] then
@@ -26,8 +25,7 @@ local main = function()
 	end
 
 	local rules = totable(filter(function(r) return rule_applies(r, date) end, shallow.rules))
-	local day = { id = date, rule_instances = {} }
-	each(function(r) table.insert(day.rule_instances, { rule_name = r.name, done = 0 }) end, rules)
+	local day = { id = date, rule_instances = reduce(function(a, r) table.insert(a, {rule_name = r.name, done = 0}) return a end, {}, rules) }
 
 	common.http_respond(cjson.encode(day) or "null")
 end
