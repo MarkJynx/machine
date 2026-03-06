@@ -250,7 +250,7 @@ async function delete_day(date) {
 
 async function save_day(date) {
 	let json = {"id": date, "notes": null, "rule_instances": []}
-	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.className == "rule_row") // TODO: check if exists
+	let rows = Array.from(document.getElementsByClassName("rule_row"))
 	json.rule_instances = rows.reduce((a, r) => { a.push(rule_row_to_dict(r, a.length, date)); return a}, []) // TODO: map
 
 	let deletion = await fetch("cgi-bin/update_day.lua", {
@@ -307,7 +307,7 @@ function insert_task(e) {
 }
 
 function rule_name_is_unique(name) {
-	let rows = Array.from(document.getElementById("task_table").rows).filter((r) => r.className == "rule_row") // TODO: check if exists
+	let rows = Array.from(document.getElementsByClassName("rule_row"))
 	return rows.reduce((x, r) => r.cells[4].innerText == name ? false : x, true)
 }
 
