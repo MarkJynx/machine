@@ -1,28 +1,23 @@
 async function main() {
-	let args = parse_url_params(window.location.search)
-	if (args.view != "day") {
+	const url_args = new URLSearchParams(window.location.search)
+	let args = {"view": null, "date": get_local_date_string(), "start_date": null, "stop_date": null}
+
+	if (url_args.has("view") && (url_args.get("view") == "matrix" || url_args.get("view") == "weekmatrix")) {
+		args.view = url_args.get("view")
+	}
+
+	["date", "start_date", "stop_date"].forEach(function(value, index) {
+		if (url_args.has(value) && url_args.get(value) && url_args.get(value).match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+			args[value] = url_args.get(value)
+		}
+	})
+
+	if (args.view) {
 		generate_matrix(args.view == "weekmatrix", args.start_date, args.stop_date)
 	} else {
 		let json = await post_date_request("read_day", args.date)
 		generate_day(args.date, json.day, json.rules)
 	}
-}
-
-function parse_url_params(url) {
-	let results = {"view": "day", "date": get_local_date_string(), "start_date": null, "stop_date": null}
-	const args = new URLSearchParams(url)
-
-	if (args.has("view") && (args.get("view") == "matrix" || args.get("view") == "weekmatrix")) {
-		results.view = args.get("view")
-	}
-
-	["date", "start_date", "stop_date"].forEach(function(value, index) {
-		if (args.has(value) && args.get(value) && args.get(value).match(/^\d{4}-\d{2}-\d{2}$/) != null) {
-			results[value] = args.get(value)
-		}
-	})
-
-	return results
 }
 
 function get_local_date_string() {
