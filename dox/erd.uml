@@ -6,9 +6,6 @@ hide empty members
 
 entity Rule {
     * Name <<PK>>
-    * RuleTier
-    * Description
-    * Motivation
     * OrderPriority
     * Period
     * Weekdays
@@ -17,11 +14,9 @@ entity Rule {
 entity RuleInstance {
     * ID <<PK>>
     * RuleName <<FK>>
-    * RuleSchedule <<FK>>
     * DayID <<FK>>
     * Done
     * OrderPriority
-    * Notes
 }
 
 entity Day {
