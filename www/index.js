@@ -176,15 +176,15 @@ function generate_day(date, day, rules) {
 		day.rule_instances.map((i) => task_table.appendChild(make_rule_instance_row(i.rule_name, i.done)))
 
 		let row = task_table.insertRow()
+
 		row.insertCell()
-		make_button_cell(row, "↑", function(e) { move_elem(e, 1)} )
-		make_button_cell(row, "↓", function(e) { move_elem(e, 0)} )
+		make_button_cell(row, "↑", function(e) { move_elem(e, true)} )
+		make_button_cell(row, "↓", function(e) { move_elem(e, false)} )
 		make_button_cell(row, "+", insert_task)
 
-		let selection_cell = row.insertCell()
 		let selection = document.createElement("select")
-		rules.map((r) => { let o = document.createElement("option"); o.text = r.name; selection.add(o) }) // TODO: forEach
-		selection_cell.appendChild(selection)
+		rules.forEach(function(rule, index) { let o = document.createElement("option"); o.text = rule.name; selection.add(o) })
+		row.insertCell().appendChild(selection)
 
 	}
 
@@ -259,8 +259,8 @@ function make_rule_instance_row(name, done) {
 	row.className = "rule_row"
 
 	make_button_cell(row, "⨯", function(e) { e.target.parentNode.parentNode.remove() })
-	make_button_cell(row, "↑", function(e) { move_elem(e, 1)})
-	make_button_cell(row, "↓", function(e) { move_elem(e, 0)})
+	make_button_cell(row, "↑", function(e) { move_elem(e, true)})
+	make_button_cell(row, "↓", function(e) { move_elem(e, false)})
 
 	let checkbox = document.createElement("input")
 	checkbox.type = "checkbox"
