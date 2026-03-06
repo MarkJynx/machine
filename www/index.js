@@ -188,7 +188,7 @@ function generate_day(date, day, rules) {
 	let navigation_table = document.createElement("table")
 	let navigation_row = insert_navigation_row(navigation_table, date)
 	if (day) {
-		make_button_cell(navigation_row, "⨯", function() { delete_day(date) })
+		make_button_cell(navigation_row, "⨯", function() { delete_day(date, rules) })
 		make_button_cell(navigation_row, "💾", function() { save_day(date) })
 	} else {
 		make_button_cell(navigation_row, "+", function() { create_day(date, rules) })
@@ -223,9 +223,9 @@ async function create_day(date, rules) {
 	generate_day(date, day, rules)
 }
 
-async function delete_day(date) {
+async function delete_day(date, rules) {
 	let deletion_data = await post_date_request("delete_day", date)
-	generate_day(date, null, null)
+	generate_day(date, null, rules)
 }
 
 async function save_day(date) {
