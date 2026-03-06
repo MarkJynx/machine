@@ -84,7 +84,8 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	streak_row.insertCell().innerText = "Streak"
 	total_row.insertCell().innerText = "%"
 	json.rules.forEach(function(rule, index) {
-		let col = matrix.map((row) => row[index]) // TODO: optimize, calculate all columns stats in one row
+		let col_full = matrix.map((row) => row[index])
+		let col = col_full.slice(start_date ? labels.indexOf(start_date) : 0, stop_date ? labels.indexOf(stop_date) + 1 : matrix.length)
 		let current_streak = col.reduce((a, x) => [0, 1, 3].includes(x) ? a + 1 : 0, 0)
 		let current_streaks = col.reduce((a, x) => { a.push([0, 1, 3].includes(x) ? (a.length > 0 ? a[a.length - 1] : 0) + 1 : 0); return a }, [])
 		let longest_streak = Math.max(...current_streaks)
@@ -285,18 +286,14 @@ function move_elem(e, up) {
 
 // Insert task row
 
-function insert_task(e) {
+function insert_task(e) { // TODO: no magic numbers(4)
 	let creation_row = e.target.parentNode.parentNode
 	let rule_name = creation_row.cells[4].firstChild.value // TODO: check if exists
-	if (rule_name_is_unique(rule_name)) {
+	let rule_names = Array.from(Array.from(document.getElementsByClassName("rule_row")).map((row) => row.cells[4].innerText))
+	if (!rule_names.includes(rule_name)) {
 		let tbody = creation_row.parentNode
 		tbody.insertBefore(make_rule_instance_row(rule_name, 0), creation_row)
 	}
-}
-
-function rule_name_is_unique(name) {
-	let rows = Array.from(document.getElementsByClassName("rule_row"))
-	return rows.reduce((x, r) => r.cells[4].innerText == name ? false : x, true)
 }
 
 // Run-time
