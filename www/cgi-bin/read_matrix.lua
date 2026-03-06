@@ -11,6 +11,7 @@ local RULE_DUE_NOT_DONE = 2
 local RULE_DUE_AND_DONE = 3
 local RULE_NOT_DUE_NOT_DONE = 0
 local RULE_NOT_DUE_BUT_DONE = 1
+local TOLERABLE_FAILURE_RATE = 1
 
 local process_day_rule = function(row, date, due_lt, done_lt, day_lt)
 	if not day_lt[date] then
@@ -36,22 +37,22 @@ local process_day = function(labels, matrix, date, rules, day_lt)
 end
 
 local process_week_rule = function(row, rule_row, rule)
-	-- TODO: refactor, no more magic numbers, a single else-if case for every scenario (-1, 1, 2, 3)
-	local grey_count = reduce(function(a, cell) if cell < 0 then return a + 1 end return a end, 0, rule_row)
-	local done_count = reduce(function(a, cell) if cell == 1 or cell == 3 then return a + 1 end return a end, 0, rule_row)
-	local red_count = reduce(function(a, cell) if cell == 2 then return a + 1 end return a end, 0, rule_row)
-	local bad_count = red_count + grey_count
-	if grey_count >= 7 or (done_count <= 0 and red_count <= 0) then
-		table.insert(row, -1) -- grey, this was a vacation week
+	local rule_is_weekly = rule.period == 7
+	local off_count = reduce(function(a, rule) return (rule == RULE_DAY_OFF or rule == RULE_OFF) and a + 1 or a end, 0, rule_row)
+	local done_count = reduce(function(a, rule) return (rule == RULE_NOT_DUE_BUT_DONE or rule == RULE_DUE_AND_DONE) and a + 1 or a end, 0, rule_row)
+	local due_not_done_count = reduce(function(a, rule) return rule == RULE_DUE_NOT_DONE and a + 1 or a end, 0, rule_row)
+	local bad_count = due_not_done_count + off_count
+
+	if off_count >= 7 or (done_count + due_not_done_count <= 0) or (not rule_is_weekly and off_count >= TOLERABLE_FAILURE_RATE + 1) then
+		table.insert(row, RULE_OFF) -- vacation
 	elseif bad_count <= 0 then
-		table.insert(row, 1) -- deep green, perfection, done but not mandatory
-	elseif (rule.period == 7 and done_count >= 1) or (rule.period ~= 7 and bad_count <= 1) then
-		table.insert(row, 3) -- green, okay, done and mandatory, as it should be
-	elseif rule.period ~= 7 and grey_count >= 2 then
-		table.insert(row, -1) -- grey, this was a vacation week
+		table.insert(row, RULE_NOT_DUE_BUT_DONE) -- perfection, optional
+	elseif (rule_is_weekly and done_count >= 1) or (not rule_is_weekly and bad_count <= TOLERABLE_FAILURE_RATE) then
+		table.insert(row, RULE_DUE_AND_DONE) -- success (tolerable failure rate)
 	else
-		table.insert(row, 2) -- red, failure
+		table.insert(row, RULE_DUE_NOT_DONE) -- failure (intolerable failure rate)
 	end
+
 	return row
 end
 
