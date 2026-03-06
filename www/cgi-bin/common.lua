@@ -137,7 +137,7 @@ local db_read_deep_days = function(r, db)
 	end
 end
 
-local db_read_deep_rule_schedule_lt = function(lt, rule, done_lt, r)
+local db_read_deep_rule_due_lt = function(lt, rule, done_lt, r)
 	if not r.day_first or not r.day_last then
 		return lt
 	end
@@ -163,7 +163,7 @@ local db_read_deep_rule = function(r, db, rule)
 	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
 	rule.instances = db_collect(db, string.format(s, "rule_instance", "", "day_id"))
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = (i.done == 1) return a end, {}, rule.instances)
-	rule.schedule_lt = db_read_deep_rule_schedule_lt({}, rule, rule.done_lt, r)
+	rule.due_lt = db_read_deep_rule_due_lt({}, rule, rule.done_lt, r)
 end
 
 local db_read_deep_rules = function(r, db)

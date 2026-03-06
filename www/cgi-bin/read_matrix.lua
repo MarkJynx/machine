@@ -5,23 +5,23 @@ local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
-local process_day_rule = function(row, date, rule, day_lt)
+local process_day_rule = function(row, date, due_lt, done_lt, day_lt)
 	if not day_lt[date] then
 		table.insert(row, -2)
-	elseif rule.schedule_lt[date] == nil then
+	elseif due_lt[date] == nil then
 		table.insert(row, -1)
 	else
-		local done = rule.done_lt[date] and 1 or 0
-		local mandatory = rule.done_lt[date] == false and 2 or (rule.schedule_lt[date] and 2 or 0)
-		table.insert(row, done + mandatory)
+		local done = done_lt[date] and 1 or 0
+		local due = done_lt[date] == false and 2 or (due_lt[date] and 2 or 0)
+		table.insert(row, done + due)
 	end
 	return row
 end
 
 local process_day = function(labels, matrix, date, rules, day_lt)
-	local row = reduce(function(a, r) return process_day_rule(a, date, r, day_lt) end, {}, rules)
-	table.insert(matrix, row)
+	local row = reduce(function(a, r) return process_day_rule(a, date, r.due_lt, r.done_lt, day_lt) end, {}, rules)
 	table.insert(labels, date)
+	table.insert(matrix, row)
 end
 
 local process_week_rule = function(row, rule_row, rule)
