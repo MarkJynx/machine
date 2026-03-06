@@ -36,8 +36,7 @@ local process_day = function(labels, matrix, date, rules, day_lt)
 	table.insert(matrix, row)
 end
 
-local process_week_rule = function(row, rule_row, rule)
-	local rule_is_weekly = rule.period == 7
+local process_week_rule = function(row, rule_row, rule_is_weekly)
 	local off_count = reduce(function(a, rule) return (rule == RULE_DAY_OFF or rule == RULE_OFF) and a + 1 or a end, 0, rule_row)
 	local done_count = reduce(function(a, rule) return (rule == RULE_NOT_DUE_BUT_DONE or rule == RULE_DUE_AND_DONE) and a + 1 or a end, 0, rule_row)
 	local due_not_done_count = reduce(function(a, rule) return rule == RULE_DUE_NOT_DONE and a + 1 or a end, 0, rule_row)
@@ -66,19 +65,14 @@ local process_week = function(labels, matrix, day_matrix, date, rules, day_first
 	if common.date_diff(first_week_day, day_first) < 0 then
 		return
 	end
-	date = first_week_day
-	table.insert(labels, date)
 
-	local row = {}
-	for rule_index, rule in ipairs(rules) do
-		local rule_row = {}  -- TODO: make a one-liner
-		local day_base_index = math.tointeger(common.date_diff(date, day_first))
-		for day_index = 1, 7 do
-			table.insert(rule_row, day_matrix[day_base_index + day_index][rule_index])
-		end
-		process_week_rule(row, rule_row, rule)
-	end
+	local row = reduce(function(a, ri)
+		local day_base_index = math.tointeger(common.date_diff(first_week_day, day_first))
+		local rule_row = totable(map(function(i) return day_matrix[day_base_index + i][ri] end, range(7)))
+		return process_week_rule(a, rule_row, rules[ri].period == 7)
+	end, {}, range(#rules))
 
+	table.insert(labels, first_week_day)
 	table.insert(matrix, row)
 end
 
