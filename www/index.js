@@ -108,7 +108,7 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	document.body.appendChild(navigation_table)
 }
 
-function rule_array_to_percentage(arr) {
+function rule_array_to_percentage(arr) { // TODO: refactor, remove this function with functional programming techniques inside generate_matrix()
 	// TODO: do not use magic numbers, configurable formulas
 	let fraction = arr.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
 	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
