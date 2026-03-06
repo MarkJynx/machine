@@ -1,18 +1,23 @@
 @startuml
 skinparam actorStyle awesome
+left to right direction
 
 actor User as U
 
-rectangle "Day" {
+rectangle "RILFs" {
 	usecase "Create Day" as UC1
 	usecase "Read Day" as UC2
 	usecase "Update Day" as UC3
 	usecase "Delete Day" as UC4
+	usecase "View day overview" as UC5
+	usecase "View week overview" as UC6
 }
 
-U .right. UC1
-U .right. UC2
-U .right. UC3
-U .right. UC4
+U .. UC1
+U .. UC2
+U .. UC3
+U .. UC4
+U .. UC5
+U .. UC6
 
 @enduml
