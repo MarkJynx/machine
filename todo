@@ -1,6 +1,7 @@
 1. FEATURE: day notes.
 2. BUGFIX: fix create-in-the-middle bug.
 3. FEATURE: dynamic add-task selection.
+4. FEATURE: WebUI: start_date and stop_date fields with submit that does a GET
 
 --------------------------------------------
 
@@ -14,11 +15,9 @@
 * REFACTORIZATION: Profile and optimize (back-end).
 * REFACTORIZATION: Minimize SQL query count.
 * REFACTORIZATION: Proper error messages.
-* FIX: properly support overlapping schedules (different weekdays).
-* FIX: properly treat multiple schedules in weekly matrix.
-* FIX: bug when creating days in between filled days.
 
-* FEATURE: schedule groups.
+* FEATURE: schedules.
+* FEATURE: tiers.
 * FEATURE: Undo/Redo (front-end).
 * REFACTORIZATION: Documentation.
 * REFACTORIZATION: Test suite.
