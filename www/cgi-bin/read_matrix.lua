@@ -4,7 +4,6 @@ require("fun")()
 local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
-
 local RULE_DAY_OFF = -2
 local RULE_OFF = -1
 local RULE_DUE_NOT_DONE = 2
@@ -69,9 +68,7 @@ local main = function()
 	json.week_matrix_labels = totable(filter(function(d) return common.date_weekday(d) == 1 and common.date_add(d, 6) <= json.day_last end, json.matrix_labels))
 	json.matrix = totable(map(function(date) return process_day(date, json.rules, json.day_lt) end, json.matrix_labels))
 	json.week_matrix = totable(map(function(date) return process_week(json.matrix, date, json.rules, json.day_first) end, json.week_matrix_labels))
-
-	local response = cjson.encode(json)
-	common.http_respond(response)
+	common.http_respond(cjson.encode(response) or "null")
 end
 
 main()
