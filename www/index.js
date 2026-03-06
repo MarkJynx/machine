@@ -275,8 +275,6 @@ function move_elem(e, up) {
 	}
 }
 
-// Insert task row
-
 function insert_task(e) { // TODO: no magic numbers(4)
 	let creation_row = e.target.parentNode.parentNode
 	let rule_name = creation_row.cells[4].firstChild.value // TODO: check if exists
