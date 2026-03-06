@@ -137,35 +137,23 @@ function generate_matrix_rule_filter(rules, matrix) {
 }
 
 function update_day_totals(rules, matrix) {
-	let perfect_row_count = 0
-	let perfect_row_total = 0
-	let current_perfect_row_streak = 0
-	let longest_perfect_row_streak = 0
-	Array.from(document.getElementsByClassName("row_total")).forEach(function(cell, index) {
-		let row_index = parseInt(cell.id.substring(9)) // TODO: do not use magic numbers
-		let count = 0
-		let total = 0
-		rules.forEach(function(rule, index) {
-			if (!rule.hidden) {
-				total += [0, 1, 2, 3].includes(matrix[row_index][index])
-				count += [0, 1, 3].includes(matrix[row_index][index])
-			}
-		})
-		cell.innerText = total > 0 ? String(Math.round(count / total * 100)) + "%" : "N/A"
-
-		if (count == total) {
-			perfect_row_count += 1
-			current_perfect_row_streak += 1
-			longest_perfect_row_streak = Math.max(longest_perfect_row_streak, current_perfect_row_streak)
-		} else {
-			current_perfect_row_streak = 0
-		}
-		perfect_row_total += 1
-	})
-
+	let shown_rules = Array.from(rules.filter((rule) => !rule.hidden)) // TODO: handle length of zero
+	let shown_rule_indices = Array.from(shown_rules.map((rule) => rules.indexOf(rule)))
+	let rows = Array.from(document.getElementsByClassName("row_total")) // TODO: handle length of zero
+	let row_indices = Array.from(rows.map((cell) => parseInt(cell.id.substring(9))))
+	let counts = Array.from(row_indices.map((row_index) => shown_rule_indices.reduce((a, rule_index) => a + [0, 1, 3].includes(matrix[row_index][rule_index]), 0)))
+	let totals = Array.from(row_indices.map((row_index) => shown_rule_indices.reduce((a, rule_index) => a + [0, 1, 2, 3].includes(matrix[row_index][rule_index]), 0)))
+	let counts_and_totals = Array.from(counts.map((count, index) => [counts[index], totals[index]]))
+	let perfect_row_count = counts_and_totals.reduce((a, count_and_total) => a + (count_and_total[0] == count_and_total[1] ? 1 : 0), 0)
+	let perfect_row_total = rows.length
+	let current_perfect_row_streaks = counts_and_totals.reduce(function(a, ct, i) { a.push(ct[0] && ct[0] == ct[1] ? i ? a[i - 1] + 1 : 1 : 0); return a }, [])
+	let longest_perfect_row_streak = Math.max(...current_perfect_row_streaks)
+	let current_perfect_row_streak = current_perfect_row_streaks[current_perfect_row_streaks.length - 1]
+	let make_fraction_string = (count, total, fraction) => total ? (fraction ? (count + " / " + total + "<br>") : "") + Math.round(count / total * 100) + "%" : "N/A"
+	rows.forEach(function(cell, index) { cell.innerHTML = make_fraction_string(counts[index], totals[index], false) })
 	document.getElementById("streak_row_total").innerText = current_perfect_row_streak + " / " + longest_perfect_row_streak
 	document.getElementById("streak_row_total").style.fontWeight = (current_perfect_row_streak == longest_perfect_row_streak) ? "bold" : "normal"
-	document.getElementById("total_row_total").innerHTML = perfect_row_total > 0 ? perfect_row_count + " / " + perfect_row_total + "<br>" + String(Math.round(perfect_row_count / perfect_row_total * 100)) + "%" : "N/A"
+	document.getElementById("total_row_total").innerHTML = make_fraction_string(perfect_row_count, perfect_row_total, true)
 }
 
 function insert_matrix_cell(row, rule_index, c) {
