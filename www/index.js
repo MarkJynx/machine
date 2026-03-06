@@ -94,9 +94,11 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 		streak_cell.className = "rule" + index
 		streak_cell.innerText = current_streak + " / " + longest_streak
 		streak_cell.style.fontWeight = (current_streak == longest_streak) ? "bold" : "normal"
+		let total = col.reduce((a, x) => a + ([0, 1, 2, 3].includes(x) ? 1 : 0), 0)
+		let count = col.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
 		let total_cell = total_row.insertCell()
 		total_cell.className = "rule" + index
-		total_cell.innerText = rule_array_to_percentage(col)
+		total_cell.innerText = total ? Math.round(count / total * 100) + "%" : "N/A"
 	})
 	streak_row.insertCell().id = "streak_row_total"
 	total_row.insertCell().id = "total_row_total"
@@ -107,13 +109,6 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	let navigation_table = document.createElement("table")
 	insert_navigation_row(navigation_table, null)
 	document.body.appendChild(navigation_table)
-}
-
-function rule_array_to_percentage(arr) { // TODO: refactor, remove this function with functional programming techniques inside generate_matrix()
-	// TODO: do not use magic numbers, configurable formulas
-	let fraction = arr.reduce((a, x) => a + ([0, 1, 3].includes(x) ? 1 : 0), 0)
-	let total = fraction + arr.reduce((a, x) => a + (x == 2 ? 1 : 0), 0)
-	return total > 0 ? String(Math.round(fraction / total * 100)) + "%" : "N/A"
 }
 
 function generate_matrix_rule_filter(rules, matrix) {
