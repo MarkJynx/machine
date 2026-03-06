@@ -68,7 +68,7 @@ local main = function()
 	json.week_matrix_labels = totable(filter(function(d) return common.date_weekday(d) == 1 and common.date_add(d, 6) <= json.day_last end, json.matrix_labels))
 	json.matrix = totable(map(function(date) return process_day(date, json.rules, json.day_lt) end, json.matrix_labels))
 	json.week_matrix = totable(map(function(date) return process_week(json.matrix, date, json.rules, json.day_first) end, json.week_matrix_labels))
-	common.http_respond(cjson.encode(response) or "null")
+	common.http_respond(cjson.encode(json) or "null")
 end
 
 main()
