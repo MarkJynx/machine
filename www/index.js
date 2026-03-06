@@ -38,7 +38,7 @@ async function post_date_request(endpoint, date) {
 function add_days(date, days) {
 	let result = new Date(date)
 	result.setDate(result.getDate() + days)
-	return result.toISOString().substring(0, 10)  // TODO: do not use magic numbers
+	return result.toISOString().substring(0, "YYYY-MM-DD".length)
 }
 
 // Matrix generation
