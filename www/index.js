@@ -25,6 +25,12 @@ function get_local_date_string() {
 	return new Date(new Date() - tzoffset).toISOString().substring(0, "YYYY-MM-DD".length)
 }
 
+function add_days(date, days) {
+	let result = new Date(date)
+	result.setDate(result.getDate() + days)
+	return result.toISOString().substring(0, "YYYY-MM-DD".length)
+}
+
 async function post_date_request(endpoint, date) {
 	let response = await fetch("cgi-bin/" + endpoint + ".lua", {
 		method: "POST",
@@ -33,12 +39,6 @@ async function post_date_request(endpoint, date) {
 	})
 
 	return await response.json()
-}
-
-function add_days(date, days) {
-	let result = new Date(date)
-	result.setDate(result.getDate() + days)
-	return result.toISOString().substring(0, "YYYY-MM-DD".length)
 }
 
 // Matrix generation
