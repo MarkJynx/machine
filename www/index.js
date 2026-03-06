@@ -22,7 +22,7 @@ async function main() {
 
 function get_local_date_string() {
 	let tzoffset = (new Date()).getTimezoneOffset() * 60000 // offset in milliseconds
-	return new Date(new Date() - tzoffset).toISOString().substring(0, 10) // TODO: do not use magic numbers
+	return new Date(new Date() - tzoffset).toISOString().substring(0, "YYYY-MM-DD".length)
 }
 
 async function post_date_request(endpoint, date) {
