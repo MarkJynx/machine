@@ -5,15 +5,26 @@ local common = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 
+local TASK_DAY_OFF = -2
+local TASK_OFF = -1
+local TASK_DUE_NOT_DONE = 2
+local TASK_DUE_AND_DONE = 3
+local TASK_NOT_DUE_NOT_DONE = 0
+local TASK_NOT_DUE_BUT_DONE = 1
+
 local process_day_rule = function(row, date, due_lt, done_lt, day_lt)
 	if not day_lt[date] then
-		table.insert(row, -2)
+		table.insert(row, TASK_DAY_OFF)
 	elseif due_lt[date] == nil then
-		table.insert(row, -1)
+		table.insert(row, TASK_OFF)
 	else
-		local done = done_lt[date] and 1 or 0
-		local due = done_lt[date] == false and 2 or (due_lt[date] and 2 or 0)
-		table.insert(row, done + due)
+		if done_lt[date] == false then
+			table.insert(row, TASK_DUE_NOT_DONE)
+		elseif done_lt[date] == true  then
+			table.insert(row, due_lt[date] and TASK_DUE_AND_DONE or TASK_NOT_DUE_BUT_DONE)
+		elseif done_lt[date] == nil then
+			table.insert(row, due_lt[date] and TASK_DUE_NOT_DONE or TASK_NOT_DUE_NOT_DONE)
+		end
 	end
 	return row
 end
