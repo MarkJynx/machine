@@ -1,3 +1,4 @@
+BUGFIX: create -> delete -> create
 FEATURE: day notes.
 FEATURE: dynamic add-task selection.
 FEATURE: WebUI: start_date and stop_date fields with submit that does a GET
