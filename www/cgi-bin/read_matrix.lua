@@ -30,10 +30,8 @@ local process_day_rule = function(row, date, due_lt, done_lt, day_lt)
 	return row
 end
 
-local process_day = function(labels, matrix, date, rules, day_lt)
-	local row = reduce(function(a, r) return process_day_rule(a, date, r.due_lt, r.done_lt, day_lt) end, {}, rules)
-	table.insert(labels, date)
-	table.insert(matrix, row)
+local process_day = function(date, rules, day_lt)
+	return reduce(function(a, r) return process_day_rule(a, date, r.due_lt, r.done_lt, day_lt) end, {}, rules)
 end
 
 local process_week_rule = function(row, rule_row, rule_is_weekly)
@@ -55,39 +53,23 @@ local process_week_rule = function(row, rule_row, rule_is_weekly)
 	return row
 end
 
-local process_week = function(labels, matrix, day_matrix, date, rules, day_first)
-	-- TODO: make last week day configurable, not hard-coded to 7
-	if common.date_weekday(date) ~= 7 then
-		return
-	end
-
-	local first_week_day = common.date_add(date, -6)
-	if common.date_diff(first_week_day, day_first) < 0 then
-		return
-	end
-
-	local row = reduce(function(a, ri)
+local process_week = function(day_matrix, first_week_day, rules, day_first)
+	return reduce(function(a, ri)
 		local day_base_index = math.tointeger(common.date_diff(first_week_day, day_first))
 		local rule_row = totable(map(function(i) return day_matrix[day_base_index + i][ri] end, range(7)))
 		return process_week_rule(a, rule_row, rules[ri].period == 7)
 	end, {}, range(#rules))
-
-	table.insert(labels, first_week_day)
-	table.insert(matrix, row)
 end
 
 local main = function()
 	common.http_enforce_method("GET")
 	local json = common.db_read_deep()
-	json.matrix_labels, json.matrix, json.week_matrix_labels, json.week_matrix = {}, {}, {}, {} -- TODO: reduce each individually
+	local day_count = (json.day_first and json.day_last) and common.date_diff(json.day_last, json.day_first) + 1 or 0
+	json.matrix_labels = totable(map(function(i) return common.date_add(json.day_first, i - 1) end, range(day_count)))
+	json.week_matrix_labels = totable(filter(function(d) return common.date_weekday(d) == 1 and common.date_add(d, 6) <= json.day_last end, json.matrix_labels))
+	json.matrix = totable(map(function(date) return process_day(date, json.rules, json.day_lt) end, json.matrix_labels))
+	json.week_matrix = totable(map(function(date) return process_week(json.matrix, date, json.rules, json.day_first) end, json.week_matrix_labels))
 
-	if json.day_first and json.day_last then
-		local day_count = common.date_diff(json.day_last, json.day_first) + 1
-		each(function(i)
-			process_day(json.matrix_labels, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_lt)
-			process_week(json.week_matrix_labels, json.week_matrix, json.matrix, common.date_add(json.day_first, i - 1), json.rules, json.day_first)
-		end, range(day_count)) -- TODO: replace each() with multiple map(?, range) calls
-	end
 	local response = cjson.encode(json)
 	common.http_respond(response)
 end
