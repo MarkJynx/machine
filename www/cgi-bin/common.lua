@@ -98,10 +98,10 @@ end
 
 common.db_delete_day = function(date)
 	local db = db_open(DB_PATH)
-	local queries = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
-	queries[2] = string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", date)
-	queries[3] = string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", date)
-	local retval = all(function(q) return db:execute(q) ~= nil end, queries)
+	local q = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
+	q[2] = ("DELETE FROM rule_instance WHERE id = '%s'"):format(date)
+	q[3] = ("DELETE FROM day WHERE id = '%s'"):format(date)
+	local retval = all(function(q) return db:execute(q) ~= nil end, q)
 	db:close()
 	return retval
 end
@@ -143,12 +143,10 @@ local db_read_deep_rule_due_lt = function(lt, rule, done_lt, r)
 	end
 
 	local weekdays = common.get_rule_weekdays(rule)
-	local start_date = r.day_first
-	local stop_date = r.day_last
 
 	local not_done_streak = math.huge
-	local day_count = common.date_diff(stop_date, start_date) + 1
-	for _, date in map(function(i) return common.date_add(start_date, i - 1) end, range(1, day_count, 1)) do
+	local day_count = common.date_diff(r.day_last, r.day_first) + 1
+	for _, date in map(function(i) return common.date_add(r.day_first, i - 1) end, range(1, day_count, 1)) do
 		lt[date] = rule.period <= not_done_streak and weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 		if lt[date] and done_lt[date] == nil then
@@ -160,8 +158,8 @@ local db_read_deep_rule_due_lt = function(lt, rule, done_lt, r)
 end
 
 local db_read_deep_rule = function(r, db, rule)
-	local s = "SELECT * FROM %s WHERE rule_name = '" .. db:escape(rule.name) .. "' %s ORDER BY %s ASC"
-	rule.instances = db_collect(db, string.format(s, "rule_instance", "", "day_id"))
+	local s = ("SELECT * FROM rule_instance WHERE rule_name = '%s' ORDER BY day_id ASC"):format(db:escape(rule.name))
+	rule.instances = db_collect(db, s)
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = (i.done == 1) return a end, {}, rule.instances)
 	rule.due_lt = db_read_deep_rule_due_lt({}, rule, rule.done_lt, r)
 end
