@@ -138,21 +138,16 @@ local db_read_deep_days = function(r, db)
 end
 
 local db_read_deep_rule_due_lt = function(lt, rule, done_lt, r)
-	if not r.day_first or not r.day_last then
-		return lt
-	end
-
 	local weekdays = common.get_rule_weekdays(rule)
-
 	local not_done_streak = math.huge
-	local day_count = common.date_diff(r.day_last, r.day_first) + 1
-	for _, date in map(function(i) return common.date_add(r.day_first, i - 1) end, range(1, day_count, 1)) do
+	local day_count = (r.day_first and r.day_last) and common.date_diff(r.day_last, r.day_first) + 1 or 0
+	each(function(date)
 		lt[date] = rule.period <= not_done_streak and weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 		if lt[date] and done_lt[date] == nil then
 			lt[date] = nil
 		end
-	end
+	end, map(function(i) return common.date_add(r.day_first, i - 1) end, range(day_count)))
 
 	return lt
 end
