@@ -55,19 +55,15 @@ end
 
 common.http_enforce_method = function(method)
 	local request_method = os.getenv("REQUEST_METHOD")
-	if request_method ~= method then
-		common.http_respond(nil)
-	end
+	common.http_panic(request_method ~= method)
 end
 
 common.http_enforce_date_payload = function()
 	common.http_enforce_method("POST")
 	local content_length = common.http_extract_content_length()
 	local payload = content_length > 0 and io.read(content_length) or nil
-	if payload and string.match(payload, "^%d%d%d%d%-%d%d%-%d%d$") then
-		return payload
-	end
-	common.http_respond(nil)
+	common.http_panic(payload == nil or payload:match("^%d%d%d%d%-%d%d%-%d%d$") == nil)
+	return payload
 end
 
 ------------------------------------------------------------------
