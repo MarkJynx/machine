@@ -36,6 +36,12 @@ common.http_respond = function(json)
 	os.exit(0)
 end
 
+common.http_panic = function(condition)
+	if (condition) then
+		common.http_respond(nil)
+	end
+end
+
 common.http_extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
