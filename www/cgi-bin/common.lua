@@ -175,7 +175,7 @@ end
 
 local db_rule_instance_to_insert_query = function(i, db)
 	local s1 = "INSERT OR ROLLBACK INTO rule_instance (rule_name, day_id, done, order_priority) VALUES "
-	local s2 = string.format("('%s','%s',%d,%d)", db:escape(i.rule_name), i.day_id, i.done, i.order_priority)
+	local s2 = ("('%s','%s',%d,%d)"):format(db:escape(i.rule_name), i.day_id, i.done, i.order_priority)
 	return s1 .. s2
 end
 
@@ -183,10 +183,10 @@ common.db_insert_day = function(day)
 	local db = db_open(DB_PATH)
 
 	local s = { "PRAGMA foreign_keys = ON", "BEGIN TRANSACTION" }
-	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "rule_instance", "day_id", day.id))
-	table.insert(s, string.format("DELETE FROM %s WHERE %s = '%s'", "day", "id", day.id))
-	local notes = type(day.notes) == "string" and string.format("'%s'", db:escape(notes)) or "NULL"
-	table.insert(s, string.format("INSERT OR ROLLBACK INTO day (id, notes) VALUES ('%s', %s)", day.id, notes))
+	table.insert(s, ("DELETE FROM rule_instance WHERE day_id = '%s'"):format(day.id))
+	table.insert(s, ("DELETE FROM day WHERE id = '%s'"):format(day.id))
+	local notes = type(day.notes) == "string" and ("'%s'"):format(db:escape(notes)) or "NULL"
+	table.insert(s, ("INSERT OR ROLLBACK INTO day (id, notes) VALUES ('%s', %s)"):format(day.id, notes))
 	each(function(i) table.insert(s, db_rule_instance_to_insert_query(i, db)) end, day.rule_instances or {})
 	table.insert(s, "COMMIT")
 	local retval = all(function(q) return db:execute(q) ~= nil end, s)
@@ -197,8 +197,8 @@ end
 
 local db_backup_rule_instance = function(i, db, backup)
 	local s = "INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ("
-	local rule_name = "'" .. i.rule_name .. "'," .. string.rep(" ", 26 - #i.rule_name) -- TODO: dynamic padding
-	s = s .. string.format("%s'%s', %d, %2d);\n", rule_name, i.day_id, i.done, i.order_priority)
+	local rule_name = "'" .. i.rule_name .. "'," .. (" "):rep(26 - #i.rule_name) -- TODO: dynamic padding
+	s = s .. ("%s'%s', %d, %2d);\n"):format(rule_name, i.day_id, i.done, i.order_priority)
 	backup:write(s)
 end
 
