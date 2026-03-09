@@ -63,8 +63,7 @@ end
 local main = function()
 	common.http_enforce_method("GET")
 	local json = common.db_read_deep()
-	local day_count = (json.day_first and json.day_last) and common.date_diff(json.day_last, json.day_first) + 1 or 0
-	json.matrix_labels = totable(map(function(i) return common.date_add(json.day_first, i - 1) end, range(day_count)))
+	json.matrix_labels = totable(map(function(i) return common.date_add(json.day_first, i - 1) end, range(json.day_count)))
 	json.week_matrix_labels = totable(filter(function(d) return common.date_weekday(d) == 1 and common.date_add(d, 6) <= json.day_last end, json.matrix_labels))
 	json.matrix = totable(map(function(date) return process_day(date, json.rules, json.day_lt) end, json.matrix_labels))
 	json.week_matrix = totable(map(function(date) return process_week(json.matrix, date, json.rules, json.day_first) end, json.week_matrix_labels))

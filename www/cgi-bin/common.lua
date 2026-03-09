@@ -130,33 +130,33 @@ end
 
 local db_read_deep_days = function(r, db)
 	local days = db_collect(db, "SELECT * FROM day ORDER BY id ASC")
+	r.day_count = 0
 	if #days > 0 then
 		r.day_first = days[1].id
 		r.day_last = days[#days].id
+		r.day_count = common.date_diff(r.day_last, r.day_first)
 		r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
 	end
 end
 
-local db_read_deep_rule_due_lt = function(lt, rule, done_lt, r)
+local db_read_deep_rule_due_lt = function(rule, done_lt, r)
 	local weekdays = common.get_rule_weekdays(rule)
 	local not_done_streak = math.huge
-	local day_count = (r.day_first and r.day_last) and common.date_diff(r.day_last, r.day_first) + 1 or 0
-	each(function(date)
+	return reduce(function(lt, date)
 		lt[date] = rule.period <= not_done_streak and weekdays[common.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 		if lt[date] and done_lt[date] == nil then
 			lt[date] = nil
 		end
-	end, map(function(i) return common.date_add(r.day_first, i - 1) end, range(day_count)))
-
-	return lt
+		return lt
+	end, {}, map(function(i) return common.date_add(r.day_first, i - 1) end, range(r.day_count)))
 end
 
 local db_read_deep_rule = function(r, db, rule)
 	local s = ("SELECT * FROM rule_instance WHERE rule_name = '%s' ORDER BY day_id ASC"):format(db:escape(rule.name))
 	rule.instances = db_collect(db, s)
 	rule.done_lt = reduce(function(a, i) a[i.day_id] = (i.done == 1) return a end, {}, rule.instances)
-	rule.due_lt = db_read_deep_rule_due_lt({}, rule, rule.done_lt, r)
+	rule.due_lt = db_read_deep_rule_due_lt(rule, rule.done_lt, r)
 end
 
 local db_read_deep_rules = function(r, db)
