@@ -5,7 +5,7 @@ local common = {}
 -- Date string utilities
 
 local date_table = function(d)
-	return { year = tonumber(string.sub(d, 1, 4)), month = tonumber(string.sub(d, 6, 7)), day = tonumber(string.sub(d, 9, 10)) }
+	return { year = tonumber(d:sub(1, 4)), month = tonumber(d:sub(6, 7)), day = tonumber(d:sub(9, 10)) }
 end
 
 common.date_diff = function(d1, d2)
@@ -17,9 +17,8 @@ common.date_weekday = function(d)
 end
 
 common.date_add = function(date, days)
-	local t = os.time(date_table(date))
-	local t2 = os.date("*t", t + days * 86400)
-	return string.format("%04d-%02d-%02d", t2.year, t2.month, t2.day)
+	local t = os.date("*t", os.time(date_table(date)) + days * 86400)
+	return ("%04d-%02d-%02d"):format(t.year, t.month, t.day)
 end
 
 ------------------------------------------------------------------
@@ -209,7 +208,7 @@ local db_backup_rule_instance = function(i, db, backup)
 end
 
 local db_backup_day = function(date, db, backup)
-	backup:write(string.format("INSERT INTO day (id) VALUES ('%s');\n", date)) -- TODO: support day.note
+	backup:write(("INSERT INTO day (id) VALUES ('%s');\n"):format(date))
 	local q = "SELECT * FROM rule_instance WHERE day_id = '" .. date .. "' ORDER BY order_priority ASC"
 	each(function(i) db_backup_rule_instance(i, db, backup) end, db_collect(db, q))
 end
