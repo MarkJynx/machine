@@ -99,8 +99,8 @@ end
 common.db_delete_day = function(date)
 	local db = db_open(DB_PATH)
 	local q = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
-	q[2] = ("DELETE FROM rule_instance WHERE id = '%s'"):format(date)
-	q[3] = ("DELETE FROM day WHERE day_id = '%s'"):format(date)
+	q[2] = ("DELETE FROM rule_instance WHERE day_id = '%s'"):format(date)
+	q[3] = ("DELETE FROM day WHERE id = '%s'"):format(date)
 	local retval = all(function(q) return db:execute(q) ~= nil end, q)
 	db:close()
 	return retval
