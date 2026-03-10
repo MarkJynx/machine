@@ -134,7 +134,7 @@ local db_read_deep_days = function(r, db)
 	if #days > 0 then
 		r.day_first = days[1].id
 		r.day_last = days[#days].id
-		r.day_count = common.date_diff(r.day_last, r.day_first)
+		r.day_count = common.date_diff(r.day_last, r.day_first) + 1
 		r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
 	end
 end
