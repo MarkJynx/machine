@@ -49,7 +49,24 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	let matrix = week_view ? json.week_matrix : json.matrix
 	let labels = week_view ? json.week_matrix_labels : json.matrix_labels
 
-	generate_matrix_rule_filter(json.rules, matrix)
+	// Rule filter table
+	let rule_filter_table = document.createElement("table")
+	let header_row = rule_filter_table.insertRow()
+	let checkbox_row = rule_filter_table.insertRow()
+	json.rules.forEach(function(rule, index) {
+		header_row.insertCell().innerHTML = rule.name.split(" ").join("<br>")
+		let checkbox = document.createElement("input")
+		checkbox.type = "checkbox"
+		checkbox.checked = true
+		checkbox.id = "rule_filter_" + index
+		checkbox.onclick = function(e) {
+			Array.from(document.getElementsByClassName("rule" + index)).forEach(function(c) { c.hidden = !e.target.checked })
+			json.rules[index].hidden = !e.target.checked
+			update_day_totals(json.rules, matrix)
+		}
+		checkbox_row.insertCell().appendChild(checkbox)
+	})
+	document.body.appendChild(rule_filter_table)
 
 	let matrix_table = document.createElement("table")
 	let header_row = matrix_table.insertRow()
@@ -104,28 +121,6 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 	let navigation_table = document.createElement("table")
 	insert_navigation_row(navigation_table, null)
 	document.body.appendChild(navigation_table)
-}
-
-function generate_matrix_rule_filter(rules, matrix) {
-	let rule_filter_table = document.createElement("table")
-	let header_row = rule_filter_table.insertRow()
-	let checkbox_row = rule_filter_table.insertRow()
-	rules.forEach(function(rule, index) {
-		header_row.insertCell().innerHTML = rule.name.split(" ").join("<br>")
-		let checkbox = document.createElement("input")
-		checkbox.type = "checkbox"
-		checkbox.checked = true
-		checkbox.id = "rule_filter_" + index
-		checkbox.onclick = function(e) {
-			Array.from(document.getElementsByClassName("rule" + index)).forEach(function(c) {
-				c.hidden = !e.target.checked
-			})
-			rules[index].hidden = !e.target.checked
-			update_day_totals(rules, matrix)
-		}
-		checkbox_row.insertCell().appendChild(checkbox)
-	})
-	document.body.appendChild(rule_filter_table)
 }
 
 function update_day_totals(rules, matrix) {

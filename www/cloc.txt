@@ -1,0 +1,21 @@
+index.js:
+	main():                        18 (used 1 time)
+	get_local_date_string():        4 (used 1 time)
+	add_days():                     5 (used 3 times)
+	post_date_request():            8 (used 3 times)
+
+	generate_matrix():             69 (used 1 time)
+	update_day_totals():           19 (used 2 times)
+	insert_matrix_cell():           6 (used 1 time)
+
+	generate_day():                29 (used 3 times)
+	insert_navigation_row():       10 (used 2 times)
+	make_button_cell():             8 (used 14 times)
+	create_day():                   4 (used 1 time)
+	delete_day():                   4 (used 1 time)
+	save_day():                    11 (used 1 time)
+	rule_row_to_dict():             5 (used 1 time)
+	make_rule_instance_row():      13 (used 1 time)
+	move_elem():                    7 (used 4 times)
+	insert_task():                  9 (used 1 time)
+	: 1
