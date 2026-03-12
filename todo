@@ -1,4 +1,5 @@
 FEATURE: day notes.
+FEATURE: return of schedules.
 FEATURE: dynamic add-task selection.
 FEATURE: WebUI: start_date and stop_date fields with submit that does a GET
 
@@ -6,13 +7,21 @@ FEATURE: WebUI: start_date and stop_date fields with submit that does a GET
 
 * FEATURE: statistics (day, daily, aggregate).
 * FEATURE: fully customizable percetange formula.
-* FEATURE: schedules.
 * FEATURE: tiers.
 * FEATURE: undo/redo (front-end).
 * FEATURE: achievements.
-* FEATURE: CRUD rule_schedule.
-* FEATURE: other CRUD tables (remove init.sql).
+* FEATURE: CRUD Rule (Read).
+* FEATURE: CRUD Rule (Create).
+* FEATURE: CRUD Rule (Update).
+* FEATURE: CRUD Rule (Delete).
+* FEATURE: CRUD Rule Schedule (Read).
+* FEATURE: CRUD Rule Schedule (Create).
+* FEATURE: CRUD Rule Schedule (Update).
+* FEATURE: CRUD Rule Schedule (Delete).
 * FEATURE: JSON export/import
+* BUGFIX: handle empty rule array.
+* BUGFIX: handle empty day array.
+* BUGFIX: handle empty rule instance array.
 
 * REFACTORIZATION: Call read_matrix.lua once at startup.
 * REFACTORIZATION: Optimize human-readable back-ups through date-directory structure.
