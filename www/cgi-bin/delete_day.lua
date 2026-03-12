@@ -1,7 +1,8 @@
 #!/usr/bin/env lua
 
-local common = require("cgi-bin.common")
+local c = require("cgi-bin.common")
 
-local response = common.db_delete_day(common.http_enforce_date_payload()) and "true" or "false"
-common.db_backup()
-common.http_respond(response)
+local response = c.db_delete_day(c.http_enforce_date_payload()) and "true" or "false"
+c.db_backup()
+c.http_respond(response)
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 require("fun")()
-local common = require("cgi-bin.common")
+local c = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
 local RULE_DAY_OFF = -2
@@ -54,20 +54,20 @@ end
 
 local process_week = function(day_matrix, first_week_day, rules, day_first)
 	return reduce(function(a, ri)
-		local day_base_index = math.tointeger(common.date_diff(first_week_day, day_first))
+		local day_base_index = math.tointeger(c.date_diff(first_week_day, day_first))
 		local rule_row = totable(map(function(i) return day_matrix[day_base_index + i][ri] end, range(7)))
 		return process_week_rule(a, rule_row, rules[ri].period == 7)
 	end, {}, range(#rules))
 end
 
 local main = function()
-	common.http_enforce_method("GET")
-	local json = common.db_read_deep()
-	json.matrix_labels = totable(map(function(i) return common.date_add(json.day_first, i - 1) end, range(json.day_count)))
-	json.week_matrix_labels = totable(filter(function(d) return common.date_weekday(d) == 1 and common.date_add(d, 6) <= json.day_last end, json.matrix_labels))
+	c.http_enforce_method("GET")
+	local json = c.db_read_deep()
+	json.matrix_labels = totable(map(function(i) return c.date_add(json.day_first, i - 1) end, range(json.day_count)))
+	json.week_matrix_labels = totable(filter(function(d) return c.date_weekday(d) == 1 and c.date_add(d, 6) <= json.day_last end, json.matrix_labels))
 	json.matrix = totable(map(function(date) return process_day(date, json.rules, json.day_lt) end, json.matrix_labels))
 	json.week_matrix = totable(map(function(date) return process_week(json.matrix, date, json.rules, json.day_first) end, json.week_matrix_labels))
-	common.http_respond(cjson.encode(json) or "null")
+	c.http_respond(cjson.encode(json) or "null")
 end
 
 main()

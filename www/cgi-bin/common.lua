@@ -1,5 +1,5 @@
 require("fun")()
-local common = {}
+local c = {}
 
 ------------------------------------------------------------------
 -- Date string utilities
@@ -8,15 +8,15 @@ local date_table = function(d)
 	return { year = tonumber(d:sub(1, 4)), month = tonumber(d:sub(6, 7)), day = tonumber(d:sub(9, 10)) }
 end
 
-common.date_diff = function(d1, d2)
+c.date_diff = function(d1, d2)
 	return os.difftime(os.time(date_table(d1)), os.time(date_table(d2))) // 86400
 end
 
-common.date_weekday = function(d)
+c.date_weekday = function(d)
 	return (os.date("%w", os.time(date_table(d))) + 7 - 1) % 7 + 1
 end
 
-common.date_add = function(date, days)
+c.date_add = function(date, days)
 	local t = os.date("*t", os.time(date_table(date)) + days * 86400)
 	return ("%04d-%02d-%02d"):format(t.year, t.month, t.day)
 end
@@ -24,7 +24,7 @@ end
 ------------------------------------------------------------------
 -- HTTP utilities
 
-common.http_respond = function(json)
+c.http_respond = function(json)
 	if json then
 		io.write("Status: 200 OK\r\n")
 		io.write("Content-Type: application/json;charset=utf-8\r\n")
@@ -36,13 +36,13 @@ common.http_respond = function(json)
 	os.exit(0)
 end
 
-common.http_panic = function(condition)
+c.http_panic = function(condition)
 	if (condition) then
-		common.http_respond(nil)
+		c.http_respond(nil)
 	end
 end
 
-common.http_extract_content_length = function()
+c.http_extract_content_length = function()
 	-- We assume CONTENT_LENGTH is correct and we drain stdin of exactly that amount of bytes.
 	-- We won't try draining (with DoS protection) stdin when there is more data than CONTENT_LENGTH.
 	-- We won't try manually timeouting when there is less data than CONTENT_LENGTH.
@@ -53,16 +53,16 @@ common.http_extract_content_length = function()
 	return content_length and content_length or 0
 end
 
-common.http_enforce_method = function(method)
+c.http_enforce_method = function(method)
 	local request_method = os.getenv("REQUEST_METHOD")
-	common.http_panic(request_method ~= method)
+	c.http_panic(request_method ~= method)
 end
 
-common.http_enforce_date_payload = function()
-	common.http_enforce_method("POST")
-	local content_length = common.http_extract_content_length()
+c.http_enforce_date_payload = function()
+	c.http_enforce_method("POST")
+	local content_length = c.http_extract_content_length()
 	local payload = content_length > 0 and io.read(content_length) or nil
-	common.http_panic(payload == nil or payload:match("^%d%d%d%d%-%d%d%-%d%d$") == nil)
+	c.http_panic(payload == nil or payload:match("^%d%d%d%d%-%d%d%-%d%d$") == nil)
 	return payload
 end
 
@@ -96,7 +96,7 @@ local db_collect_single = function(db, q)
 	return #results == 1 and results[1] or nil
 end
 
-common.db_delete_day = function(date)
+c.db_delete_day = function(date)
 	local db = db_open(DB_PATH)
 	local q = { "BEGIN TRANSACTION", nil, nil, "COMMIT" }
 	q[2] = ("DELETE FROM rule_instance WHERE day_id = '%s'"):format(date)
@@ -111,7 +111,7 @@ local db_get_last_rule_instance = function(db, rule_name, date)
 	return db_collect_single(db, q:format(rule_name, date))
 end
 
-common.db_read_shallow = function(date)
+c.db_read_shallow = function(date)
 	local db = db_open(DB_PATH)
 
 	local rules = db_collect(db, "SELECT * FROM rule ORDER BY order_priority ASC")
@@ -134,22 +134,22 @@ local db_read_deep_days = function(r, db)
 	if #days > 0 then
 		r.day_first = days[1].id
 		r.day_last = days[#days].id
-		r.day_count = common.date_diff(r.day_last, r.day_first) + 1
+		r.day_count = c.date_diff(r.day_last, r.day_first) + 1
 		r.day_lt = reduce(function(a, d) a[d.id] = true return a end, {}, days)
 	end
 end
 
 local db_read_deep_rule_due_lt = function(rule, done_lt, r)
-	local weekdays = common.get_rule_weekdays(rule)
+	local weekdays = c.get_rule_weekdays(rule)
 	local not_done_streak = math.huge
 	return reduce(function(lt, date)
-		lt[date] = rule.period <= not_done_streak and weekdays[common.date_weekday(date)]
+		lt[date] = rule.period <= not_done_streak and weekdays[c.date_weekday(date)]
 		not_done_streak = done_lt[date] and 1 or not_done_streak + 1
 		if lt[date] and done_lt[date] == nil then
 			lt[date] = nil
 		end
 		return lt
-	end, {}, map(function(i) return common.date_add(r.day_first, i - 1) end, range(r.day_count)))
+	end, {}, map(function(i) return c.date_add(r.day_first, i - 1) end, range(r.day_count)))
 end
 
 local db_read_deep_rule = function(r, db, rule)
@@ -164,7 +164,7 @@ local db_read_deep_rules = function(r, db)
 	each(function(rule) db_read_deep_rule(r, db, rule) end, r.rules)
 end
 
-common.db_read_deep = function()
+c.db_read_deep = function()
 	local r = {}
 	local db = db_open(DB_PATH)
 	db_read_deep_days(r, db)
@@ -179,7 +179,7 @@ local db_rule_instance_to_insert_query = function(i, db)
 	return s1 .. s2
 end
 
-common.db_insert_day = function(day)
+c.db_insert_day = function(day)
 	local db = db_open(DB_PATH)
 
 	local s = { "PRAGMA foreign_keys = ON", "BEGIN TRANSACTION" }
@@ -208,7 +208,7 @@ local db_backup_day = function(date, db, backup)
 	each(function(i) db_backup_rule_instance(i, db, backup) end, db_collect(db, q))
 end
 
-common.db_backup = function()
+c.db_backup = function()
 	local db = db_open(DB_PATH)
 	local backup = io.open(DB_BACKUP_PATH, "wb")
 	local days = db_collect(db, "SELECT * FROM day ORDER BY id ASC")
@@ -220,8 +220,8 @@ end
 ------------------------------------------------------------------
 -- Other
 
-common.get_rule_weekdays = function(rule)
+c.get_rule_weekdays = function(rule)
 	return totable(map(function(i) return (rule.weekdays & (2 ^ (i - 1))) > 0 end, range(7)))
 end
 
-return common
+return c
