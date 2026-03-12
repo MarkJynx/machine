@@ -4,17 +4,8 @@ require("fun")()
 local c = require("cgi-bin.common")
 local cjson = require("cjson.safe")
 
-local rule_applies = function(rule, date)
-	local weekdays = c.get_rule_weekdays(rule)
-	if not weekdays[c.date_weekday(date)] then
-		return false
-	end
-
-	if rule.last_instance and c.date_diff(date, rule.last_instance.day_id) < rule.period then
-		return false
-	end
-
-	return true
+local rule_applies = function(r, d)
+	return c.get_rule_weekdays(r)[c.date_weekday(d)] and (r.last_instance == nil and true or c.date_diff(d, r.last_instance.day_id) >= r.period)
 end
 
 local main = function()
