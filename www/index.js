@@ -51,10 +51,10 @@ async function generate_matrix(week_view, start_date=null, stop_date=null) {
 
 	// Rule filter table
 	let rule_filter_table = document.createElement("table")
-	let header_row = rule_filter_table.insertRow()
+	let rule_filter_header_row = rule_filter_table.insertRow()
 	let checkbox_row = rule_filter_table.insertRow()
 	json.rules.forEach(function(rule, index) {
-		header_row.insertCell().innerHTML = rule.name.split(" ").join("<br>")
+		rule_filter_header_row.insertCell().innerHTML = rule.name.split(" ").join("<br>")
 		let checkbox = document.createElement("input")
 		checkbox.type = "checkbox"
 		checkbox.checked = true
