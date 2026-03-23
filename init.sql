@@ -24,16 +24,19 @@ CREATE TABLE IF NOT EXISTS rule_instance (
 
 ---------------------------------------------------------------------------------------------------
 
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Early rise", 1, 1, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Nail care", 2, 7, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Home cleaning", 3, 1, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Shower", 4, 4, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Hair care", 5, 2, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Face shave", 6, 2, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Dental care (after sleep)", 8, 1, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: push (A)", 12, 7, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: push (B)", 13, 7, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: pull (A)", 14, 7, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: pull (B)", 15, 7, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: legs (A)", 16, 7, 127);
-INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: legs (B)", 17, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Early rise",                 1, 1, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Home cleaning",              2, 1, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Dental care (after sleep)",  3, 1, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Face shave",                 4, 2, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Shower",                     5, 4, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Hair care",                  6, 2, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Nail care",                  7, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: push (A)",          8, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: push (B)",          9, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: pull (A)",         10, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: pull (B)",         11, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: legs (A)",         12, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Workout: legs (B)",         13, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Laundry",                   14, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Car care",                  15, 7, 127);
+INSERT INTO rule (name, order_priority, period, weekdays) VALUES ("Accounting",                16, 7, 127);
