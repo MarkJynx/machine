@@ -323,4 +323,5 @@ INSERT INTO day (id) VALUES ('2026-03-25');
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Early rise',                '2026-03-25', 1,  1);
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Home cleaning',             '2026-03-25', 1,  2);
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Dental care (after sleep)', '2026-03-25', 1,  3);
-INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Workout: push (B)',         '2026-03-25', 1,  4);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Accounting',                '2026-03-25', 1,  4);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Workout: push (B)',         '2026-03-25', 1,  5);
