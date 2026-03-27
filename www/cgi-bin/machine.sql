@@ -340,3 +340,17 @@ INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Acc
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Dental care (after sleep)', '2026-03-27', 1,  4);
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Face shave',                '2026-03-27', 1,  5);
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Hair care',                 '2026-03-27', 1,  6);
+INSERT INTO day (id) VALUES ('2026-03-28');
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Early rise',                '2026-03-28', 1,  1);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Home cleaning',             '2026-03-28', 1,  2);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Dental care (after sleep)', '2026-03-28', 1,  3);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Shower',                    '2026-03-28', 1,  4);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Hair care',                 '2026-03-28', 1,  5);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Laundry',                   '2026-03-28', 1,  6);
+INSERT INTO day (id) VALUES ('2026-03-29');
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Early rise',                '2026-03-29', 1,  1);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Home cleaning',             '2026-03-29', 1,  2);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Dental care (after sleep)', '2026-03-29', 1,  3);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Face shave',                '2026-03-29', 1,  4);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Workout: legs (A)',         '2026-03-29', 1,  5);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Car care',                  '2026-03-29', 1,  6);

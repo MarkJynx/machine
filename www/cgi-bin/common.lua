@@ -5,7 +5,7 @@ local c = {}
 -- Date string utilities
 
 local date_table = function(d)
-	return { year = tonumber(d:sub(1, 4)), month = tonumber(d:sub(6, 7)), day = tonumber(d:sub(9, 10)) }
+	return { isdst = false, year = tonumber(d:sub(1, 4)), month = tonumber(d:sub(6, 7)), day = tonumber(d:sub(9, 10)) }
 end
 
 c.date_diff = function(d1, d2)

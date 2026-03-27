@@ -27,7 +27,7 @@ function get_local_date_string() {
 
 function add_days(date, days) {
 	let result = new Date(date)
-	result.setDate(result.getDate() + days)
+	result.setTime(result.getTime() + days * 24 * 3600 * 1000)
 	return result.toISOString().substring(0, "YYYY-MM-DD".length)
 }
 
