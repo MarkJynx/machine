@@ -506,3 +506,9 @@ INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Ear
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Home cleaning',             '2026-04-22', 1,  2);
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Dental care (after sleep)', '2026-04-22', 1,  3);
 INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Face shave',                '2026-04-22', 1,  4);
+INSERT INTO day (id) VALUES ('2026-04-23');
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Early rise',                '2026-04-23', 1,  1);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Home cleaning',             '2026-04-23', 1,  2);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Dental care (after sleep)', '2026-04-23', 1,  3);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Shower',                    '2026-04-23', 1,  4);
+INSERT INTO rule_instance (rule_name, day_id, done, order_priority) VALUES ('Hair care',                 '2026-04-23', 1,  5);
